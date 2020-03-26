@@ -7,10 +7,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import com.example.plaintowerdefense.gem_shop.BuyGemActivity;
 import com.example.plaintowerdefense.social.SocialActivity;
@@ -51,6 +60,43 @@ public class MainActivity extends BaseActivity {
     private GoogleSignInClient mGoogleSignInClient;
 
     SharedPreferences sharedPreference;
+    // 이미지 갈아끼워주는 역할
+    private static ViewSwitcher imageSwitcher;
+
+    private static ImageView tv;
+
+
+    private final static Handler imageSwitchHandler = new Handler() {
+        public void handleMessage(Message msg) {
+//            msg.what += 1;
+//            remainingSecond--;
+            // 처음 시작 할 때 세팅
+            /*
+            0일 때 -> next . 1
+            1 next 2
+            2 next 3
+            3 next 4
+            4 0 -> 1
+             */
+            if (msg.what == -1) {
+                imageSwitcher.setDisplayedChild(0);
+                msg.what = 1;
+            } else if (msg.what < 4) {
+                imageSwitcher.showNext();
+                msg.what += 1;
+            } else {
+                imageSwitcher.setDisplayedChild(0);
+                msg.what = 1;
+            }
+            imageSwitchHandler.sendEmptyMessageDelayed(msg.what, 5000);
+//            shakeTimeLeftTextView.setText(msg.what+"초");
+//            if(msg.what > 0){
+            // 메세지를 처리하고 또다시 핸들러에 메세지 전달 (1000ms 지연)
+//            }else{
+//                isShakeAvailable = false;
+//            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,42 +117,48 @@ public class MainActivity extends BaseActivity {
 
         // 체크박스 클릭여부, 체크박스 마지막 클릭 시간을 판단해서 팝업을 내보낸다
         // 체크 박스 클릭시 다음날에 팝업이 뜨게된다
-        sharedPreference = getSharedPreferences("setting",MODE_WORLD_READABLE|MODE_WORLD_WRITEABLE);
+        sharedPreference = getSharedPreferences("setting", MODE_WORLD_READABLE | MODE_WORLD_WRITEABLE);
         // shared preference를 불러온다. 구분자 $ 의 왼쪽은 pop up를 띄우는지 여부, 오른쪽은 마지막 pop up checkbox 클릭 시간
-        String popUpStatusString = sharedPreference.getString("popUpStatus","true&none");
+        String popUpStatusString = sharedPreference.getString("popUpStatus", "true&none");
         String[] popUpStatus = popUpStatusString.split("&");
         // 팝업 뜰 때 - 체크박스 클릭 안되었을 때, 클릭되었으나 하루가 지났을 때
-        if(popUpStatus[0].contentEquals("true")){
+        if (popUpStatus[0].contentEquals("true")) {
             showAdvertisement();
-        }else{
+        } else {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
-            String dateString  = simpleDateFormat.format(new Date(System.currentTimeMillis()));
+            String dateString = simpleDateFormat.format(new Date(System.currentTimeMillis()));
             Singleton.log(dateString);
-            if(popUpStatus[1].contentEquals(dateString)){
+            if (popUpStatus[1].contentEquals(dateString)) {
                 // 하루 동안 보지 않기 클릭됨 & 아직 하루 안지남
-                Singleton.log("하루동안보지않기,하루안지남 : "+dateString);
+                Singleton.log("하루동안보지않기,하루안지남 : " + dateString);
                 // 테스트 용
 //                SharedPreferences.Editor editor = sharedPreference.edit();
 ////                editor.remove("popUpStatus");
 //                editor.putString("popUpStatus","true&"+dateString);
 //                editor.apply();
-            }else{
+            } else {
                 // 하루 동안 보지 않기 클릭됨 & 하루 지남
-                Singleton.log("하루동안보지않기,하루지남 : "+dateString);
+                Singleton.log("하루동안보지않기,하루지남 : " + dateString);
                 SharedPreferences.Editor editor = sharedPreference.edit();
 //                editor.remove("popUpStatus");
-                editor.putString("popUpStatus","true&"+dateString);
+                editor.putString("popUpStatus", "true&" + dateString);
                 editor.apply();
                 showAdvertisement();
             }
         }
+        ImageView demoImage = (ImageView) findViewById(R.id.test_image_iv_main);
+        int imagesToShow[] = {R.drawable.background_blue_aqua_turquoise, R.drawable.background_blur, R.drawable.background_free_pic, R.drawable.background_milky_way};
+
+//        animate(demoImage, imagesToShow, 0,true);
+        fadeAnimation(demoImage, true, 0);
     }
+
     @Override
     public void onStart() {
         super.onStart();
         // 로그인한 계정에 따라 닉네임/프로필 세팅
         LoginSingleton.getInstance(context);
-        LoginSingleton.loginOnStart(nicknameTextView,profileImageView);
+        LoginSingleton.loginOnStart(nicknameTextView, profileImageView);
 
     }
 
@@ -114,6 +166,8 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 //        Singleton.toast("싱글톤 클래스 테스트", true);
+        //
+//        imageSwitchHandler.sendEmptyMessage(-1);
     }
 
     // 따로 구분한 클릭 처리 이벤트
@@ -183,7 +237,6 @@ public class MainActivity extends BaseActivity {
     }
 
 
-
     private void signIn() {
 
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
@@ -200,8 +253,9 @@ public class MainActivity extends BaseActivity {
 
         }
     }
+
     // 팝업을 띄워주는 기능
-    public void showAdvertisement(){
+    public void showAdvertisement() {
         // xml -> view 한뒤 view binding
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_advertisement, null);
         final CheckBox todayCheckBox = dialogView.findViewById(R.id.cb_advertisement);
@@ -211,9 +265,8 @@ public class MainActivity extends BaseActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(dialogView);
         // 닫기 버튼
-        builder.setPositiveButton("닫기", new DialogInterface.OnClickListener(){
-            public void onClick(DialogInterface dialog, int pos)
-            {
+        builder.setPositiveButton("닫기", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int pos) {
                 Singleton.log("팝업 닫기 눌림");
             }
         });
@@ -225,7 +278,7 @@ public class MainActivity extends BaseActivity {
         advertisementImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intent = new Intent(MainActivity.this,BuyGemActivity.class);
+                intent = new Intent(MainActivity.this, BuyGemActivity.class);
                 startActivity(intent);
                 // dialog는 메인화면에 다시 진입했을 때 보이지 않도록 한다
                 alertDialog.dismiss();
@@ -235,14 +288,14 @@ public class MainActivity extends BaseActivity {
         todayCheckBox.setOnClickListener(new CheckBox.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (((CheckBox)v).isChecked()) {
+                if (((CheckBox) v).isChecked()) {
                     // 팝업 보여주기 : false , 마지막 checkbox 클릭시간 : 현재 날짜 로 저장
-                    SharedPreferences sharedPreferences = getSharedPreferences("setting",MODE_WORLD_WRITEABLE);
+                    SharedPreferences sharedPreferences = getSharedPreferences("setting", MODE_WORLD_WRITEABLE);
                     SharedPreferences.Editor editor = sharedPreference.edit();
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
-                    String dateString  = simpleDateFormat.format(new Date(System.currentTimeMillis()));
-                    Singleton.toast(dateString,true);
-                    editor.putString("popUpStatus","false&"+dateString);
+                    String dateString = simpleDateFormat.format(new Date(System.currentTimeMillis()));
+                    Singleton.toast(dateString, true);
+                    editor.putString("popUpStatus", "false&" + dateString);
                     editor.apply();
                     // checkbox클릭시 바로 dialog를 닫는다
                     alertDialog.dismiss();
@@ -250,7 +303,120 @@ public class MainActivity extends BaseActivity {
                     Singleton.log("CheckBox is unchecked.");
                 }
             }
-        }) ;
+        });
     }
 
+    // handler 이용한 fade in fade out animation
+    public void fadeAnimation(final ImageView imageView, final boolean isfadeOut, final int index) {
+        final int imagesToShow[] = {R.drawable.background_blue_aqua_turquoise, R.drawable.background_blur, R.drawable.background_free_pic, R.drawable.background_milky_way};
+
+        final Animation animationFade;
+        // fade in & out animation 초기화
+        final Animation fadein;
+        final Animation fadeout;
+        fadeout = AnimationUtils.loadAnimation(this, R.anim.fadeout);
+        fadein = AnimationUtils.loadAnimation(this, R.anim.fadein);
+        // 사진 세팅
+        imageView.setImageResource(imagesToShow[index]);
+        // 그림이 화면에 보이는 시간은 5초, 빈화면은 1초간 뜨게한다
+        int delay;
+        if(!isfadeOut){
+            // fade in 일때는 투명 -> 보통의 그림이어야한다.
+            // 안그러면 뚝뚝 끊ㄱ미
+            imageView.setAlpha(0f);
+            delay = 1000;
+        }else{
+            delay = 5000;
+        }
+        // animation 설정
+        if (isfadeOut) {
+            animationFade = AnimationUtils.loadAnimation(this, R.anim.fadeout);
+        } else {
+            animationFade = AnimationUtils.loadAnimation(this, R.anim.fadein);
+        }
+        // animation listener - 끝날 때에만 필요하다.
+        animationFade.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if (isfadeOut) {
+                    // fade out 시 다른 사진으로 전환
+                    if(index < 3){
+                        fadeAnimation(imageView,false,index+1);
+                    }else{
+                        fadeAnimation(imageView,false,0);
+                    }
+                }else {
+                    // fade in 일 때는 fade out 으로 한다
+                    fadeAnimation(imageView,true,index);
+                }
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+        // 핸들러 자체는 무한루프가 아니다. 하지만 method에서 계속 자신을 호출하기 때문에 계속 돌게 된다
+        Handler imageSwitchHandler = new Handler();
+        imageSwitchHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                imageView.setAlpha(1f);
+                imageView.startAnimation(animationFade);
+            }
+        }, delay);
+
+    }
+
+
+    private void animate(final ImageView imageView, final int images[], final int imageIndex, final boolean forever) {
+
+        //imageView <-- The View which displays the images
+        //images[] <-- Holds R references to the images to display
+        //imageIndex <-- index of the first image to show in images[]
+        //forever <-- If equals true then after the last image it starts all over again with the first image resulting in an infinite loop. You have been warned.
+
+        int fadeInDuration = 1000; // Configure time values here
+        int timeBetween = 3000;
+        int fadeOutDuration = 1000;
+
+        imageView.setVisibility(View.INVISIBLE);    //Visible or invisible by default - this will apply when the animation ends
+        imageView.setImageResource(images[imageIndex]);
+
+        Animation fadeIn = new AlphaAnimation(0, 1);
+        fadeIn.setInterpolator(new DecelerateInterpolator()); // add this
+        fadeIn.setDuration(fadeInDuration);
+
+        Animation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setInterpolator(new AccelerateInterpolator()); // and this
+        fadeOut.setStartOffset(fadeInDuration + timeBetween);
+        fadeOut.setDuration(fadeOutDuration);
+
+        AnimationSet animation = new AnimationSet(false); // change to false
+        animation.addAnimation(fadeIn);
+        animation.addAnimation(fadeOut);
+        animation.setRepeatCount(1);
+        imageView.setAnimation(animation);
+
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            public void onAnimationEnd(Animation animation) {
+                if (images.length - 1 > imageIndex) {
+                    animate(imageView, images, imageIndex + 1, forever); //Calls itself until it gets to the end of the array
+                } else {
+                    if (forever) {
+                        animate(imageView, images, 0, forever);  //Calls itself to start the animation all over again in a loop if forever = true
+                    }
+                }
+            }
+
+            public void onAnimationRepeat(Animation animation) {
+                // TODO Auto-generated method stub
+            }
+
+            public void onAnimationStart(Animation animation) {
+                // TODO Auto-generated method stub
+            }
+        });
+    }
 }

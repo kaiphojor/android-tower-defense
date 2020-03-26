@@ -2,15 +2,15 @@ package com.example.plaintowerdefense.game.bgm;
 
 import android.media.MediaPlayer;
 
-public class bgmPlayerSingleton {
-    private static MediaPlayer mp = null;
+public class MusicPlayerSingleton {
+    private static MediaPlayer player = null;
 
-    public static MediaPlayer getMusicPlayerIns(){
-        if(mp == null){
-            mp = new MediaPlayer();
-            return mp;
+    public static MediaPlayer getInstance(){
+        if(player == null){
+            player = new MediaPlayer();
+            return player;
         } else{
-            return mp;
+            return player;
         }
     }
 }

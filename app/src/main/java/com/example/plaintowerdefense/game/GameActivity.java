@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,6 +24,8 @@ import com.example.plaintowerdefense.BaseActivity;
 import com.example.plaintowerdefense.LoginSingleton;
 import com.example.plaintowerdefense.R;
 import com.example.plaintowerdefense.Singleton;
+import com.example.plaintowerdefense.game.bgm.MusicContext;
+import com.example.plaintowerdefense.game.bgm.MusicPlayerSingleton;
 import com.example.plaintowerdefense.game.tower_list.Tower;
 import com.example.plaintowerdefense.game.tower_list.TowerListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,7 +33,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class GameActivity extends BaseActivity implements View.OnClickListener{
+public class GameActivity extends BaseActivity implements View.OnClickListener, MediaPlayer.OnPreparedListener {
     // 임시
     Button temporaryResultButton;
     TextView temporaryTextView;
@@ -49,8 +53,12 @@ public class GameActivity extends BaseActivity implements View.OnClickListener{
     private Context context = this;
     Intent intent;
     TowerListAdapter towerListAdapter;
+    // 배경음악
+//    BackgroundMusic backgroundMusic = new BackgroundMusic();
+//    MediaPlayer musicPlayer;
 
 
+    MediaPlayer musicPlayer = MusicPlayerSingleton.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,6 +128,7 @@ public class GameActivity extends BaseActivity implements View.OnClickListener{
             }
         });
         profileImageView = findViewById(R.id.profile_iv_game);
+        // 배경음 재생
 
 
     }
@@ -127,7 +136,17 @@ public class GameActivity extends BaseActivity implements View.OnClickListener{
     @Override
     protected void onResume() {
         super.onResume();
+        musicPlayer = MediaPlayer.create(GameActivity.this,R.raw.skull_fire);
+        musicPlayer.setVolume(100,100);
+        musicPlayer.setLooping(true);
+        // 준비되었을 때 시작하기 위한 listener
+        musicPlayer.setOnPreparedListener(this);
+//        musicPlayer.prepareAsync();
+//            musicPlayer.start();
+//            return null;
         // 클릭시 이름을 출력
+        // music context에 맞는 음악을 재생한다.
+//        backgroundMusic.execute(new MusicContext(context,R.raw.skull_fire,true));
 
     }
 
@@ -185,8 +204,62 @@ public class GameActivity extends BaseActivity implements View.OnClickListener{
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+//         음악 중지
+        musicPlayer.stop();
+        musicPlayer.reset();
+//        if(!backgroundMusic.isCancelled()){
+//            backgroundMusic.cancel(true);
+//        }
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
-        ((Activity) context).finish();
+        // 음악 정지 - async
+//        musicPlayer.stop();
+
+//        if(!backgroundMusic.isCancelled()){
+//            backgroundMusic.cancel(true);
+//        }
+//        ((Activity) context).finish();
     }
+
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+        musicPlayer.start();
+    }
+    // 음악 실행 - async
+
+//    public class BackgroundMusic extends AsyncTask<MusicContext, Void, Void> {
+//        // 실행할 activity와 음악
+//        Context context;
+//        private int resourceNumber;
+//        MediaPlayer musicPlayer;
+//
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//        }
+//        // 백그라운드에서 작업(다른 thread에서 처리)
+//        @Override
+//        protected Void doInBackground(MusicContext... musicContexts) {
+//            MusicContext musicContext = musicContexts[0];
+//            // 음악 세팅 및 실행
+//            musicPlayer = MediaPlayer.create((Activity)(musicContext.getContext()),musicContext.getResourceId());
+//            musicPlayer.setVolume(100,100);
+//            musicPlayer.setLooping(musicContext.isLooping());
+//            musicPlayer.start();
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onCancelled(Void aVoid) {
+//            super.onCancelled(aVoid);
+//            musicPlayer.reset();
+////            musicPlayer.stop();
+//            musicPlayer = null;
+//        }
+//    }
 }

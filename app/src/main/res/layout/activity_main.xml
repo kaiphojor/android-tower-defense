@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:id="@+id/navigation_ll_main"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/title_tv_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:paddingStart="30dp"
+            android:text="타워디펜스"
+            android:textSize="36sp" />
+
+        <ImageView
+            android:id="@+id/profile_iv_main"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            tools:srcCompat="@tools:sample/avatars[0]" />
+
+        <TextView
+            android:id="@+id/nickname_tv_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="사용자이름"
+            android:textSize="24sp" />
+
+        <ImageView
+            android:id="@+id/gem_iv_main"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/diamond" />
+
+        <TextView
+            android:id="@+id/gem_number_tv_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="100"
+            android:textSize="25sp" />
+
+        <ImageView
+            android:id="@+id/buy_gem_iv_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/plus_32" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/menu_ll_main"
+        android:layout_width="200dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="24dp"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/navigation_ll_main">
+
+        <TextView
+            android:id="@+id/stage_select_tv_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="시작하기"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/setting_tv_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="환경설정"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/multi_play_tv_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="멀티플레이"
+            android:textSize="25sp"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/buy_gem_tv_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="보석 상점"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/friend_tv_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="recyclerview"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/listview_tv_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="listview test"
+            android:textSize="25sp" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/cover_image_fl_main"
+        android:layout_width="505dp"
+        android:layout_height="359dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/menu_ll_main">
+
+        <ImageView
+            android:id="@+id/test_image_iv_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@color/colorAccent"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

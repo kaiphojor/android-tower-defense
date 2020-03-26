@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_id_setting"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".IdSettingActivity">
+
+    <LinearLayout
+        android:id="@+id/navigation_ll_id_setting"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/title_tv_id_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:paddingStart="30dp"
+            android:text="로그인"
+            android:textSize="36sp" />
+
+        <TextView
+            android:id="@+id/username_tv_id_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:text="user00001"
+            android:textSize="24sp" />
+
+        <ImageView
+            android:id="@+id/gem_iv_id_setting"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            app:srcCompat="@drawable/diamond" />
+
+        <TextView
+            android:id="@+id/gem_number_tv_id_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:text="100"
+            android:textSize="25sp" />
+
+        <ImageView
+            android:id="@+id/buy_gem_iv_id_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            app:srcCompat="@drawable/plus_32" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/settting_ll_id_setting"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_default="percent"
+        app:layout_constraintHeight_percent="0.7"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/navigation_ll_id_setting"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_percent="0.4">
+
+        <TextView
+            android:id="@+id/nickname_tv_id_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="5dp"
+            android:text="닉네임을 입력하세요(필수)" />
+
+        <EditText
+            android:id="@+id/nickname_et_id_setting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="25dp"
+            android:ems="10"
+            android:hint="한글 8자,영문 16자 제한"
+            android:inputType="textPersonName" />
+
+        <TextView
+            android:id="@+id/profile_image_tv_id_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="5dp"
+            android:text="사진을 선택해주세요(갤러리 혹은 카메라)" />
+
+        <ImageView
+            android:id="@+id/profile_image_iv_id_setting"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="25dp"
+            app:srcCompat="@android:drawable/ic_menu_report_image" />
+
+        <Button
+            android:id="@+id/submit_setting_bt_id_setting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="확인" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/camera_iv_id_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="100dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.75"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.68"
+        app:srcCompat="@drawable/camera_64" />
+</androidx.constraintlayout.widget.ConstraintLayout>

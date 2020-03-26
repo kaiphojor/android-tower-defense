@@ -1,0 +1,110 @@
+apply plugin: 'com.android.application'
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+    defaultConfig {
+        applicationId "com.example.plaintowerdefense"
+        minSdkVersion 25
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+//        annotationProcessorOptions {
+//                includeCompileClasspath true
+//        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+apply plugin: 'com.google.gms.google-services'
+//android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    testImplementation 'junit:junit:4.13'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+//    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
+    implementation "androidx.drawerlayout:drawerlayout:1.0.0"
+
+
+    //room db
+    def room_version = "2.2.4"
+//    implementation "androidx.room:room-runtime:$room_version"
+//    annotationProcessor "androidx.room:room-compiler:$room_version"
+    // For Kotlin use kapt instead of annotationProcessor
+
+    // lottie animation
+    implementation 'com.airbnb.android:lottie:1.5.3'
+    // 사진 가져오기
+    implementation 'gun0912.ted:tedpermission:2.2.3'
+    // image crop
+    implementation 'com.soundcloud.android:android-crop:1.0.1@aar'
+
+    def nav_version = "2.2.1"
+    // Java language implementation
+    implementation "androidx.navigation:navigation-fragment:$nav_version"
+    implementation "androidx.navigation:navigation-ui:$nav_version"
+
+// firebase 로그인 의존성
+
+
+    def version_number = "2.0"
+    // Adds libraries defining annotations to only the compile classpath.
+//    compileOnly "com.google.dagger:dagger:$version_number"
+    // Adds the annotation processor dependency to the annotation processor classpath.
+//    annotationProcessor "com.google.dagger:dagger-compiler:$version_number"
+
+    // add the Firebase SDK for Google Analytics
+//    implementation 'com.google.firebase:firebase-analytics:17.2.3'
+    // add SDKs for any other desired Firebase products
+    // https://firebase.google.com/docs/android/setup#available-libraries
+    // analytics
+    implementation 'com.google.firebase:firebase-core:17.2.3'
+    // 인증 및 로그인
+    implementation 'com.google.firebase:firebase-auth:19.3.0'
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
+    // 인증 로그인 UI
+    implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
+    //    annotationProcessor 'com.google.auto.value:auto-value:1.5.2'
+//    implementation 'com.google.firebase:firebase-admin:6.8.1'
+//    implementation 'com.google.firebase:firebase-admin:5.8.0'
+
+//    implementation ('com.google.firebase:firebase-messaging:20.1.3'){
+//        exclude module: 'firebase-common'
+//    }
+//    implementation ('com.google.firebase:firebase-auth:19.3.0'){
+//        exclude module: 'firebase-common'
+//    }
+//    implementation ('com.google.firebase:firebase-database:19.2.1'){
+//        exclude module: 'firebase-common'
+//    }
+//    implementation ('com.firebase:firebase-client-android:2.5.0'){
+//        exclude module: 'firebase-common'
+//    }
+
+//    // Dynamic Feature Module Support
+//    implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
+
+    // for kakao login
+//    implementation 'com.google.firebase:firebase-admin:6.8.1'
+    // annotation processor must be declared explicitly
+    // Adds libraries defining annotations to only the compile classpath.
+//    compileOnly 'com.google.dagger:dagger:1.4'
+    // Adds the annotation processor dependency to the annotation processor classpath.
+//    annotationProcessor 'com.google.dagger:dagger-compiler:1.4'
+//    annotationProcessor 'com.google.auto.value:auto-value:1.5.2'
+//    annotationProcessor 'org.apache.logging.log4j:log4j-core:2.8'
+//    implementation 'com.google.firebase:firebase-admin:6.8.1'
+
+
+
+}

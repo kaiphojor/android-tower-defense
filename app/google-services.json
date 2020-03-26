@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "222245973849",
+    "firebase_url": "https://plain-tower-defense.firebaseio.com",
+    "project_id": "plain-tower-defense",
+    "storage_bucket": "plain-tower-defense.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:222245973849:android:9ae01aa21c4258fbda2648",
+        "android_client_info": {
+          "package_name": "com.example.plaintowerdefense"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "222245973849-e1i3ajsqkqedk180q4am84piqiud3tkc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.plaintowerdefense",
+            "certificate_hash": "ec56588200ffa7d2d344d2761b214c83d707877f"
+          }
+        },
+        {
+          "client_id": "222245973849-crfe1e8e9339l191lpck893pu1vpo70h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuyKSZWo8ynuJOnTgqnCeEAev52R35RQU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "222245973849-crfe1e8e9339l191lpck893pu1vpo70h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

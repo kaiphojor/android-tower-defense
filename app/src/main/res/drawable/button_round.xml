@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="10dp"
+    android:shape="rectangle">
+    <!--    //10dp만큼-->
+    <!--    //각모서리에-->
+
+    <solid android:color="#FFFFFF" />
+    <!--    // 내부 색 설정-->
+    <!--    //좌측 상단에 12dp에 해당하는만큼 둥글게 만들겠다-->
+    <!--    //우측 상단-->
+    <!--    //좌측 하단-->
+    <!--    //우측 하단-->
+    <corners
+        android:bottomLeftRadius="12dp"
+        android:bottomRightRadius="12dp"
+        android:topLeftRadius="12dp"
+        android:topRightRadius="12dp" />
+</shape>

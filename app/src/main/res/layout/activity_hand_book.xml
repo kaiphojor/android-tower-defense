@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_hand_book"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HandBookActivity">
+
+    <LinearLayout
+        android:id="@+id/navigation_ll_hand_book"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/title_tv_hand_book"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:paddingStart="30dp"
+            android:text="도감"
+            android:textSize="36sp" />
+
+        <TextView
+            android:id="@+id/username_tv_hand_book"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:text="사용자이름"
+            android:textSize="24sp" />
+
+        <ImageView
+            android:id="@+id/gem_iv_hand_book"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            app:srcCompat="@drawable/diamond" />
+
+        <TextView
+            android:id="@+id/gem_number_tv_hand_book"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:text="100"
+            android:textSize="25sp" />
+
+        <ImageView
+            android:id="@+id/buy_gem_iv_hand_book"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            app:srcCompat="@drawable/plus_32" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/enemy_bt_hand_book"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/diamond"
+        android:gravity="bottom|center_horizontal"
+        android:paddingBottom="10dp"
+        android:text="enemy"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tower_bt_hand_book"
+        app:layout_constraintTop_toBottomOf="@+id/navigation_ll_hand_book"
+        app:srcCompat="@drawable/diamond" />
+
+    <Button
+        android:id="@+id/tower_bt_hand_book"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:background="@drawable/diamond"
+        android:gravity="bottom|center_horizontal"
+        android:paddingBottom="10dp"
+        android:text="TOWER"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/enemy_bt_hand_book"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/navigation_ll_hand_book"
+        app:srcCompat="@drawable/diamond" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_game"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".game.GameActivity">
+
+    <LinearLayout
+        android:id="@+id/navigation_ll_game"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/title_tv_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:paddingStart="30dp"
+            android:text="게임화면"
+            android:textSize="36sp" />
+
+        <ImageView
+            android:id="@+id/profile_iv_game"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            tools:srcCompat="@tools:sample/avatars[0]" />
+
+        <TextView
+            android:id="@+id/username_tv_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:text="사용자이름"
+            android:textSize="24sp" />
+
+        <ImageView
+            android:id="@+id/gem_iv_game"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            app:srcCompat="@drawable/diamond" />
+
+        <TextView
+            android:id="@+id/gem_number_tv_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:text="100"
+            android:textSize="25sp" />
+
+        <ImageView
+            android:id="@+id/buy_gem_iv_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            app:srcCompat="@drawable/plus_32" />
+
+    </LinearLayout>
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="360dp"-->
+
+    <com.example.plaintowerdefense.game.GameSurfaceView
+        android:id="@+id/sv_game"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/menu_ll_game"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/navigation_ll_game"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/temporary_bt_game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="임시 결과 화면"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/test_tv_game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="좌표"
+        app:layout_constraintBottom_toTopOf="@+id/temporary_bt_game"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/menu_ll_game"
+        android:layout_width="199dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/navigation_ll_game"
+        app:layout_constraintVertical_bias="0.0">
+
+        <TextView
+            android:id="@+id/description_name_tv_game"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="이름" />
+
+        <LinearLayout
+            android:id="@+id/description_ll_game"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/description_iv_game"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                app:srcCompat="@drawable/camera_64" />
+
+            <TextView
+                android:id="@+id/description_tv_game"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="설명" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/menu_lv_game"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/menu_bt_game"
+        android:layout_width="40dp"
+        android:layout_height="120dp"
+        android:background="@drawable/side_menu_text_added"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/sv_game"
+        app:layout_constraintTop_toBottomOf="@+id/navigation_ll_game"
+        app:layout_constraintVertical_bias="0.13" />
+</androidx.constraintlayout.widget.ConstraintLayout>

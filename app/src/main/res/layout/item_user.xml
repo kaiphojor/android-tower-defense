@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_user"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border_layout"
+    android:orientation="horizontal"
+    app:layout_anchorGravity="clip_horizontal">
+
+    <ImageView
+        android:id="@+id/favorite_iv_user"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        app:srcCompat="@drawable/favourite_blank" />
+
+    <ImageView
+        android:id="@+id/profile_image_iv_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        app:srcCompat="@drawable/camera_64" />
+
+    <TextView
+        android:id="@+id/name_tv_user"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:text="삼도수군통제사" />
+
+    <TextView
+        android:id="@+id/memo_tv_user"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:background="@drawable/edit_round"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:text="메모" />
+
+    <Button
+        android:id="@+id/modify_bt_user"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:text="메모수정" />
+
+    <Button
+        android:id="@+id/delete_bt_user"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:text="친구삭제" />
+</LinearLayout>

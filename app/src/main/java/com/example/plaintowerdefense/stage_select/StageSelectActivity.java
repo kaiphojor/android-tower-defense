@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.plaintowerdefense.BaseActivity;
+import com.example.plaintowerdefense.GameLoadingActivity;
 import com.example.plaintowerdefense.LoginSingleton;
 import com.example.plaintowerdefense.R;
 import com.example.plaintowerdefense.game.GameActivity;
@@ -77,7 +78,8 @@ public class StageSelectActivity extends BaseActivity implements View.OnClickLis
         int id = v.getId();
         switch(id){
             case R.id.temporary_start_bt_stage_select:
-                intent = new Intent(context, GameActivity.class);
+                intent = new Intent(context, GameLoadingActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(intent);
                 break;
             case R.id.previous_stage_iv_stage_select :

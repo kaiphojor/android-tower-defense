@@ -13,7 +13,7 @@
     <string name="nav_header_subtitle">3dp</string>
     <!-- 버튼 -->
     <string name="submit">확인</string>
-<!--    tower 관련-->
+    <!--    tower 관련-->
     <string name="tower_code_1">기본타워</string>
     <string name="tower_code_2">고무타워</string>
     <string name="tower_code_3">플라스틱타워</string>

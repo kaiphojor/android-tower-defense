@@ -7,6 +7,7 @@ public class Enemy {
     int speed;
     int x;
     int y;
+    int[] centeredPixel;
     int direction;
 
     // 적 번호에 따른 초기화
@@ -95,5 +96,13 @@ public class Enemy {
 
     public void setDirection(int direction) {
         this.direction = direction;
+    }
+
+    public int[] getCenteredPixel() {
+        return centeredPixel;
+    }
+
+    public void setCenteredPixel(int[] centeredPixel) {
+        this.centeredPixel = centeredPixel;
     }
 }

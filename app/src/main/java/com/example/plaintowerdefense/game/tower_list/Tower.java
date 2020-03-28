@@ -20,7 +20,8 @@ public class Tower {
     // 좌표
     private int x;
     private int y;
-
+    // 중심 pixel 좌표
+    private int[] centeredPixel;
 
     private String name;
 //    private String description;
@@ -42,27 +43,27 @@ public class Tower {
     public void initialSetting(){
         towerLevel = 1;
         switch(towerCode){
-            case 1:
-                towerAttackPoint = 10;
+            case 0:
+                towerAttackPoint = 0;
                 towerAttackSpeed = 10;
-                towerRange = 10;
+                towerRange = 400;
                 break;
-            case 2:
+            case 1:
                 towerAttackPoint = 20;
                 towerAttackSpeed = 10;
                 towerRange = 20;
                 break;
-            case 3:
+            case 2:
                 towerAttackPoint = 30;
                 towerAttackSpeed = 10;
                 towerRange = 20;
                 break;
-            case 4:
+            case 3:
                 towerAttackPoint = 40;
                 towerAttackSpeed = 10;
                 towerRange = 20;
                 break;
-            case 5:
+            case 4:
                 towerAttackPoint = 50;
                 towerAttackSpeed = 10;
                 towerRange = 20;
@@ -151,5 +152,13 @@ public class Tower {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public int[] getCenteredPixel() {
+        return centeredPixel;
+    }
+
+    public void setCenteredPixel(int[] centeredPixel) {
+        this.centeredPixel = centeredPixel;
     }
 }

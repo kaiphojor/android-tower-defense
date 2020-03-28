@@ -28,12 +28,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHolder.Callback{
-
-
-//    Context context = this;
-
+    // new int[9][17];
     int[][] tileMap
-//                    = new int[7][15];
             = new int[][]{
             {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0},
             {0,1,1,1,1, 0,0,0,0,0, 0,0,0,0,0, 0,0},
@@ -63,18 +59,18 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
     // 타일, 적, focused image
     Bitmap tileImage;
     Bitmap enemyTileImage;
+    // 빔 이미지
     Bitmap focusedTileImage;
+    // resized image
+    Bitmap beamImage;
     Bitmap enemyPelletImage;
-
     Bitmap tileImageResized;
     Bitmap enemyTileImageResized;
-
-    // 빔 이미지
-    Bitmap beamImage;
     Bitmap scaledBeamImage;
+
     // 게임 진행 제어하는 counter
     int counter = 0;
-
+    int enemySpawnGap = 1000;
     private Thread thread = null;
     // surfaceview rendering 용
     Thread renderThread = null;
@@ -119,7 +115,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         super(context);
         holder = getHolder();
     }
-
+    // surface 만들어진 직후 호출 - image load, 위치, 스레드 초기화
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         // window 크기
@@ -148,7 +144,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         enemyTileImageResized  = Bitmap.createScaledBitmap(enemyTileImage, tileLength, tileLength, true);
         focusedTileImage  = Bitmap.createScaledBitmap(focusedTileImage, tileLength, tileLength, true);
 
-        scaledBeamImage = Bitmap.createScaledBitmap(beamImage, 300, 30, true);
+//        scaledBeamImage = Bitmap.createScaledBitmap(beamImage, 300, 30, true);
 
 
         // tower image 초기화
@@ -178,14 +174,14 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
 //        doDraw(c);
 //        getHolder().unlockCanvasAndPost(c);
     }
-
+    // 화면 크기 바뀔 때 호출
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         Singleton.log("surface changed");
 
 
     }
-    //
+    // surface 삭제 전 호출, 스레드를 안전하게 종료
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         try {
@@ -200,6 +196,17 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         renderThread = new Thread(this);
         renderThread.start();
     }
+    public void pause() {
+        running = false;
+        while(true) {
+            try {
+                renderThread.join();
+                return;
+            } catch (InterruptedException e) {
+                // retry
+            }
+        }
+    }
     //        Chapter 4 ■ Android for Game Developers
     public void run() {
         Log.i("width : ",tileWidth+"");
@@ -212,6 +219,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                 continue;
             try{
                 canvas = holder.lockCanvas();
+
                 synchronized (holder){
                     doDraw(canvas);
                     Thread.sleep(10);
@@ -227,17 +235,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         }
     }
 
-    public void pause() {
-        running = false;
-        while(true) {
-            try {
-                renderThread.join();
-                return;
-            } catch (InterruptedException e) {
-                // retry
-            }
-        }
-    }
+
     public void doDraw(Canvas canvas){
         if(canvas != null){
             // Paint 표시, 그리기 개체
@@ -245,179 +243,83 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
             paint.setAntiAlias(true);
 
             canvas.drawRGB(0, 100, 0);
-            // 맵에 해당하는 tile 그리기
-            for(int i=0;i<tileWidth; i++){
-                for(int j=0;j<tileHeight; j++){
-                    // 전체 타일의 기준 좌표에 타일의 행 열 번호를 이용해서 위치를 정한다
-                    rect.set(baseX+i*tileLength,baseY+j*tileLength,baseX+(i+1)*tileLength,baseY+(j+1)*tileLength);
-                    // 적들이 지나가는 경로는 focus 갖지 못한다
-                    if(tileMap[j][i] == 0){
-                        canvas.drawBitmap(tileImageResized,null,rect,paint);
-                    }else if(tileMap[j][i] == 1){
-                        canvas.drawBitmap(enemyTileImageResized,null,rect,paint);
-                    }
-                }
-            }
-            // 생성된 타워들을 그림
-            if(!towerList.isEmpty()){
-                for(Tower tower : towerList){
-//                    Singleton.log("towercode :" + tower.getTowerCode());
-                    canvas.drawBitmap(towerImageBitmap[tower.getTowerCode()],baseX+tower.getX()*tileLength,baseY+tower.getY()*tileLength,paint);
-                }
-            }
-
-            // 적을 생성
-            if(!enemyList.isEmpty()){
-                for(Enemy enemy : enemyList){
-                    canvas.drawBitmap(enemyPelletImage,enemy.getX(),enemy.getY(),paint);
-                }
-            }
+            // 맵 그리기
+            drawMapTile(canvas,paint);
+            // 타워 그리기
+            drawTower(canvas,paint);
+            // 적 그리기
+            drawEnemy(canvas,paint);
             // 적을 움직이게 해야함 경로대로
             // 현재 경로에서 map 경로만들기
 
             // TODO : 타워가 공격할 때 image
             //  사거리 내의 적을 탐지 - 우선순위 확인 ( 나중에 시간되면 바꿀 수 있는 것으로..)
             //  적을 공격 -> 적위치 타워위치 를 이용한 빔 이미지
-//            Matrix matrix = new Matrix();
-//            matrix.postRotate(40);
-//            Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBeamImage, 0, 0, scaledBeamImage.getWidth(), scaledBeamImage.getHeight(), matrix, true);
-//            canvas.drawBitmap(rotatedBitmap,100,100,paint);
-            // focus된 좌표의 타일
-            // 좌표에 해당하는 곳에 테두리 밝은 표시
-            if(focusedTileCoordinate != null){
-                canvas.drawBitmap(focusedTileImage,baseX+focusedTileCoordinate[1]*tileLength,baseY+focusedTileCoordinate[0]*tileLength,paint);
+
+            // 공격 모션 그리기
+            // 적 찾기
+            for(Tower tower : towerList){
+                for(Enemy enemy : enemyList){
+                    // 타워 - 적 간 거리 측정
+                    int distance = getDistance(tower,enemy);
+                    // 사거리 이내에 들어왔을 때 공격
+                    if(distance < tower.getTowerRange()){
+                        Singleton.log("tower-enemy distance : " + distance);
+//                        Singleton.log("tower range : " + tower.getTowerRange());
+//                        Singleton.log("angle : " + angle);
+                        // 빔의 회전 각도값 계산
+                        float angle = getAngle(tower,enemy);
+                        Matrix matrix = new Matrix();
+                        matrix.postRotate(angle);
+                        int[] centeredPixelCoordinate = tower.getCenteredPixel();
+                        // 빔 길이를 타워 - 적 간 거리에 따라 조정
+                        scaledBeamImage = Bitmap.createScaledBitmap(beamImage, distance, 20, true);
+                        // 각도 값에 따라 빔 그림 회전
+                        Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBeamImage,0,0, scaledBeamImage.getWidth(), scaledBeamImage.getHeight(), matrix, true);
+                        /*
+                        android 좌표 사분면
+                        3 | 4
+                        ㅡㅡㅡ
+                        2 | 1
+                         */
+                        // X좌표 보정 - 1사분면 4사분면 : 0, 2사분면 3사분면 : 너비값
+                        int angleCorrectionX = angle <= 90 || angle >= 270 ? 0 : rotatedBitmap.getWidth();
+                        // y좌표 보정 - 1사분면 2사분면 : 0 , 3사분면 4사분면 : 높이값
+                        int angleCorrectionY = angle < 180 ? 0 : rotatedBitmap.getHeight();
+                        // 좌표 보정한 회전된 빔 그림을 그린다
+                        canvas.drawBitmap(rotatedBitmap,centeredPixelCoordinate[0]-angleCorrectionX,centeredPixelCoordinate[1]-angleCorrectionY,paint);
+                        // 공격
+                        // damage 입히기
+                        break;
+                    }else{
+                        // 공격하지 않음
+                    }
+                }
             }
-            if(testBoolean){
-                testBoolean = false;
-                ((GameActivity)getContext()).setMenuVisibility(false);
-            }
+            // focus 얻음 표시 그리기
+            drawFocus(canvas,paint);
         }
+    }
+
+    public void doPrepare(){
+        // 스레드 반복하기 이전에
     }
     // 계산 과정을 담는 메소드. canvas에 그리는 doDraw와는 따로 처리한다.
     public void doProcess(){
-        try{
-            SharedPreferences sharedPreferences =  context.getSharedPreferences("game",Context.MODE_MULTI_PROCESS);
-            // tower가 클릭 되었을 때에만 동작
-            if(sharedPreferences.getBoolean("isTowerClick",false)){
-                // focus tile이 있을 때에만 tower를 만든다
-                if(focusedTileCoordinate != null){
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    String towerInfoJSONString = sharedPreferences.getString("towerInfo","error");
-                    Singleton.log(towerInfoJSONString);
-                    Tower tower = parseJSONTowerInfo(towerInfoJSONString);
-                    // 좌표, 타워정보  리스트에 저장
-                    tower.setX(focusedTileCoordinate[1]);
-                    tower.setY(focusedTileCoordinate[0]);
-                    towerList.add(tower);
-                    // 다 사용한 shared preference 비워주기
-                    editor.putString("towerInfo","");
-                    editor.putBoolean("isTowerClick",false);
-                    editor.apply();
-//                Singleton.getInstance(context);
-//                Singleton.log("COMMUNICATION_SUCCESS!!!");
-                }
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-
-        // 적 생성
-        if(counter%100 == 0){
-            Enemy enemy = new Enemy(0);
-            int[] spawnCoordinate = new int[]{baseX+enemySpawnPoint[0]*tileLength + tileLength/2 - enemyScale/2,baseY+enemySpawnPoint[1]*tileLength + tileLength/2 - enemyScale/2,enemySpawnPoint[2]};
-            enemy.setCoordinate(spawnCoordinate);
-            enemyList.add(enemy);
-        }
-        // 적 위치 이동
-        for(Enemy e : enemyList){
-            // 좌표를 해시맵으로 해야 순회를 하지 않을 수 있다.
-            int x = e.getX();
-            int y = e.getY();
-            int[] mapXY = getMappedCoordinate(x,y);
-//            Singleton.log("mapXY : " + mapXY[0] + " "+mapXY[1]);
-            int direction = getDirection(mapXY);
-            // 방향이 같으면 그대로 간다
-            if(e.getDirection() == direction){
-                // 그대로 간다.
-
-            // 방향이 다르다면 경로조정용 rect에 좌표가 포함 되는지 파악한다
-            // 좌 상단 rect 와 우하단 rect에 모두 포함되는지
-            // rect에 포함되었다 == 경로 조정한 대로 똑바로 갔다.
-            }else {
-                Rect[] adjustmentRect = getPathAdjustmentRect(mapXY[0],mapXY[1]);
-                // rect에 포함이 되어야만 방향 조정한다
-                if(adjustmentRect[0].intersect(x,y,x+enemyScale,y+enemyScale)
-                && adjustmentRect[1].intersect(x,y,x+enemyScale,y+enemyScale)){
-                    // 방향 전환을 한다.
-                    e.setDirection(direction);
-                }else{
-                    // 방향전환을 하지 않는다
-                    direction = e.getDirection();
-                }
-            }
-            switch(direction){
-                // 왼쪽 방향으로 간다.
-                case 0:
-                    e.setX(x-e.getSpeed());
-                    break;
-                // 위쪽 방향으로 간다.
-                case 1:
-                    e.setY(y-e.getSpeed());
-                    break;
-                // 오른쪽 방향으로 간다.
-                case 2:
-                    e.setX(x+e.getSpeed());
-                    break;
-                // 아래쪽 방향으로 간다.
-                case 3:
-                    e.setY(y+e.getSpeed());
-                    break;
-                // 마지막 경로이다. 움직일 필요없음
-                case -1 :
-                    break;
-            }
-            //TODO :  그 이전에 일단 중앙으로 가야한다.
-            // left top right bottom
-            // 중심부에 오는지 확인
-//            Rect adjustmentRect = getPathAdjustmentRect(mapXY[0],mapXY[1]);
-//            if(adjustmentRect.contains(x,y)){
-//                // rect에 포함이 되어야만 방향 조정한다
-//                e.setDirection(direction);
-//                switch(direction){
-//                    // 왼쪽 방향으로 간다.
-//                    case 0:
-//                        e.setX(x-e.getSpeed());
-//                        break;
-//                    // 위쪽 방향으로 간다.
-//                    case 1:
-//                        e.setY(y-e.getSpeed());
-//                        break;
-//                    // 오른쪽 방향으로 간다.
-//                    case 2:
-//                        e.setX(x+e.getSpeed());
-//                        break;
-//                    // 아래쪽 방향으로 간다.
-//                    case 3:
-//                        e.setY(y+e.getSpeed());
-//                        break;
-//                    // 마지막 경로이다. 움직일 필요없음
-//                    case -1 :
-//                        break;
-//                }
-//            }else{
-//
-//            }
-        }
+        // 타워 생성
+        towerInit();
+        // 적 생성 및 이동
+        enemyInit();
+        enemyMove();
         counter++;
-
     }
+    // touch 시 focus 얻는 이벤트
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int keyAction = event.getAction();
         // touch 되는 위치
         int x = (int)event.getX();
         int y = (int)event.getY();
-
 
         Log.i("TOUCH","EVENT executed");
 
@@ -441,7 +343,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         // MOVE, UP 관련 이벤트가 연이어 발생하게 할려면 true 를 반환해주어야 한다.
         return true;
     }
-
+    /*
+    각종 좌표 계산
+     */
     // 타일이 클릭되었는지를 확인
     public void checkTileClick(int x, int y){
         // tile 안이 touch 된 상태인지
@@ -480,7 +384,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
             ((GameActivity)getContext()).setMenuVisibility(false);
         }
     }
-
+    // json object로 된 tower 정보를 저장 -> 타워 생성에 이용
     public Tower parseJSONTowerInfo(String jsonString){
         try{
             JSONObject towerInfoJSONObject = new JSONObject(jsonString);
@@ -492,13 +396,12 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
 //            Singleton.log("tower code : " + towerCode);
             Tower tower = new Tower(towerCode,name,price,image);
             tower.initialSetting();
+//            Singleton.log("parse - tower range : " + tower.getTowerRange());
+
             return tower;
         }catch(Exception e){
             return null;
         }
-    }
-    public void doPrepare(){
-        // 스레드 반복하기 이전에
     }
     // 적의 이동 경로 설정
     public void setEnemyPath(){
@@ -635,15 +538,15 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         return parsedCoordinate;
     }
     // x,y 좌표에서 진행할 방향을 return
+    public int getDirection(int[] coordinate){
+        // x, y는 tile 기준 좌표
+        int pathDirection = (int)enemyPathMap.get(coordinate[0]+","+coordinate[1]);
+//        Singleton.log("coordinate key : " +coordinate[0]+","+coordinate[1]);
+        return pathDirection;
+    }
     public int getDirection(int x,int y){
         // x, y는 tile 기준 좌표
         int pathDirection = (int)enemyPathMap.get(x+","+y);
-        return pathDirection;
-    }
-    public int getDirection(int[] coordinate){
-//        Singleton.log("coordinate key : " +coordinate[0]+","+coordinate[1]);
-        // x, y는 tile 기준 좌표
-        int pathDirection = (int)enemyPathMap.get(coordinate[0]+","+coordinate[1]);
         return pathDirection;
     }
     // 적 경로 조정하기 위한 Rect
@@ -663,5 +566,215 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                         new Rect(left,top,left+rectLength,top+rectLength)
                         ,new Rect(subRectLeft,subRectTop,subRectLeft+rectLength,subRectTop+rectLength)
         };
+    }
+    // map 좌표 -> pixel 좌표 -> 중심좌표 조정
+    public int[] getCenteredCoordinate(int[] mappedCoordinate){
+        int centeredX = baseX + mappedCoordinate[0]*tileLength + tileLength/2;
+        int centeredY = baseY + mappedCoordinate[1]*tileLength + tileLength/2;
+        return new int[]{centeredX,centeredY};
+    }
+    // tower - enemy 간 거리 반환
+    public int getDistance(Tower tower,Enemy enemy){
+        int[] towerCoordinate = tower.getCenteredPixel();
+        int[] enemyCoordinate = enemy.getCenteredPixel();
+        int distance = (int)Math.sqrt(Math.pow(towerCoordinate[0]-enemyCoordinate[0],2)+Math.pow(towerCoordinate[1]-enemyCoordinate[1],2));
+        return distance;
+    }
+    // tower - enemy 간 각도 계산
+    public float getAngle(Tower tower,Enemy enemy){
+        int[] towerCoordinate = tower.getCenteredPixel();
+        int[] enemyCoordinate = enemy.getCenteredPixel();
+        // (target y - source y, target x - source x) atan 값을 theta -> degree 로 변환
+        float angle = (float)Math.toDegrees(Math.atan2(enemyCoordinate[1]-towerCoordinate[1],enemyCoordinate[0]-towerCoordinate[0]));
+        if(angle < 0){
+            angle += 360;
+        }
+        return angle;
+    }
+    /*
+    객체 처리 메소드
+     */
+    // 적 객체 생성
+    public void enemyInit(){
+        // 적 생성
+        if(counter%enemySpawnGap == 0){
+            Enemy enemy = new Enemy(0);
+            int[] spawnCoordinate = new int[]{baseX+enemySpawnPoint[0]*tileLength + tileLength/2 - enemyScale/2,baseY+enemySpawnPoint[1]*tileLength + tileLength/2 - enemyScale/2,enemySpawnPoint[2]};
+            enemy.setCoordinate(spawnCoordinate);
+            // 적 중앙 좌표 설정
+            int[] centeredPixel = new int[]{enemy.getX()+enemyScale/2,enemy.getY()+enemyScale/2};
+            enemy.setCenteredPixel(centeredPixel);
+            enemyList.add(enemy);
+        }
+    }
+    // 적 이동
+    public void enemyMove(){
+
+        //TODO :  그 이전에 일단 중앙으로 가야한다.
+        // left top right bottom
+        // 중심부에 오는지 확인
+        // 적 위치 이동
+        for(Enemy e : enemyList){
+            // 좌표를 해시맵으로 해야 순회를 하지 않을 수 있다.
+            int x = e.getX();
+            int y = e.getY();
+            int[] mapXY = getMappedCoordinate(x,y);
+//            Singleton.log("mapXY : " + mapXY[0] + " "+mapXY[1]);
+            int direction = getDirection(mapXY);
+            // 방향이 같으면 그대로 간다
+            if(e.getDirection() == direction){
+                // 그대로 간다.
+
+                // 방향이 다르다면 경로조정용 rect에 좌표가 포함 되는지 파악한다
+                // 좌 상단 rect 와 우하단 rect에 모두 포함되는지
+                // rect에 포함되었다 == 경로 조정한 대로 똑바로 갔다.
+            }else {
+                Rect[] adjustmentRect = getPathAdjustmentRect(mapXY[0],mapXY[1]);
+                // rect에 포함이 되어야만 방향 조정한다
+                if(adjustmentRect[0].intersect(x,y,x+enemyScale,y+enemyScale)
+                        && adjustmentRect[1].intersect(x,y,x+enemyScale,y+enemyScale)){
+                    // 방향 전환을 한다.
+                    e.setDirection(direction);
+                }else{
+                    // 방향전환을 하지 않는다
+                    direction = e.getDirection();
+                }
+            }
+            switch(direction){
+                // 왼쪽 방향으로 간다.
+                case 0:
+                    e.setX(x-e.getSpeed());
+                    break;
+                // 위쪽 방향으로 간다.
+                case 1:
+                    e.setY(y-e.getSpeed());
+                    break;
+                // 오른쪽 방향으로 간다.
+                case 2:
+                    e.setX(x+e.getSpeed());
+                    break;
+                // 아래쪽 방향으로 간다.
+                case 3:
+                    e.setY(y+e.getSpeed());
+                    break;
+                // 마지막 경로이다. 움직일 필요없음
+                case -1 :
+                    break;
+            }
+            // 적 중앙 좌표 설정
+            int[] centeredPixel = new int[]{e.getX()+enemyScale/2,e.getY()+enemyScale/2};
+            e.setCenteredPixel(centeredPixel);
+//            Rect adjustmentRect = getPathAdjustmentRect(mapXY[0],mapXY[1]);
+//            if(adjustmentRect.contains(x,y)){
+//                // rect에 포함이 되어야만 방향 조정한다
+//                e.setDirection(direction);
+//                switch(direction){
+//                    // 왼쪽 방향으로 간다.
+//                    case 0:
+//                        e.setX(x-e.getSpeed());
+//                        break;
+//                    // 위쪽 방향으로 간다.
+//                    case 1:
+//                        e.setY(y-e.getSpeed());
+//                        break;
+//                    // 오른쪽 방향으로 간다.
+//                    case 2:
+//                        e.setX(x+e.getSpeed());
+//                        break;
+//                    // 아래쪽 방향으로 간다.
+//                    case 3:
+//                        e.setY(y+e.getSpeed());
+//                        break;
+//                    // 마지막 경로이다. 움직일 필요없음
+//                    case -1 :
+//                        break;
+//                }
+//            }else{
+//
+//            }
+        }
+    }
+    // tower 객체 생성
+    public void towerInit(){
+        try{
+            SharedPreferences sharedPreferences =  context.getSharedPreferences("game",Context.MODE_MULTI_PROCESS);
+            // tower가 클릭 되었을 때에만 동작
+            if(sharedPreferences.getBoolean("isTowerClick",false)){
+                // focus tile이 있을 때에만 tower를 만든다
+                if(focusedTileCoordinate != null){
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    String towerInfoJSONString = sharedPreferences.getString("towerInfo","error");
+                    Singleton.log(towerInfoJSONString);
+                    Tower tower = parseJSONTowerInfo(towerInfoJSONString);
+                    // 좌표, 타워정보  리스트에 저장
+                    tower.setX(focusedTileCoordinate[1]);
+                    tower.setY(focusedTileCoordinate[0]);
+                    // 중심 픽셀 좌표 등록
+                    int[] centeredCoordinate = getCenteredCoordinate(new int[]{focusedTileCoordinate[1],focusedTileCoordinate[0]});
+                    tower.setCenteredPixel(centeredCoordinate);
+                    towerList.add(tower);
+                    // 다 사용한 shared preference 비워주기
+                    editor.putString("towerInfo","");
+                    editor.putBoolean("isTowerClick",false);
+                    editor.apply();
+//                Singleton.getInstance(context);
+//                Singleton.log("COMMUNICATION_SUCCESS!!!");
+                }
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    /*
+    그리는 메소드
+     */
+    // 맵에 해당하는 타일 그리기
+    public void drawMapTile(Canvas canvas,Paint paint){
+        // 맵에 해당하는 tile 그리기
+        for(int i=0;i<tileWidth; i++){
+            for(int j=0;j<tileHeight; j++){
+                // 전체 타일의 기준 좌표에 타일의 행 열 번호를 이용해서 위치를 정한다
+                rect.set(baseX+i*tileLength,baseY+j*tileLength,baseX+(i+1)*tileLength,baseY+(j+1)*tileLength);
+                // 적들이 지나가는 경로는 focus 갖지 못한다
+                if(tileMap[j][i] == 0){
+                    canvas.drawBitmap(tileImageResized,null,rect,paint);
+                }else if(tileMap[j][i] == 1){
+                    canvas.drawBitmap(enemyTileImageResized,null,rect,paint);
+                }
+            }
+        }
+    }
+    // 타워 그리기
+    public void drawTower(Canvas canvas,Paint paint){
+        // 생성된 타워들을 그림
+        if(!towerList.isEmpty()){
+            for(Tower tower : towerList){
+//                    Singleton.log("towercode :" + tower.getTowerCode());
+                canvas.drawBitmap(towerImageBitmap[tower.getTowerCode()],baseX+tower.getX()*tileLength,baseY+tower.getY()*tileLength,paint);
+            }
+        }
+    }
+    // 적 그리기
+    public void drawEnemy(Canvas canvas,Paint paint){
+        // 적을 그린다
+        if(!enemyList.isEmpty()){
+            for(Enemy enemy : enemyList){
+                canvas.drawBitmap(enemyPelletImage,enemy.getX(),enemy.getY(),paint);
+            }
+        }
+
+    }
+    // focus 얻음 표시 그리기
+    public void drawFocus(Canvas canvas,Paint paint){
+        // focus된 좌표의 타일
+        // 좌표에 해당하는 곳에 테두리 밝은 표시
+        if(focusedTileCoordinate != null){
+            canvas.drawBitmap(focusedTileImage,baseX+focusedTileCoordinate[1]*tileLength,baseY+focusedTileCoordinate[0]*tileLength,paint);
+        }
+
+        if(testBoolean){
+            testBoolean = false;
+            ((GameActivity)getContext()).setMenuVisibility(false);
+        }
     }
 }

@@ -74,6 +74,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
     // 인증 로그인 UI
     implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
+    implementation 'org.jetbrains:annotations-java5:15.0'
     //    annotationProcessor 'com.google.auto.value:auto-value:1.5.2'
 //    implementation 'com.google.firebase:firebase-admin:6.8.1'
 //    implementation 'com.google.firebase:firebase-admin:5.8.0'

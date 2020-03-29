@@ -128,14 +128,12 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
             }
         });
         profileImageView = findViewById(R.id.profile_iv_game);
-        // 배경음 재생
-
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        // mp3 초기화
         musicPlayer = MediaPlayer.create(GameActivity.this,R.raw.skull_fire);
         musicPlayer.setVolume(100,100);
         musicPlayer.setLooping(true);

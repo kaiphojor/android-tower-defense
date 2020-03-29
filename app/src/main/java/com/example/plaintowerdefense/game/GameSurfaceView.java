@@ -70,7 +70,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
 
     // 게임 진행 제어하는 counter
     int counter = 0;
-    int enemySpawnGap = 1000;
+    int enemySpawnGap = 200;
     private Thread thread = null;
     // surfaceview rendering 용
     Thread renderThread = null;
@@ -222,7 +222,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
 
                 synchronized (holder){
                     doDraw(canvas);
-                    Thread.sleep(10);
+                    Thread.sleep(20);
                 }
                 if(canvas != null ){
                     holder.unlockCanvasAndPost(canvas);
@@ -255,47 +255,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
             // TODO : 타워가 공격할 때 image
             //  사거리 내의 적을 탐지 - 우선순위 확인 ( 나중에 시간되면 바꿀 수 있는 것으로..)
             //  적을 공격 -> 적위치 타워위치 를 이용한 빔 이미지
+            // 타워가 공격하는 그림 그리기
+            drawTowerAttack(canvas,paint);
 
-            // 공격 모션 그리기
-            // 적 찾기
-            for(Tower tower : towerList){
-                for(Enemy enemy : enemyList){
-                    // 타워 - 적 간 거리 측정
-                    int distance = getDistance(tower,enemy);
-                    // 사거리 이내에 들어왔을 때 공격
-                    if(distance < tower.getTowerRange()){
-                        Singleton.log("tower-enemy distance : " + distance);
-//                        Singleton.log("tower range : " + tower.getTowerRange());
-//                        Singleton.log("angle : " + angle);
-                        // 빔의 회전 각도값 계산
-                        float angle = getAngle(tower,enemy);
-                        Matrix matrix = new Matrix();
-                        matrix.postRotate(angle);
-                        int[] centeredPixelCoordinate = tower.getCenteredPixel();
-                        // 빔 길이를 타워 - 적 간 거리에 따라 조정
-                        scaledBeamImage = Bitmap.createScaledBitmap(beamImage, distance, 20, true);
-                        // 각도 값에 따라 빔 그림 회전
-                        Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBeamImage,0,0, scaledBeamImage.getWidth(), scaledBeamImage.getHeight(), matrix, true);
-                        /*
-                        android 좌표 사분면
-                        3 | 4
-                        ㅡㅡㅡ
-                        2 | 1
-                         */
-                        // X좌표 보정 - 1사분면 4사분면 : 0, 2사분면 3사분면 : 너비값
-                        int angleCorrectionX = angle <= 90 || angle >= 270 ? 0 : rotatedBitmap.getWidth();
-                        // y좌표 보정 - 1사분면 2사분면 : 0 , 3사분면 4사분면 : 높이값
-                        int angleCorrectionY = angle < 180 ? 0 : rotatedBitmap.getHeight();
-                        // 좌표 보정한 회전된 빔 그림을 그린다
-                        canvas.drawBitmap(rotatedBitmap,centeredPixelCoordinate[0]-angleCorrectionX,centeredPixelCoordinate[1]-angleCorrectionY,paint);
-                        // 공격
-                        // damage 입히기
-                        break;
-                    }else{
-                        // 공격하지 않음
-                    }
-                }
-            }
             // focus 얻음 표시 그리기
             drawFocus(canvas,paint);
         }
@@ -310,7 +272,12 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         towerInit();
         // 적 생성 및 이동
         enemyInit();
+        // 갱신 후 남은 적의 이동
+        enemyUpdate();
         enemyMove();
+        // 타워 쿨타임 감소
+        towerAttack();
+        towerUpdate();
         counter++;
     }
     // touch 시 focus 얻는 이벤트
@@ -725,6 +692,56 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
             e.printStackTrace();
         }
     }
+    // tower 상태 갱신
+    public void towerUpdate(){
+        // 쿨타임 감소
+        for(Tower tower : towerList){
+            tower.reduceCoolDown();
+            tower.reduceBeamImageCountDown();
+        }
+    }
+    public void towerAttack(){
+        // 공격 모션 그리기
+        // 적 찾기
+        for(Tower tower : towerList){
+            if(tower.isAttackEnabled()){
+                // 공격 가능
+                for(Enemy enemy : enemyList){
+                    // 타워 - 적 간 거리 측정
+                    int distance = getDistance(tower,enemy);
+                    // 사거리 이내에 들어왔을 때 공격
+                    if(distance < tower.getTowerRange()){
+                        Singleton.log("tower-enemy distance : " + distance);
+                        // 공격
+                        // 공격 및 피해 적용
+                        enemy.getDamage(tower.getTowerAttackPoint());
+                        tower.resetCoolDown();
+                        tower.setBeamImageCountDown();
+                        // damage 입히기
+                        break;
+                    }else{
+                        // 공격하지 않음
+                    }
+                }
+            }else{
+                // 공격 불가
+//                Singleton.log("can not attack");
+            }
+
+        }
+    }
+    // enemy 상태 갱신
+    public void enemyUpdate(){
+        // iterator 쓰는 건 for each 에서는 현재 element를 제거할 수 없기 때문
+        for (Iterator<Enemy> iterator = enemyList.iterator(); iterator.hasNext();) {
+            Enemy enemy = iterator.next();
+            // 적이 죽었을 경우 목록에서 제거한다
+            if (enemy.isDead()) {
+                // Remove the current element from the iterator and the list.
+                iterator.remove();
+            }
+        }
+    }
     /*
     그리는 메소드
      */
@@ -777,4 +794,108 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
             ((GameActivity)getContext()).setMenuVisibility(false);
         }
     }
+    // 타워가 공격하는 빔 그리기(8frame 동안 보여준다)
+    public void drawTowerAttack(Canvas canvas,Paint paint){
+        // 공격 모션 그리기
+        // 적 찾기
+        for(Tower tower : towerList){
+            // 빔을 보여줄 수 있을 때
+            if(tower.isBeamDisplayable()){
+                // 공격 가능
+                for(Enemy enemy : enemyList){
+                    // 타워 - 적 간 거리 측정
+                    int distance = getDistance(tower,enemy);
+                    // 사거리 이내에 들어왔을 때 공격
+                    if(distance < tower.getTowerRange()){
+                        Singleton.log("tower-enemy distance : " + distance);
+//                        Singleton.log("tower range : " + tower.getTowerRange());
+//                        Singleton.log("angle : " + angle);
+                        // 빔의 회전 각도값 계산
+                        float angle = getAngle(tower,enemy);
+                        Matrix matrix = new Matrix();
+                        matrix.postRotate(angle);
+                        int[] centeredPixelCoordinate = tower.getCenteredPixel();
+                        // 빔 길이를 타워 - 적 간 거리에 따라 조정
+                        scaledBeamImage = Bitmap.createScaledBitmap(beamImage, distance, 20, true);
+                        // 각도 값에 따라 빔 그림 회전
+                        Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBeamImage,0,0, scaledBeamImage.getWidth(), scaledBeamImage.getHeight(), matrix, true);
+                    /*
+                    android 좌표 사분면
+                    3 | 4
+                    ㅡㅡㅡ
+                    2 | 1
+                     */
+                        // X좌표 보정 - 1사분면 4사분면 : 0, 2사분면 3사분면 : 너비값
+                        int angleCorrectionX = angle <= 90 || angle >= 270 ? 0 : rotatedBitmap.getWidth();
+                        // y좌표 보정 - 1사분면 2사분면 : 0 , 3사분면 4사분면 : 높이값
+                        int angleCorrectionY = angle < 180 ? 0 : rotatedBitmap.getHeight();
+                        // 좌표 보정한 회전된 빔 그림을 그린다
+                        canvas.drawBitmap(rotatedBitmap,centeredPixelCoordinate[0]-angleCorrectionX,centeredPixelCoordinate[1]-angleCorrectionY,paint);
+                        break;
+                    }else{
+                        // 공격하지 않음
+                        Singleton.log("can not attack - range");
+                    }
+                }
+            }else{
+                // 빔을 보여줄 수 없음
+                Singleton.log("can not show beam");
+            }
+
+
+        }
+    }
+//    // 타워가 공격하는 빔 그리기(공격 관련 계산도 한꺼번에 적용)
+//    public void drawTowerAttack(Canvas canvas,Paint paint){
+//        // 공격 모션 그리기
+//        // 적 찾기
+//        for(Tower tower : towerList){
+//            if(tower.isAttackEnabled()){
+//                // 공격 가능
+//                for(Enemy enemy : enemyList){
+//                    // 타워 - 적 간 거리 측정
+//                    int distance = getDistance(tower,enemy);
+//                    // 사거리 이내에 들어왔을 때 공격
+//                    if(distance < tower.getTowerRange()){
+//                        Singleton.log("tower-enemy distance : " + distance);
+////                        Singleton.log("tower range : " + tower.getTowerRange());
+////                        Singleton.log("angle : " + angle);
+//                        // 빔의 회전 각도값 계산
+//                        float angle = getAngle(tower,enemy);
+//                        Matrix matrix = new Matrix();
+//                        matrix.postRotate(angle);
+//                        int[] centeredPixelCoordinate = tower.getCenteredPixel();
+//                        // 빔 길이를 타워 - 적 간 거리에 따라 조정
+//                        scaledBeamImage = Bitmap.createScaledBitmap(beamImage, distance, 20, true);
+//                        // 각도 값에 따라 빔 그림 회전
+//                        Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBeamImage,0,0, scaledBeamImage.getWidth(), scaledBeamImage.getHeight(), matrix, true);
+//                        /*
+//                        android 좌표 사분면
+//                        3 | 4
+//                        ㅡㅡㅡ
+//                        2 | 1
+//                         */
+//                        // X좌표 보정 - 1사분면 4사분면 : 0, 2사분면 3사분면 : 너비값
+//                        int angleCorrectionX = angle <= 90 || angle >= 270 ? 0 : rotatedBitmap.getWidth();
+//                        // y좌표 보정 - 1사분면 2사분면 : 0 , 3사분면 4사분면 : 높이값
+//                        int angleCorrectionY = angle < 180 ? 0 : rotatedBitmap.getHeight();
+//                        // 좌표 보정한 회전된 빔 그림을 그린다
+//                        canvas.drawBitmap(rotatedBitmap,centeredPixelCoordinate[0]-angleCorrectionX,centeredPixelCoordinate[1]-angleCorrectionY,paint);
+//                        // 공격
+//                        // 공격 및 피해 적용
+//                        enemy.getDamage(tower.getTowerAttackPoint());
+//                        tower.resetCoolDown();
+//                        // damage 입히기
+//                        break;
+//                    }else{
+//                        // 공격하지 않음
+//                    }
+//                }
+//            }else{
+//                // 공격 불가
+//                Singleton.log("can not attack");
+//            }
+//
+//        }
+//    }
 }

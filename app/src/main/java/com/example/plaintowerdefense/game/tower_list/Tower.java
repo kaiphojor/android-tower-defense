@@ -1,9 +1,5 @@
 package com.example.plaintowerdefense.game.tower_list;
 
-import android.content.Context;
-
-import com.example.plaintowerdefense.R;
-
 /*
 타워 클래스
 이름
@@ -17,6 +13,11 @@ public class Tower {
     private int towerAttackPoint;
     private int towerAttackSpeed;
     private int towerRange;
+    private int towerDelay;
+    private int towerCoolDown;
+    // 빔 이미지를 좀더 오래 표시할 수 있도록 하는 변수
+    private int beamImageTime;
+    private int beamImageCountDown;
     // 좌표
     private int x;
     private int y;
@@ -44,33 +45,39 @@ public class Tower {
         towerLevel = 1;
         switch(towerCode){
             case 0:
-                towerAttackPoint = 0;
-                towerAttackSpeed = 10;
-                towerRange = 400;
+                towerAttackPoint = 1;
+                towerAttackSpeed = 50;
+                towerRange = 300;
                 break;
             case 1:
-                towerAttackPoint = 20;
+                towerAttackPoint = 2;
                 towerAttackSpeed = 10;
-                towerRange = 20;
+                towerRange = 300;
                 break;
             case 2:
-                towerAttackPoint = 30;
+                towerAttackPoint = 3;
                 towerAttackSpeed = 10;
-                towerRange = 20;
+                towerRange = 300;
                 break;
             case 3:
-                towerAttackPoint = 40;
+                towerAttackPoint = 4;
                 towerAttackSpeed = 10;
-                towerRange = 20;
+                towerRange = 500;
                 break;
             case 4:
-                towerAttackPoint = 50;
+                towerAttackPoint = 5;
                 towerAttackSpeed = 10;
-                towerRange = 20;
+                towerRange = 500;
                 break;
             default :
                 break;
         }
+        // 공격 쿨다운 초기화
+        towerDelay = 1000 / towerAttackSpeed;
+        towerCoolDown = 0;
+        // 빔 이미지 지속시간 초기화 - 좀더 오랫동안 보여주려고
+        beamImageTime = 7;
+        beamImageCountDown = 0;
     }
 
     // getter setter
@@ -161,4 +168,44 @@ public class Tower {
     public void setCenteredPixel(int[] centeredPixel) {
         this.centeredPixel = centeredPixel;
     }
+
+    public int getTowerDelay() {
+        return towerDelay;
+    }
+
+    public void setTowerDelay(int towerDelay) {
+        this.towerDelay = towerDelay;
+    }
+
+    public int getTowerCoolDown() {
+        return towerCoolDown;
+    }
+
+    public void setTowerCoolDown(int towerCoolDown) {
+        this.towerCoolDown = towerCoolDown;
+    }
+    // 공격 쿨타임 다 찼는지 여부
+    public boolean isAttackEnabled(){
+        return towerCoolDown <= 0;
+    }
+    // 쿨타임 감소
+    public void reduceCoolDown(){
+        towerCoolDown--;
+    }
+    // 쿨타임 초기화
+     public void resetCoolDown(){
+        towerCoolDown = towerDelay;
+     }
+     // 빔 이미지 시간 설정(0이상 일때만 보임)
+     public void setBeamImageCountDown(){
+        beamImageCountDown = beamImageTime;
+     }
+     // 빔 이미지 카운트 다운
+     public void reduceBeamImageCountDown(){
+         beamImageCountDown--;
+     }
+     // 빔을 화면에 표시할 수 있는지 여부
+     public boolean isBeamDisplayable(){
+        return beamImageCountDown > 0;
+     }
 }

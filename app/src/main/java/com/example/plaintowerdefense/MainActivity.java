@@ -66,37 +66,6 @@ public class MainActivity extends BaseActivity {
     private static ImageView tv;
 
 
-    private final static Handler imageSwitchHandler = new Handler() {
-        public void handleMessage(Message msg) {
-//            msg.what += 1;
-//            remainingSecond--;
-            // 처음 시작 할 때 세팅
-            /*
-            0일 때 -> next . 1
-            1 next 2
-            2 next 3
-            3 next 4
-            4 0 -> 1
-             */
-            if (msg.what == -1) {
-                imageSwitcher.setDisplayedChild(0);
-                msg.what = 1;
-            } else if (msg.what < 4) {
-                imageSwitcher.showNext();
-                msg.what += 1;
-            } else {
-                imageSwitcher.setDisplayedChild(0);
-                msg.what = 1;
-            }
-            imageSwitchHandler.sendEmptyMessageDelayed(msg.what, 5000);
-//            shakeTimeLeftTextView.setText(msg.what+"초");
-//            if(msg.what > 0){
-            // 메세지를 처리하고 또다시 핸들러에 메세지 전달 (1000ms 지연)
-//            }else{
-//                isShakeAvailable = false;
-//            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -321,8 +290,8 @@ public class MainActivity extends BaseActivity {
         // 그림이 화면에 보이는 시간은 5초, 빈화면은 1초간 뜨게한다
         int delay;
         if(!isfadeOut){
-            // fade in 일때는 투명 -> 보통의 그림이어야한다.
-            // 안그러면 뚝뚝 끊ㄱ미
+            // fade in 일때는 투명 -> 불투명이어야한다.
+            // 안그러면 뚝뚝 끊겨서 보임
             imageView.setAlpha(0f);
             delay = 1000;
         }else{
@@ -339,6 +308,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onAnimationStart(Animation animation) {
             }
+            // 재귀 호출 부분
             @Override
             public void onAnimationEnd(Animation animation) {
                 if (isfadeOut) {
@@ -369,7 +339,7 @@ public class MainActivity extends BaseActivity {
 
     }
 
-
+    // 원래 잘되는 예제
     private void animate(final ImageView imageView, final int images[], final int imageIndex, final boolean forever) {
 
         //imageView <-- The View which displays the images
@@ -419,4 +389,39 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
+
+    // image switcher view - 사진 2개만 허용
+    private final static Handler imageSwitchHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            /*
+            사진 전환
+            0일 때 -> next . 1
+            1 next 2
+            2 next 3
+            3 next 4
+            4 0 -> 1
+             */
+            if (msg.what == -1) {
+                imageSwitcher.setDisplayedChild(0);
+                msg.what = 1;
+            } else if (msg.what < 4) {
+                imageSwitcher.showNext();
+                msg.what += 1;
+            } else {
+                imageSwitcher.setDisplayedChild(0);
+                msg.what = 1;
+            }
+            imageSwitchHandler.sendEmptyMessageDelayed(msg.what, 5000);
+            //            msg.what += 1;
+//            remainingSecond--;
+            // 처음 시작 할 때 세팅
+
+//            shakeTimeLeftTextView.setText(msg.what+"초");
+//            if(msg.what > 0){
+            // 메세지를 처리하고 또다시 핸들러에 메세지 전달 (1000ms 지연)
+//            }else{
+//                isShakeAvailable = false;
+//            }
+        }
+    };
 }

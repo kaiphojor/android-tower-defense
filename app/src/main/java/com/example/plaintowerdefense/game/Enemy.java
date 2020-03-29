@@ -2,7 +2,7 @@ package com.example.plaintowerdefense.game;
 
 public class Enemy {
     int enemyCode;
-    int health;
+    int healthPoint;
     int attackPoint;
     int speed;
     int x;
@@ -15,18 +15,18 @@ public class Enemy {
         enemyCode = code;
         switch(code){
             case 0:
-                health = 1;
+                healthPoint = 150;
                 attackPoint =1;
                 speed = 5;
                 break;
             case 1:
-                health = 2;
+                healthPoint = 20;
                 attackPoint =1;
                 speed = 2;
                 break;
             case 2:
-                health = 1;
-                attackPoint =4;
+                healthPoint = 10;
+                attackPoint = 4;
                 speed = 1;
                 break;
             default :
@@ -42,12 +42,12 @@ public class Enemy {
     }
 
 
-    public int getHealth() {
-        return health;
+    public int getHealthPoint() {
+        return healthPoint;
     }
 
-    public void setHealth(int health) {
-        this.health = health;
+    public void setHealthPoint(int healthPoint) {
+        this.healthPoint = healthPoint;
     }
 
     public int getAttackPoint() {
@@ -104,5 +104,14 @@ public class Enemy {
 
     public void setCenteredPixel(int[] centeredPixel) {
         this.centeredPixel = centeredPixel;
+    }
+
+    // tower 피해 적용
+    public void getDamage(int damage){
+        healthPoint -= damage;
+    }
+    // 죽었는지 안죽었는지 확인
+    public boolean isDead(){
+        return healthPoint <= 0;
     }
 }

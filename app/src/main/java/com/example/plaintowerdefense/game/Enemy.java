@@ -1,6 +1,7 @@
 package com.example.plaintowerdefense.game;
 
 public class Enemy {
+    String name;
     int enemyCode;
     int healthPoint;
     int attackPoint;
@@ -15,16 +16,19 @@ public class Enemy {
         enemyCode = code;
         switch(code){
             case 0:
+                name = "minion";
                 healthPoint = 150;
                 attackPoint =1;
                 speed = 5;
                 break;
             case 1:
+                name = "boss";
                 healthPoint = 20;
                 attackPoint =1;
                 speed = 2;
                 break;
             case 2:
+                name = "other";
                 healthPoint = 10;
                 attackPoint = 4;
                 speed = 1;
@@ -41,6 +45,13 @@ public class Enemy {
         direction = coordinate[2];
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public int getHealthPoint() {
         return healthPoint;
@@ -97,7 +108,7 @@ public class Enemy {
     public void setDirection(int direction) {
         this.direction = direction;
     }
-
+    // 타일 중심부 픽셀 좌표 반환 - 타워 공격 이미지 출력 위한 정보
     public int[] getCenteredPixel() {
         return centeredPixel;
     }

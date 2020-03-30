@@ -29,11 +29,18 @@ import com.example.plaintowerdefense.game.bgm.MusicPlayerSingleton;
 import com.example.plaintowerdefense.game.tower_list.Tower;
 import com.example.plaintowerdefense.game.tower_list.TowerListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 public class GameActivity extends BaseActivity implements View.OnClickListener, MediaPlayer.OnPreparedListener {
+    // 상단에 표시하는 게임 진행 정보
+    TextView healthPointView;
+    TextView coinCountView;
+    Button startButton;
+    TextView waveTextView;
+
     // 임시
     Button temporaryResultButton;
     TextView temporaryTextView;
@@ -56,9 +63,9 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
     // 배경음악
 //    BackgroundMusic backgroundMusic = new BackgroundMusic();
 //    MediaPlayer musicPlayer;
-
-
+    // mp3 player singleton
     MediaPlayer musicPlayer = MusicPlayerSingleton.getInstance();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +73,11 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
         setContentView(R.layout.activity_game);
         Singleton.getInstance(context);
         // view 연결 & click listener 등록
+        startButton = findViewById(R.id.start_bt_game);
+        healthPointView = findViewById(R.id.health_point_tv_game);
+        coinCountView = findViewById(R.id.coin_tv_game);
+        waveTextView = findViewById(R.id.wave_tv_game);
+
         temporaryResultButton = findViewById(R.id.temporary_bt_game);
         temporaryResultButton.setOnClickListener(this);
         temporaryTextView = findViewById(R.id.test_tv_game);
@@ -76,42 +88,42 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
         gameView = findViewById(R.id.sv_game);
         // tower 목록 초기화
         towerList = new ArrayList<Tower>();
-        towerList.add(new Tower(0,getString(R.string.tower_code_1),10,R.drawable.red_tile));
-        towerList.add(new Tower(1,getString(R.string.tower_code_2),30,R.drawable.orange_tile));
-        towerList.add(new Tower(2,getString(R.string.tower_code_3),40,R.drawable.yellow_tile));
-        towerList.add(new Tower(3,getString(R.string.tower_code_4),50,R.drawable.light_green_tile));
-        towerList.add(new Tower(4,getString(R.string.tower_code_5),60,R.drawable.green_tile));
+        towerList.add(new Tower(0, getString(R.string.tower_code_1), 10, R.drawable.red_tile));
+        towerList.add(new Tower(1, getString(R.string.tower_code_2), 30, R.drawable.orange_tile));
+        towerList.add(new Tower(2, getString(R.string.tower_code_3), 40, R.drawable.yellow_tile));
+        towerList.add(new Tower(3, getString(R.string.tower_code_4), 50, R.drawable.light_green_tile));
+        towerList.add(new Tower(4, getString(R.string.tower_code_5), 60, R.drawable.green_tile));
         // adapter 초기화 및 view에 연결
-        towerListAdapter = new TowerListAdapter(this,towerList);
-        towerListAdapter.setOnTowerClickListener(new TowerListAdapter.OnTowerClickListener(){
+        towerListAdapter = new TowerListAdapter(this, towerList);
+        towerListAdapter.setOnTowerClickListener(new TowerListAdapter.OnTowerClickListener() {
             // 타워 목록에서 타워를 클릭 했을 때
             @Override
-            public void onTowerClick(View v, int position){
+            public void onTowerClick(View v, int position) {
                 Toast.makeText(getApplicationContext(),
                         towerListAdapter.getItem(position).getName(),
-                Toast.LENGTH_LONG).show();
+                        Toast.LENGTH_LONG).show();
                 // 돈이 충분하다면 shared preference 에 저장 ( GameActivity와 GameSurfaceView 통신용)
-                SharedPreferences sharedPreferences = getSharedPreferences("game",MODE_MULTI_PROCESS | MODE_WORLD_WRITEABLE);
-                try{
+                SharedPreferences sharedPreferences = getSharedPreferences("game", MODE_MULTI_PROCESS | MODE_WORLD_WRITEABLE);
+                try {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     Tower tower = towerList.get(position);
                     // json object에 클릭한 타워정보 저장
                     JSONObject towerInfoJSON = new JSONObject();
-                    towerInfoJSON.put("towerCode",tower.getTowerCode());
-                    towerInfoJSON.put("name",tower.getName());
-                    towerInfoJSON.put("price",tower.getPrice());
-                    towerInfoJSON.put("image",tower.getImageResource());
+                    towerInfoJSON.put("towerCode", tower.getTowerCode());
+                    towerInfoJSON.put("name", tower.getName());
+                    towerInfoJSON.put("price", tower.getPrice());
+                    towerInfoJSON.put("image", tower.getImageResource());
                     String towerInfoJSONString = towerInfoJSON.toString();
 
 
                     // tower click 여부와 tower 정보 shared preference에 저장
 //                    editor.putBoolean("isTowerClick", false);
-                    editor.putBoolean("isTowerClick",true);
-                    editor.putString("towerInfo",towerInfoJSONString.toString());
+                    editor.putBoolean("isTowerClick", true);
+                    editor.putString("towerInfo", towerInfoJSONString.toString());
                     editor.apply();
                     // tower code는 제대로 전달됨
 //                    Singleton.log("tower code : "+ tower.getTowerCode()+"");
-                }catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -121,21 +133,22 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
         // 로그인 상태 표시
         idTextView = findViewById(R.id.username_tv_game);
         //임시 click listener
-        idTextView.setOnClickListener(new View.OnClickListener(){
+        idTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
         });
         profileImageView = findViewById(R.id.profile_iv_game);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         // mp3 초기화
-        musicPlayer = MediaPlayer.create(GameActivity.this,R.raw.skull_fire);
-        musicPlayer.setVolume(100,100);
+        musicPlayer = MediaPlayer.create(GameActivity.this, R.raw.skull_fire);
+        musicPlayer.setVolume(100, 100);
         musicPlayer.setLooping(true);
         // 준비되었을 때 시작하기 위한 listener
         musicPlayer.setOnPreparedListener(this);
@@ -148,52 +161,37 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
 
     }
 
-    public void fuckfuck(final int position){
+    public void fuckfuck(final int position) {
         // listener
 //        towerClickListener.onCreateClick(position);
 
     }
-    public void setTextView(final String text){
-        GameActivity.this.runOnUiThread(new Runnable() {
-            public void run() {
-                temporaryTextView.setText(text);
-            }
-        });
-    }
-    // side menu가 보이는지 여부를 결정. focus 획득 혹은 button click에 따라 수행됨
-    public void setMenuVisibility(final boolean visibilityParameter){
-        GameActivity.this.runOnUiThread(new Runnable() {
-            public void run() {
-                int visibility = visibilityParameter ? View.VISIBLE : View.GONE;
-                sideMenuLayout.setVisibility(visibility);
-            }
-        });
-    }
+
 
     @Override
     protected void onStart() {
         super.onStart();
         // 로그인한 계정에 따라 닉네임/프로필 세팅
         LoginSingleton.getInstance(context);
-        LoginSingleton.loginOnStart(idTextView,profileImageView);
+        LoginSingleton.loginOnStart(idTextView, profileImageView);
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        switch(id){
+        switch (id) {
             case R.id.temporary_bt_game:
-                 // 액티비티를 완전히 끝내버리지 않으면 surfaceview가 계속 rendering 해서 전환이 불가능하다
+                // 액티비티를 완전히 끝내버리지 않으면 surfaceview가 계속 rendering 해서 전환이 불가능하다
                 ((Activity) context).finish();
-                intent = new Intent(context,RewardActivity.class);
+                intent = new Intent(context, RewardActivity.class);
                 startActivity(intent);
                 break;
             // 사이드 메뉴가 보이는 것을 버튼 클릭으로 전환.
             case R.id.menu_bt_game:
-                if(sideMenuLayout.getVisibility() == View.GONE){
+                if (sideMenuLayout.getVisibility() == View.GONE) {
 //                    sideMenuLayout.setVisibility(View.VISIBLE);
                     setMenuVisibility(true);
-                }else{
+                } else {
                     sideMenuLayout.setVisibility(View.GONE);
 //                    setMenuVisibility(false);
                 }
@@ -230,7 +228,7 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
     }
     // 음악 실행 - async
 
-//    public class BackgroundMusic extends AsyncTask<MusicContext, Void, Void> {
+    //    public class BackgroundMusic extends AsyncTask<MusicContext, Void, Void> {
 //        // 실행할 activity와 음악
 //        Context context;
 //        private int resourceNumber;
@@ -260,4 +258,57 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
 //            musicPlayer = null;
 //        }
 //    }
+    /*
+    GameSurfaceView에서 호출하는 메소드
+     */
+    public void setTextView(final String text) {
+        GameActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+                temporaryTextView.setText(text);
+            }
+        });
+    }
+    // coin 숫자 설정
+    public void setCoinCountView(final String coinCount) {
+        GameActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+                coinCountView.setText(coinCount);
+            }
+        });
+    }
+    // 체력 숫자 설정
+    public void setHealthPointView(final String healthPoint) {
+        GameActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+                healthPointView.setText(healthPoint);
+            }
+        });
+    }
+    // 스테이지 설정
+    public void setWaveTextView(final String stageText) {
+        GameActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+                waveTextView.setText(stageText);
+            }
+        });
+    }
+    // 시작 버튼 설정
+    public void setstartButton(final String buttonText) {
+        GameActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+                startButton.setText(buttonText);
+            }
+        });
+    }
+
+    // side menu가 보이는지 여부를 결정. focus 획득 혹은 button click에 따라 수행됨
+    public void setMenuVisibility(final boolean visibilityParameter) {
+        GameActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+                int visibility = visibilityParameter ? View.VISIBLE : View.GONE;
+                sideMenuLayout.setVisibility(visibility);
+            }
+        });
+    }
+
 }

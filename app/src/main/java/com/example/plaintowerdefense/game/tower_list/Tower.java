@@ -13,7 +13,9 @@ public class Tower {
     private int towerAttackPoint;
     private int towerAttackSpeed;
     private int towerRange;
+    // 타워 공격 딜레이
     private int towerDelay;
+    // 현재 적용되고 있는 쿨다운 시간
     private int towerCoolDown;
     // 빔 이미지를 좀더 오래 표시할 수 있도록 하는 변수
     private int beamImageTime;
@@ -152,7 +154,6 @@ public class Tower {
     public void setX(int x) {
         this.x = x;
     }
-
     public int getY() {
         return y;
     }
@@ -161,13 +162,6 @@ public class Tower {
         this.y = y;
     }
 
-    public int[] getCenteredPixel() {
-        return centeredPixel;
-    }
-
-    public void setCenteredPixel(int[] centeredPixel) {
-        this.centeredPixel = centeredPixel;
-    }
 
     public int getTowerDelay() {
         return towerDelay;
@@ -183,6 +177,14 @@ public class Tower {
 
     public void setTowerCoolDown(int towerCoolDown) {
         this.towerCoolDown = towerCoolDown;
+    }
+    // 타일 중심부 픽셀 좌표 반환 - 타워 공격 이미지 출력 위한 정보
+    public int[] getCenteredPixel() {
+        return centeredPixel;
+    }
+
+    public void setCenteredPixel(int[] centeredPixel) {
+        this.centeredPixel = centeredPixel;
     }
     // 공격 쿨타임 다 찼는지 여부
     public boolean isAttackEnabled(){
@@ -200,7 +202,7 @@ public class Tower {
      public void setBeamImageCountDown(){
         beamImageCountDown = beamImageTime;
      }
-     // 빔 이미지 카운트 다운
+     // 빔 이미지 카운트 다운 - 1 이상일 동안 이미지 출력
      public void reduceBeamImageCountDown(){
          beamImageCountDown--;
      }

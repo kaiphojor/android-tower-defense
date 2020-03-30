@@ -1,6 +1,8 @@
 package com.example.plaintowerdefense.stage_select;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +13,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
+import com.example.plaintowerdefense.GameLoadingActivity;
 import com.example.plaintowerdefense.R;
+import com.example.plaintowerdefense.Singleton;
+import com.example.plaintowerdefense.game.tower_list.Tower;
 
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 public class StageAdapter extends PagerAdapter {
@@ -41,27 +47,48 @@ public class StageAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
 //        return super.instantiateItem(container, position);
-        View view = null;
+        View page = null;
 
         if(context != null){
             // inflater service 등록
             LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             // xml -> view 변환
-            view = inflater.inflate(R.layout.page_stage,container,false);
-
+            page = inflater.inflate(R.layout.page_stage,container,false);
             // view binding
-            levelTextView = view.findViewById(R.id.level_tv_stage);
-            String levelString = "Level "+(position+1);
+            levelTextView = page.findViewById(R.id.level_tv_stage);
+            final String levelString = "Level "+(position+1);
+            final int level = position + 1;
             levelTextView.setText(levelString);
-            starRatingBar = view.findViewById(R.id.rb_stage);
-            stageImageView = view.findViewById(R.id.iv_stage);
+            starRatingBar = page.findViewById(R.id.rb_stage);
+            stageImageView = page.findViewById(R.id.iv_stage);
             stageImageView.setImageResource(R.drawable.seele_logo);
+            // click listener
+            page.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    Singleton.getInstance(context);
+                    Singleton.log(levelString);
+                    Singleton.log(level+"");
+                    // 선택한 stage level shared preference에 저장
+                    SharedPreferences sharedPreferences = context.getSharedPreferences("game", context.MODE_PRIVATE | context.MODE_WORLD_WRITEABLE);
+                    try {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putInt("stageLevel", level);
+                        editor.apply();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    Intent intent = new Intent(context, GameLoadingActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    context.startActivity(intent);
+                }
+            });
         }
         // 뷰페이저에 추가.
-        container.addView(view);
+        container.addView(page);
 
         // 만든 view를 반환
-        return view;
+        return page;
     }
 
     // 아이템 위치를 반환

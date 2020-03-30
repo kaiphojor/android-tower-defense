@@ -18,13 +18,51 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/title_tv_game"
+            android:id="@+id/wave_tv_game"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="5"
             android:paddingStart="30dp"
-            android:text="게임화면"
+            android:text="wave 0"
             android:textSize="36sp" />
+
+        <Button
+            android:id="@+id/start_bt_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:text="시작"
+            android:textSize="24sp" />
+
+        <ImageView
+            android:id="@+id/health_point_iv_game"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            app:srcCompat="@drawable/pixel_heart_thick_edge" />
+
+        <TextView
+            android:id="@+id/health_point_tv_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:text="30"
+            android:textSize="24sp" />
+
+        <ImageView
+            android:id="@+id/coin_iv_game"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            app:srcCompat="@drawable/coin" />
+
+        <TextView
+            android:id="@+id/coin_tv_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:text="30"
+            android:textSize="24sp" />
 
         <ImageView
             android:id="@+id/profile_iv_game"
@@ -83,8 +121,9 @@
         android:layout_height="wrap_content"
         android:text="임시 결과 화면"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/menu_bt_game"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.333" />
 
     <TextView
         android:id="@+id/test_tv_game"

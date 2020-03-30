@@ -91,7 +91,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
     // 적을 저장한 목록
     ArrayList<Enemy> enemyList;
     HashMap<String,Integer> enemyPathMap;
-
+    // 스테이지 객체
+    Stage stage;
+    int stageLevel;
 
     // 리스너 객체 참조를 저장하는 변수
     private static OnTowerClickListener towerClickListener = null;
@@ -115,6 +117,10 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         super(context);
         holder = getHolder();
     }
+
+    /*
+    surfaceview 기본 메소드
+     */
     // surface 만들어진 직후 호출 - image load, 위치, 스레드 초기화
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
@@ -191,38 +197,26 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         }
     }
 
-    public void resume() {
-        running = true;
-        renderThread = new Thread(this);
-        renderThread.start();
-    }
-    public void pause() {
-        running = false;
-        while(true) {
-            try {
-                renderThread.join();
-                return;
-            } catch (InterruptedException e) {
-                // retry
-            }
-        }
-    }
-    //        Chapter 4 ■ Android for Game Developers
+    // surfaceview가 동작하는 thread 부분
     public void run() {
-        Log.i("width : ",tileWidth+"");
-        Log.i("height : ",tileHeight+"");
+//        Log.i("width : ",tileWidth+"");
+//        Log.i("height : ",tileHeight+"");
+        // 준비과정 - onCreate와 비슷한 기능
         doPrepare();
 
         while(!Thread.currentThread().isInterrupted()) {
             canvas = null;
+            // 유효한 surface 일때만 적용
             if(!holder.getSurface().isValid())
                 continue;
+            // surfaceview의 pixel 수정. 수정이 끝난 canvas가 최종적으로 surface에 그려짐
             try{
                 canvas = holder.lockCanvas();
 
+                // 그림 그리는 부분
                 synchronized (holder){
                     doDraw(canvas);
-                    Thread.sleep(20);
+                    Thread.sleep(10);
                 }
                 if(canvas != null ){
                     holder.unlockCanvasAndPost(canvas);
@@ -231,11 +225,20 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                 e.printStackTrace();
             }finally{
             }
+            // 객체 처리 부분
             doProcess();
         }
     }
+    // rendering 사전 준비
+    // 스레드 반복이전 완료되어야 할 객체 초기화
+    public void doPrepare(){
+        // 선택한 level 불러오기
+        SharedPreferences sharedPreferences =  context.getSharedPreferences("game",Context.MODE_MULTI_PROCESS);
+        stageLevel = sharedPreferences.getInt("stageLevel",1);
+        Singleton.log("stage level : " + stageLevel);
 
-
+    }
+    // rendering - 여러 그림들을 canvas에 그린다.
     public void doDraw(Canvas canvas){
         if(canvas != null){
             // Paint 표시, 그리기 개체
@@ -252,9 +255,6 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
             // 적을 움직이게 해야함 경로대로
             // 현재 경로에서 map 경로만들기
 
-            // TODO : 타워가 공격할 때 image
-            //  사거리 내의 적을 탐지 - 우선순위 확인 ( 나중에 시간되면 바꿀 수 있는 것으로..)
-            //  적을 공격 -> 적위치 타워위치 를 이용한 빔 이미지
             // 타워가 공격하는 그림 그리기
             drawTowerAttack(canvas,paint);
 
@@ -262,11 +262,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
             drawFocus(canvas,paint);
         }
     }
-
-    public void doPrepare(){
-        // 스레드 반복하기 이전에
-    }
-    // 계산 과정을 담는 메소드. canvas에 그리는 doDraw와는 따로 처리한다.
+    // game 진행에서 필요한 객체처리 메소드.
     public void doProcess(){
         // 타워 생성
         towerInit();
@@ -310,256 +306,11 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         // MOVE, UP 관련 이벤트가 연이어 발생하게 할려면 true 를 반환해주어야 한다.
         return true;
     }
+
+
+
     /*
-    각종 좌표 계산
-     */
-    // 타일이 클릭되었는지를 확인
-    public void checkTileClick(int x, int y){
-        // tile 안이 touch 된 상태인지
-        boolean isTileArea;
-
-        // 타일안의 영역인지 구분
-        if(x < baseX || x > baseX + tileLength * tileWidth || y < baseY || y > baseY + tileLength * tileHeight){
-            isTileArea = false;
-        }else{
-            isTileArea = true;
-        }
-        // 타일 안의 영역일 경우
-        if(isTileArea){
-            x -= baseX;
-            y -= baseY;
-            // 좌표 mapping해서 tile 배열의 index로 접근 가능하도록 함
-            int mappedX = x / tileLength;
-            int mappedY = y / tileLength;
-            // 해당하는 곳의 타일을 확인
-            // [y 좌표 = 높이 = 행][x좌표 = 너비 = 열]
-            if(tileMap[mappedY][mappedX] == 0){
-                // 적 타일이 아니면 focus된 곳의 좌표를 저장
-                // focused( int[2] - x,y 좌표 저장. focus 안되었을 때
-                focusedTileCoordinate = new int[]{mappedY,mappedX};
-                Log.i("FOCUS_COMPLETE","x : "+mappedX + " y : "+mappedY);
-            }
-
-            ((GameActivity)getContext()).setTextView("x : "+mappedX +" y : "+mappedY);
-            // 왼쪽에 있던 메뉴가 드러나도록 한다.
-            ((GameActivity)getContext()).setMenuVisibility(true);
-
-        }else{
-            // 타일 밖이면 focus를 잃는다
-//            focusedTileCoordinate = null;
-            //      만약 focus 가 있다면 lose focus
-            ((GameActivity)getContext()).setMenuVisibility(false);
-        }
-    }
-    // json object로 된 tower 정보를 저장 -> 타워 생성에 이용
-    public Tower parseJSONTowerInfo(String jsonString){
-        try{
-            JSONObject towerInfoJSONObject = new JSONObject(jsonString);
-            int towerCode = towerInfoJSONObject.optInt("towerCode");
-            String name = towerInfoJSONObject.optString("name");
-            int price = towerInfoJSONObject.optInt("price");
-            int image = towerInfoJSONObject.optInt("image");
-            // 문제 발생
-//            Singleton.log("tower code : " + towerCode);
-            Tower tower = new Tower(towerCode,name,price,image);
-            tower.initialSetting();
-//            Singleton.log("parse - tower range : " + tower.getTowerRange());
-
-            return tower;
-        }catch(Exception e){
-            return null;
-        }
-    }
-    // 적의 이동 경로 설정
-    public void setEnemyPath(){
-        Singleton.getInstance(context);
-//        tileMap = null;
-        // 현재 x,y 좌표
-        int currentX = enemySpawnPoint[0];
-        int currentY = enemySpawnPoint[1];
-        // 경로 저장 변수 초기화
-        enemyTraversal = new ArrayList<>();
-
-        // tileMap에서 1있는 곳을 찾는다.
-        // 이전 좌표와 일치하지 않는다면 등록한다.
-        // 일치하는 좌표가 없다면 끝
-        // 처음일 때
-        // 중간일 때
-        // 마지막일 때
-        int[] prePos = new int[]{currentX, currentY,-1};
-        int[] curPos = new int[]{currentX,currentY,-1};
-
-        while(true){
-            boolean isFindNextPath = false;
-            // 다음 경로를 찾는다.
-            currentX = prePos[0];
-            currentY = prePos[1];
-
-            int previousX = enemySpawnPoint[0];
-            int previousY = enemySpawnPoint[1];
-            // 이전 경로 위치 설정
-            if(!enemyTraversal.isEmpty()){
-                previousX = enemyTraversal.get(enemyTraversal.size()-1)[0];
-                previousY = enemyTraversal.get(enemyTraversal.size()-1)[1];
-            }
-
-            for(int i=0; i<4; i++){
-                int possibleXCoordinate = prePos[0];
-                int possibleYCoordinate = prePos[1];
-                // 검사 후 맵 왼쪽 끝이 아니라면 검사
-                if(i == 0 && possibleXCoordinate != 0){
-                    possibleXCoordinate -= 1;
-                }
-                // 검사 후 맵 위쪽 끝이 아니라면 검사
-                if(i == 1 && possibleYCoordinate != 0){
-                    possibleYCoordinate -= 1;
-                }
-                // 검사 후 맵 오른쪽 끝이 아니라면 검사
-                if(i == 2 && possibleXCoordinate != tileWidth-1){
-                    possibleXCoordinate += 1;
-                }
-                // 검사 후 맵 아랫쪽 끝이 아니라면 검사
-                if(i == 3 && possibleYCoordinate != tileHeight-1){
-                    possibleYCoordinate += 1;
-                }
-//                Singleton.log("x,y : " + possibleXCoordinate + ", " + possibleYCoordinate);
-                if(tileMap[possibleYCoordinate][possibleXCoordinate] == 1){
-//                    Singleton.log("found! - x,y : " + possibleXCoordinate + ", " + possibleYCoordinate);
-                    // 같은 위치일 때 - pass
-                    if(prePos[0] == possibleXCoordinate && prePos[1] == possibleYCoordinate){
-//                        Singleton.log("같은위치! - x,y : " + possibleXCoordinate + ", " + possibleYCoordinate);
-                        continue;
-                    }
-                    // 처음 값을 집어넣을 때
-                    if(enemyTraversal.isEmpty()){
-                        prePos[2] = i;
-                        // 경로 추가 후
-//                        enemyTraversal.add(new int[]{currentX,currentX,i});
-                        enemyTraversal.add(prePos);
-                        enemyPathMap.put(prePos[0]+","+prePos[1],prePos[2]);
-//                        Singleton.log("1path ("+prePos[0]+","+prePos[1] +") -> " + prePos[2]);
-                        curPos = new int[]{possibleXCoordinate,possibleYCoordinate,-1};
-                        prePos = curPos;
-                        isFindNextPath = true;
-                        break;
-                    // 이전에 방문했던 경로일 경우 - pass
-                    }else if(previousX==possibleXCoordinate && previousY==possibleYCoordinate){
-//                        Singleton.log("이전경로! - x,y : " + possibleXCoordinate + ", " + possibleYCoordinate);
-                        continue;
-                    }else{
-                        prePos[2] = i;
-                        // 경로 추가 후
-//                        enemyTraversal.add(new int[]{currentX,currentX,i});
-                        enemyTraversal.add(prePos);
-                        enemyPathMap.put(prePos[0]+","+prePos[1],prePos[2]);
-//                        Singleton.log("2path ("+prePos[0]+","+prePos[1] +") -> " + prePos[2]);
-//                        Singleton.log("curpos ("+possibleXCoordinate+","+possibleYCoordinate +") -> " + -1);
-                        curPos = new int[]{possibleXCoordinate,possibleYCoordinate,-1};
-                        prePos = curPos;
-                        isFindNextPath = true;
-                        break;
-                    }
-                }else{
-                    // 해당 타일이 적이 다니는 경로가 아닐 때
-//                    Singleton.log("경로이탈! - x,y : " + possibleXCoordinate + ", " + possibleYCoordinate);
-                }
-                // loop 탈출
-                if(i==3){
-//                    break;
-                }
-            }
-            // 마지막일 때
-            if(!isFindNextPath){
-                enemyTraversal.add(curPos);
-                enemyPathMap.put(curPos[0]+","+curPos[1],curPos[2]);
-                break;
-            }
-        }
-        // 값이 잘 들어왔나 확인차 로그 출력
-        Set<String> keyset = enemyPathMap.keySet();
-        for(String key : keyset){
-            Singleton.log("keyset " + key + " : " +enemyPathMap.get(key));
-        }
-        Singleton.log("array list size : " + enemyTraversal.size());
-        Singleton.log("hashmap size : " + enemyPathMap.size());
-
-//        for(int[] enemyPath : enemyTraversal){
-//            Singleton.log("path ("+enemyPath[0]+","+enemyPath[1] +") -> " + enemyPath[2]);
-//        }
-    }
-    // 현재 좌표(픽셀)의 타일 위치를 반환
-    public int[] getMappedCoordinate(int x, int y){
-        x -= baseX;
-        y -= baseY;
-        // 좌표 mapping해서 tile 배열의 index로 접근 가능하도록 함
-        int mappedX = x / tileLength;
-        int mappedY = y / tileLength;
-        return new int[]{mappedX,mappedY};
-    }
-    // comma로 구분된 좌표 문자열을 integer로 변환
-    public int[] getParsedCoordinate(String stringCoordinate){
-        String[] halvedString = stringCoordinate.split(",");
-        int[] parsedCoordinate = new int[2];
-        parsedCoordinate[0] = Integer.parseInt(halvedString[0]);
-        parsedCoordinate[1] = Integer.parseInt(halvedString[1]);
-        return parsedCoordinate;
-    }
-    // x,y 좌표에서 진행할 방향을 return
-    public int getDirection(int[] coordinate){
-        // x, y는 tile 기준 좌표
-        int pathDirection = (int)enemyPathMap.get(coordinate[0]+","+coordinate[1]);
-//        Singleton.log("coordinate key : " +coordinate[0]+","+coordinate[1]);
-        return pathDirection;
-    }
-    public int getDirection(int x,int y){
-        // x, y는 tile 기준 좌표
-        int pathDirection = (int)enemyPathMap.get(x+","+y);
-        return pathDirection;
-    }
-    // 적 경로 조정하기 위한 Rect
-    public Rect[] getPathAdjustmentRect(int x,int y){
-        int rectLength = 2;
-        int centerX = baseX + x*tileLength + tileLength/2;
-        int centerY = baseY + y*tileLength + tileLength/2;
-        // 좌상단 rect 좌표
-        int left = centerX - enemyScale/2 - rectLength/2;
-        int top = centerY - enemyScale/2 - rectLength/2;
-        // 우하단 rect 좌표
-        int subRectLeft = centerX + enemyScale/2 - rectLength/2;
-        int subRectTop = centerY + enemyScale/2 - rectLength/2;
-//        Rect adjustmentRect = new Rect(left,top,left+rectLength,top+rectLength);
-//        Rect[] adjustmentRect =
-        return new Rect[]{
-                        new Rect(left,top,left+rectLength,top+rectLength)
-                        ,new Rect(subRectLeft,subRectTop,subRectLeft+rectLength,subRectTop+rectLength)
-        };
-    }
-    // map 좌표 -> pixel 좌표 -> 중심좌표 조정
-    public int[] getCenteredCoordinate(int[] mappedCoordinate){
-        int centeredX = baseX + mappedCoordinate[0]*tileLength + tileLength/2;
-        int centeredY = baseY + mappedCoordinate[1]*tileLength + tileLength/2;
-        return new int[]{centeredX,centeredY};
-    }
-    // tower - enemy 간 거리 반환
-    public int getDistance(Tower tower,Enemy enemy){
-        int[] towerCoordinate = tower.getCenteredPixel();
-        int[] enemyCoordinate = enemy.getCenteredPixel();
-        int distance = (int)Math.sqrt(Math.pow(towerCoordinate[0]-enemyCoordinate[0],2)+Math.pow(towerCoordinate[1]-enemyCoordinate[1],2));
-        return distance;
-    }
-    // tower - enemy 간 각도 계산
-    public float getAngle(Tower tower,Enemy enemy){
-        int[] towerCoordinate = tower.getCenteredPixel();
-        int[] enemyCoordinate = enemy.getCenteredPixel();
-        // (target y - source y, target x - source x) atan 값을 theta -> degree 로 변환
-        float angle = (float)Math.toDegrees(Math.atan2(enemyCoordinate[1]-towerCoordinate[1],enemyCoordinate[0]-towerCoordinate[0]));
-        if(angle < 0){
-            angle += 360;
-        }
-        return angle;
-    }
-    /*
-    객체 처리 메소드
+    객체 처리 메소드 - doProcess에서 호출
      */
     // 적 객체 생성
     public void enemyInit(){
@@ -700,6 +451,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
             tower.reduceBeamImageCountDown();
         }
     }
+    // tower 공격
     public void towerAttack(){
         // 공격 모션 그리기
         // 적 찾기
@@ -742,8 +494,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
             }
         }
     }
+
     /*
-    그리는 메소드
+    그림 그리는 메소드 - doDraw에서 호출
      */
     // 맵에 해당하는 타일 그리기
     public void drawMapTile(Canvas canvas,Paint paint){
@@ -779,7 +532,6 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                 canvas.drawBitmap(enemyPelletImage,enemy.getX(),enemy.getY(),paint);
             }
         }
-
     }
     // focus 얻음 표시 그리기
     public void drawFocus(Canvas canvas,Paint paint){
@@ -794,7 +546,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
             ((GameActivity)getContext()).setMenuVisibility(false);
         }
     }
-    // 타워가 공격하는 빔 그리기(8frame 동안 보여준다)
+    // 타워 공격 이미지 그리기(공격할 때 뿐만 아니라 일정시간 동안 보여줌)
     public void drawTowerAttack(Canvas canvas,Paint paint){
         // 공격 모션 그리기
         // 적 찾기
@@ -898,4 +650,269 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
 //
 //        }
 //    }
+    /*
+    각종 좌표 계산
+     */
+    // 타일이 클릭되었는지를 확인
+    public void checkTileClick(int x, int y){
+        // tile 안이 touch 된 상태인지
+        boolean isTileArea;
+
+        // 타일안의 영역인지 구분
+        if(x < baseX || x > baseX + tileLength * tileWidth || y < baseY || y > baseY + tileLength * tileHeight){
+            isTileArea = false;
+        }else{
+            isTileArea = true;
+        }
+        // 타일 안의 영역일 경우
+        if(isTileArea){
+            x -= baseX;
+            y -= baseY;
+            // 좌표 mapping해서 tile 배열의 index로 접근 가능하도록 함
+            int mappedX = x / tileLength;
+            int mappedY = y / tileLength;
+            // 해당하는 곳의 타일을 확인
+            // [y 좌표 = 높이 = 행][x좌표 = 너비 = 열]
+            if(tileMap[mappedY][mappedX] == 0){
+                // 적 타일이 아니면 focus된 곳의 좌표를 저장
+                // focused( int[2] - x,y 좌표 저장. focus 안되었을 때
+                focusedTileCoordinate = new int[]{mappedY,mappedX};
+                Log.i("FOCUS_COMPLETE","x : "+mappedX + " y : "+mappedY);
+            }
+
+            ((GameActivity)getContext()).setTextView("x : "+mappedX +" y : "+mappedY);
+            // 왼쪽에 있던 메뉴가 드러나도록 한다.
+            ((GameActivity)getContext()).setMenuVisibility(true);
+
+        }else{
+            // 타일 밖이면 focus를 잃는다
+    //            focusedTileCoordinate = null;
+            //      만약 focus 가 있다면 lose focus
+            ((GameActivity)getContext()).setMenuVisibility(false);
+        }
+    }
+    // json object로 된 tower 정보를 저장 -> 타워 생성에 이용
+    public Tower parseJSONTowerInfo(String jsonString){
+        try{
+            JSONObject towerInfoJSONObject = new JSONObject(jsonString);
+            int towerCode = towerInfoJSONObject.optInt("towerCode");
+            String name = towerInfoJSONObject.optString("name");
+            int price = towerInfoJSONObject.optInt("price");
+            int image = towerInfoJSONObject.optInt("image");
+            // 문제 발생
+//            Singleton.log("tower code : " + towerCode);
+            Tower tower = new Tower(towerCode,name,price,image);
+            tower.initialSetting();
+//            Singleton.log("parse - tower range : " + tower.getTowerRange());
+
+            return tower;
+        }catch(Exception e){
+            return null;
+        }
+    }
+    // 적의 이동 경로 설정
+    public void setEnemyPath(){
+        Singleton.getInstance(context);
+//        tileMap = null;
+        // 현재 x,y 좌표
+        int currentX = enemySpawnPoint[0];
+        int currentY = enemySpawnPoint[1];
+        // 경로 저장 변수 초기화
+        enemyTraversal = new ArrayList<>();
+
+        // tileMap에서 1있는 곳을 찾는다.
+        // 이전 좌표와 일치하지 않는다면 등록한다.
+        // 일치하는 좌표가 없다면 끝
+        // 처음일 때
+        // 중간일 때
+        // 마지막일 때
+        int[] prePos = new int[]{currentX, currentY,-1};
+        int[] curPos = new int[]{currentX,currentY,-1};
+
+        while(true){
+            boolean isFindNextPath = false;
+            // 다음 경로를 찾는다.
+            currentX = prePos[0];
+            currentY = prePos[1];
+
+            int previousX = enemySpawnPoint[0];
+            int previousY = enemySpawnPoint[1];
+            // 이전 경로 위치 설정
+            if(!enemyTraversal.isEmpty()){
+                previousX = enemyTraversal.get(enemyTraversal.size()-1)[0];
+                previousY = enemyTraversal.get(enemyTraversal.size()-1)[1];
+            }
+
+            for(int i=0; i<4; i++){
+                int possibleXCoordinate = prePos[0];
+                int possibleYCoordinate = prePos[1];
+                // 검사 후 맵 왼쪽 끝이 아니라면 검사
+                if(i == 0 && possibleXCoordinate != 0){
+                    possibleXCoordinate -= 1;
+                }
+                // 검사 후 맵 위쪽 끝이 아니라면 검사
+                if(i == 1 && possibleYCoordinate != 0){
+                    possibleYCoordinate -= 1;
+                }
+                // 검사 후 맵 오른쪽 끝이 아니라면 검사
+                if(i == 2 && possibleXCoordinate != tileWidth-1){
+                    possibleXCoordinate += 1;
+                }
+                // 검사 후 맵 아랫쪽 끝이 아니라면 검사
+                if(i == 3 && possibleYCoordinate != tileHeight-1){
+                    possibleYCoordinate += 1;
+                }
+//                Singleton.log("x,y : " + possibleXCoordinate + ", " + possibleYCoordinate);
+                if(tileMap[possibleYCoordinate][possibleXCoordinate] == 1){
+//                    Singleton.log("found! - x,y : " + possibleXCoordinate + ", " + possibleYCoordinate);
+                    // 같은 위치일 때 - pass
+                    if(prePos[0] == possibleXCoordinate && prePos[1] == possibleYCoordinate){
+//                        Singleton.log("같은위치! - x,y : " + possibleXCoordinate + ", " + possibleYCoordinate);
+                        continue;
+                    }
+                    // 처음 값을 집어넣을 때
+                    if(enemyTraversal.isEmpty()){
+                        prePos[2] = i;
+                        // 경로 추가 후
+//                        enemyTraversal.add(new int[]{currentX,currentX,i});
+                        enemyTraversal.add(prePos);
+                        enemyPathMap.put(prePos[0]+","+prePos[1],prePos[2]);
+//                        Singleton.log("1path ("+prePos[0]+","+prePos[1] +") -> " + prePos[2]);
+                        curPos = new int[]{possibleXCoordinate,possibleYCoordinate,-1};
+                        prePos = curPos;
+                        isFindNextPath = true;
+                        break;
+                        // 이전에 방문했던 경로일 경우 - pass
+                    }else if(previousX==possibleXCoordinate && previousY==possibleYCoordinate){
+//                        Singleton.log("이전경로! - x,y : " + possibleXCoordinate + ", " + possibleYCoordinate);
+                        continue;
+                    }else{
+                        prePos[2] = i;
+                        // 경로 추가 후
+//                        enemyTraversal.add(new int[]{currentX,currentX,i});
+                        enemyTraversal.add(prePos);
+                        enemyPathMap.put(prePos[0]+","+prePos[1],prePos[2]);
+//                        Singleton.log("2path ("+prePos[0]+","+prePos[1] +") -> " + prePos[2]);
+//                        Singleton.log("curpos ("+possibleXCoordinate+","+possibleYCoordinate +") -> " + -1);
+                        curPos = new int[]{possibleXCoordinate,possibleYCoordinate,-1};
+                        prePos = curPos;
+                        isFindNextPath = true;
+                        break;
+                    }
+                }else{
+                    // 해당 타일이 적이 다니는 경로가 아닐 때
+//                    Singleton.log("경로이탈! - x,y : " + possibleXCoordinate + ", " + possibleYCoordinate);
+                }
+                // loop 탈출
+                if(i==3){
+//                    break;
+                }
+            }
+            // 마지막일 때
+            if(!isFindNextPath){
+                enemyTraversal.add(curPos);
+                enemyPathMap.put(curPos[0]+","+curPos[1],curPos[2]);
+                break;
+            }
+        }
+        // 값이 잘 들어왔나 확인차 로그 출력
+        Set<String> keyset = enemyPathMap.keySet();
+        for(String key : keyset){
+            Singleton.log("keyset " + key + " : " +enemyPathMap.get(key));
+        }
+        Singleton.log("array list size : " + enemyTraversal.size());
+        Singleton.log("hashmap size : " + enemyPathMap.size());
+
+//        for(int[] enemyPath : enemyTraversal){
+//            Singleton.log("path ("+enemyPath[0]+","+enemyPath[1] +") -> " + enemyPath[2]);
+//        }
+    }
+    // 현재 좌표(픽셀)의 타일 위치를 반환
+    public int[] getMappedCoordinate(int x, int y){
+        x -= baseX;
+        y -= baseY;
+        // 좌표 mapping해서 tile 배열의 index로 접근 가능하도록 함
+        int mappedX = x / tileLength;
+        int mappedY = y / tileLength;
+        return new int[]{mappedX,mappedY};
+    }
+    // comma로 구분된 좌표 문자열을 integer로 변환
+    public int[] getParsedCoordinate(String stringCoordinate){
+        String[] halvedString = stringCoordinate.split(",");
+        int[] parsedCoordinate = new int[2];
+        parsedCoordinate[0] = Integer.parseInt(halvedString[0]);
+        parsedCoordinate[1] = Integer.parseInt(halvedString[1]);
+        return parsedCoordinate;
+    }
+    // x,y 좌표에서 진행할 방향을 return
+    public int getDirection(int[] coordinate){
+        // x, y는 tile 기준 좌표
+        int pathDirection = (int)enemyPathMap.get(coordinate[0]+","+coordinate[1]);
+//        Singleton.log("coordinate key : " +coordinate[0]+","+coordinate[1]);
+        return pathDirection;
+    }
+    public int getDirection(int x,int y){
+        // x, y는 tile 기준 좌표
+        int pathDirection = (int)enemyPathMap.get(x+","+y);
+        return pathDirection;
+    }
+    // 적 경로 조정하기 위한 Rect
+    public Rect[] getPathAdjustmentRect(int x,int y){
+        int rectLength = 2;
+        int centerX = baseX + x*tileLength + tileLength/2;
+        int centerY = baseY + y*tileLength + tileLength/2;
+        // 좌상단 rect 좌표
+        int left = centerX - enemyScale/2 - rectLength/2;
+        int top = centerY - enemyScale/2 - rectLength/2;
+        // 우하단 rect 좌표
+        int subRectLeft = centerX + enemyScale/2 - rectLength/2;
+        int subRectTop = centerY + enemyScale/2 - rectLength/2;
+//        Rect adjustmentRect = new Rect(left,top,left+rectLength,top+rectLength);
+//        Rect[] adjustmentRect =
+        return new Rect[]{
+                new Rect(left,top,left+rectLength,top+rectLength)
+                ,new Rect(subRectLeft,subRectTop,subRectLeft+rectLength,subRectTop+rectLength)
+        };
+    }
+    // map 좌표 -> pixel 좌표 -> 중심좌표 조정
+    public int[] getCenteredCoordinate(int[] mappedCoordinate){
+        int centeredX = baseX + mappedCoordinate[0]*tileLength + tileLength/2;
+        int centeredY = baseY + mappedCoordinate[1]*tileLength + tileLength/2;
+        return new int[]{centeredX,centeredY};
+    }
+    // tower - enemy 간 거리 반환
+    public int getDistance(Tower tower,Enemy enemy){
+        int[] towerCoordinate = tower.getCenteredPixel();
+        int[] enemyCoordinate = enemy.getCenteredPixel();
+        int distance = (int)Math.sqrt(Math.pow(towerCoordinate[0]-enemyCoordinate[0],2)+Math.pow(towerCoordinate[1]-enemyCoordinate[1],2));
+        return distance;
+    }
+    // tower - enemy 간 각도 계산
+    public float getAngle(Tower tower,Enemy enemy){
+        int[] towerCoordinate = tower.getCenteredPixel();
+        int[] enemyCoordinate = enemy.getCenteredPixel();
+        // (target y - source y, target x - source x) atan 값을 theta -> degree 로 변환
+        float angle = (float)Math.toDegrees(Math.atan2(enemyCoordinate[1]-towerCoordinate[1],enemyCoordinate[0]-towerCoordinate[0]));
+        if(angle < 0){
+            angle += 360;
+        }
+        return angle;
+    }
+    // rendering thread 초기화 - surfaceview를 일반 view가 아닌 layout으로 취급했을 때 필요한 것...
+    public void resume() {
+    running = true;
+    renderThread = new Thread(this);
+    renderThread.start();
+}
+    public void pause() {
+        running = false;
+        while(true) {
+            try {
+                renderThread.join();
+                return;
+            } catch (InterruptedException e) {
+                // retry
+            }
+        }
+    }
 }

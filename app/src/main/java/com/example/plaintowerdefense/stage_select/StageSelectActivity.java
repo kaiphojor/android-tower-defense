@@ -61,7 +61,6 @@ public class StageSelectActivity extends BaseActivity implements View.OnClickLis
         //login 상태 관련 view
         idTextView = findViewById(R.id.username_tv_stage_select);
         profileImageView = findViewById(R.id.profile_iv_stage_select);
-
     }
 
     @Override
@@ -70,7 +69,6 @@ public class StageSelectActivity extends BaseActivity implements View.OnClickLis
         // 로그인한 계정에 따라 닉네임/프로필 세팅
         LoginSingleton.getInstance(context);
         LoginSingleton.loginOnStart(idTextView,profileImageView);
-
     }
 
     @Override

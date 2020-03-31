@@ -17,7 +17,7 @@ public class Enemy {
         switch(code){
             case 0:
                 name = "minion";
-                healthPoint = 150;
+                healthPoint = 20; // 150 - 죽이기 어려움
                 attackPoint =1;
                 speed = 5;
                 break;

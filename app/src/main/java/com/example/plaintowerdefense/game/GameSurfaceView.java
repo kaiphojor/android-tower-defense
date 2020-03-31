@@ -236,7 +236,13 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         SharedPreferences sharedPreferences =  context.getSharedPreferences("game",Context.MODE_MULTI_PROCESS);
         stageLevel = sharedPreferences.getInt("stageLevel",1);
         Singleton.log("stage level : " + stageLevel);
-
+        // stage 초기화
+        stage = new Stage(stageLevel);
+        // 맵 정보를 가져온다
+        tileMap = stage.getMapInfo();
+        // 골드, 체력 세팅
+        ((GameActivity)getContext()).setCoinCountView(stage.getPlayerGold()+"");
+        ((GameActivity)getContext()).setHealthPointView(stage.getPlayerHealthPoint()+"");
     }
     // rendering - 여러 그림들을 canvas에 그린다.
     public void doDraw(Canvas canvas){
@@ -307,8 +313,6 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         return true;
     }
 
-
-
     /*
     객체 처리 메소드 - doProcess에서 호출
      */
@@ -325,14 +329,28 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
             enemyList.add(enemy);
         }
     }
-    // 적 이동
+    // enemy 상태 갱신
+    public void enemyUpdate(){
+        // iterator 쓰는 건 for each 에서는 현재 element를 제거할 수 없기 때문
+        for (Iterator<Enemy> iterator = enemyList.iterator(); iterator.hasNext();) {
+            Enemy enemy = iterator.next();
+            // 적이 죽었을 경우 목록에서 제거한다
+            if (enemy.isDead()) {
+                // Remove the current element from the iterator and the list.
+                iterator.remove();
+            }
+        }
+    }
+    // 적 이동 및 경로 끝에 도달했을 때 상태 갱신
     public void enemyMove(){
 
         //TODO :  그 이전에 일단 중앙으로 가야한다.
         // left top right bottom
         // 중심부에 오는지 확인
         // 적 위치 이동
-        for(Enemy e : enemyList){
+        for(Iterator<Enemy> iterator = enemyList.iterator(); iterator.hasNext();) {
+            Enemy e = iterator.next();
+            boolean isEnemyReached= false;
             // 좌표를 해시맵으로 해야 순회를 하지 않을 수 있다.
             int x = e.getX();
             int y = e.getY();
@@ -377,11 +395,27 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                     break;
                 // 마지막 경로이다. 움직일 필요없음
                 case -1 :
+                    // 적이 끝에 도달해서 플레이어에 데미지를 입힘
+                    isEnemyReached = true;
                     break;
             }
-            // 적 중앙 좌표 설정
-            int[] centeredPixel = new int[]{e.getX()+enemyScale/2,e.getY()+enemyScale/2};
-            e.setCenteredPixel(centeredPixel);
+            // 적이 끝까지 도달했다면 플레이어에게 피해를 주고 사라져야한다
+            if(isEnemyReached){
+                int remainingHealthPoint = stage.getPlayerHealthPoint()-e.getAttackPoint();
+                // 3항 연산자가 더 빠른지, Math.max가 더 빠른지 - 동일한 코드이다. 알기 쉽게 3항씀
+                remainingHealthPoint = remainingHealthPoint >= 0 ? remainingHealthPoint: 0;
+                // 피해받고 남은 플레이어 체력을 UI에 표시
+                ((GameActivity)getContext()).setHealthPointView(remainingHealthPoint+"");
+                // surfaceview에서 갖고 있는 객체에도 반영
+                stage.setPlayerHealthPoint(remainingHealthPoint);
+                // 적 삭제
+                iterator.remove();
+            // 적이 진행중이라면 이동한 적의 중앙 좌표를 설정한다
+            }else {
+                // 적 중앙 좌표 설정
+                int[] centeredPixel = new int[]{e.getX()+enemyScale/2,e.getY()+enemyScale/2};
+                e.setCenteredPixel(centeredPixel);
+            }
 //            Rect adjustmentRect = getPathAdjustmentRect(mapXY[0],mapXY[1]);
 //            if(adjustmentRect.contains(x,y)){
 //                // rect에 포함이 되어야만 방향 조정한다
@@ -480,18 +514,6 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
 //                Singleton.log("can not attack");
             }
 
-        }
-    }
-    // enemy 상태 갱신
-    public void enemyUpdate(){
-        // iterator 쓰는 건 for each 에서는 현재 element를 제거할 수 없기 때문
-        for (Iterator<Enemy> iterator = enemyList.iterator(); iterator.hasNext();) {
-            Enemy enemy = iterator.next();
-            // 적이 죽었을 경우 목록에서 제거한다
-            if (enemy.isDead()) {
-                // Remove the current element from the iterator and the list.
-                iterator.remove();
-            }
         }
     }
 
@@ -892,7 +914,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         int[] towerCoordinate = tower.getCenteredPixel();
         int[] enemyCoordinate = enemy.getCenteredPixel();
         // (target y - source y, target x - source x) atan 값을 theta -> degree 로 변환
+        // tangent 값을 y , x 로 나눠 받아서 각 사분면간 구분을 할 수 있도록 한다.
         float angle = (float)Math.toDegrees(Math.atan2(enemyCoordinate[1]-towerCoordinate[1],enemyCoordinate[0]-towerCoordinate[0]));
+        // -pi ~ + pi 범위에서 0 ~ 2 pi 범위로 만들어서 음수 값이 나오지 않게 한다.
         if(angle < 0){
             angle += 360;
         }

@@ -98,6 +98,12 @@ public class GameLoadingActivity extends AppCompatActivity {
             super.onCancelled();
             onBackPressed();
         }
+
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        loadingTask.cancel(true);
+    }
 }

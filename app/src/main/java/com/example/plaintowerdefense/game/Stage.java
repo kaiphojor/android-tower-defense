@@ -6,16 +6,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Stage {
-    int stageCode;
-    int[][] mapInfo;
+    private int stageCode;
+    private int[][] mapInfo;
     // 플레이어가 게임 종료후 받을 보상
-    int playerCredit;
+    private int playerCredit;
     // 플레이어가 타워를 살 때 사용할 골드
-    int playerGold;
+    private int playerGold;
     // stage 별 할당된 player
-    int playerHealthPoint;
+    private int playerHealthPoint;
     // 현재 phase
-    int currentWave;
+    private int currentWave;
     // 죽인 적 정보
     public HashMap<String,Integer> enemyKilled;
     // 게임에서의 총 단계별 정보

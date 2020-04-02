@@ -21,10 +21,21 @@ public class EnemyInfo{
         return name;
     }
 
+
+    // 적 생산 가능한지 판단하기
+    public boolean canGenerate(int currentTime){
+        // 숫자
+        return number > 0 && generationTime == currentTime;
+    }
+    // 적을 생산할 때 수치 갱신 메소드
+    public void postGenerationUpdate(int currentTime){
+        number--;
+        generationTime = currentTime + generationGap;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
-
     public int getNumber() {
         return number;
     }

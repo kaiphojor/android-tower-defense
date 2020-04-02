@@ -97,6 +97,10 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
     // 스테이지 객체
     Stage stage;
     int stageLevel;
+    // 현재 wave에서 생성할 적 정보
+    EnemyInfo[] waveEnemyInfo;
+    static final int MINION = 0;
+    static final int BOSS = 1;
 
     // 리스너 객체 참조를 저장하는 변수
     private static OnTowerClickListener towerClickListener = null;
@@ -252,11 +256,18 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         Singleton.log("stage level : " + stageLevel);
         // stage 초기화
         stage = new Stage(stageLevel);
+        waveEnemyInfo = new EnemyInfo[5];
         // 맵 정보를 가져온다
         tileMap = stage.getMapInfo();
         // 골드, 체력 세팅
         ((GameActivity)getContext()).setCoinCountView(stage.getPlayerGold()+"");
         ((GameActivity)getContext()).setHealthPointView(stage.getPlayerHealthPoint()+"");
+
+        ArrayList waveList = stage.getWaveList();
+        // 현재 wave 반환
+        Wave wave = (Wave)waveList.get(stage.getCurrentWave()-1);
+        wave.getEnemyInfo("minion");
+
     }
     // rendering - 여러 그림들을 canvas에 그린다.
     public void doDraw(Canvas canvas){

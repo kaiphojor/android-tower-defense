@@ -264,9 +264,11 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         ((GameActivity)getContext()).setHealthPointView(stage.getPlayerHealthPoint()+"");
 
         ArrayList waveList = stage.getWaveList();
-        // 현재 wave 반환
+        // 현재 wave 반환 및 적 생성 정보 저장
         Wave wave = (Wave)waveList.get(stage.getCurrentWave()-1);
-        wave.getEnemyInfo("minion");
+        // wave 정보
+        waveEnemyInfo[MINION] = wave.getEnemyInfo("minion");
+        waveEnemyInfo[BOSS] = wave.getEnemyInfo("boss");
 
     }
     // rendering - 여러 그림들을 canvas에 그린다.
@@ -344,15 +346,32 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
     // 적 객체 생성
     public void enemyInit(){
         // 적 생성
-        if(counter%enemySpawnGap == 0){
-            Enemy enemy = new Enemy(0);
-            int[] spawnCoordinate = new int[]{baseX+enemySpawnPoint[0]*tileLength + tileLength/2 - enemyScale/2,baseY+enemySpawnPoint[1]*tileLength + tileLength/2 - enemyScale/2,enemySpawnPoint[2]};
-            enemy.setCoordinate(spawnCoordinate);
-            // 적 중앙 좌표 설정
-            int[] centeredPixel = new int[]{enemy.getX()+enemyScale/2,enemy.getY()+enemyScale/2};
-            enemy.setCenteredPixel(centeredPixel);
-            enemyList.add(enemy);
+        // minion 생성
+        if(waveEnemyInfo[MINION] != null){
+            // 생성 가능한지 확인 (남은 적 수, 시간)
+            if(waveEnemyInfo[MINION].canGenerate(counter)){
+                // 적 정보 갱신
+                waveEnemyInfo[MINION].postGenerationUpdate(counter);
+                // 적 생성
+                Enemy enemy = new Enemy(0);
+                int[] spawnCoordinate = new int[]{baseX+enemySpawnPoint[0]*tileLength + tileLength/2 - enemyScale/2,baseY+enemySpawnPoint[1]*tileLength + tileLength/2 - enemyScale/2,enemySpawnPoint[2]};
+                enemy.setCoordinate(spawnCoordinate);
+                // 적 중앙 좌표 설정
+                int[] centeredPixel = new int[]{enemy.getX()+enemyScale/2,enemy.getY()+enemyScale/2};
+                enemy.setCenteredPixel(centeredPixel);
+                enemyList.add(enemy);
+                // 갱신
+            }
         }
+//        if(counter%enemySpawnGap == 0){
+//            Enemy enemy = new Enemy(0);
+//            int[] spawnCoordinate = new int[]{baseX+enemySpawnPoint[0]*tileLength + tileLength/2 - enemyScale/2,baseY+enemySpawnPoint[1]*tileLength + tileLength/2 - enemyScale/2,enemySpawnPoint[2]};
+//            enemy.setCoordinate(spawnCoordinate);
+//            // 적 중앙 좌표 설정
+//            int[] centeredPixel = new int[]{enemy.getX()+enemyScale/2,enemy.getY()+enemyScale/2};
+//            enemy.setCenteredPixel(centeredPixel);
+//            enemyList.add(enemy);
+//        }
     }
     // enemy 상태 갱신
     public void enemyUpdate(){

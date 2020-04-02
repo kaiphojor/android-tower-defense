@@ -65,7 +65,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
     // 빔 이미지
     Bitmap focusedTileImage;
     // resized image
-    Bitmap beamImage;
+    Bitmap[] beamImage;
     Bitmap enemyPelletImage;
     Bitmap tileImageResized;
     Bitmap enemyTileImageResized;
@@ -146,7 +146,14 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         focusedTileImage =BitmapFactory.decodeResource(res, R.drawable.focused_pixel_500);
         enemyPelletImage = BitmapFactory.decodeResource(res,R.drawable.yellow_pellet);
         enemyPelletImage = BitmapFactory.decodeResource(res,R.drawable.yellow_pellet);
-        beamImage = BitmapFactory.decodeResource(res,R.drawable.red_beam_horizontal);
+        // 빔 이미지 load
+        beamImage = new Bitmap[6];
+        beamImage[0] = BitmapFactory.decodeResource(res,R.drawable.red_beam_horizontal);
+        beamImage[1] = BitmapFactory.decodeResource(res,R.drawable.yellow_beam);
+        beamImage[2] = BitmapFactory.decodeResource(res,R.drawable.yellow_circle_beam);
+        beamImage[3] = BitmapFactory.decodeResource(res,R.drawable.green_beam);
+        beamImage[4] = BitmapFactory.decodeResource(res,R.drawable.sky_blue_beam);
+        beamImage[5] = BitmapFactory.decodeResource(res,R.drawable.sky_blue_circle_beam);
         startPointImage = BitmapFactory.decodeResource(res,R.drawable.watertex0);
         endPointImage = BitmapFactory.decodeResource(res,R.drawable.deathtex3);
         startPointImage = Bitmap.createScaledBitmap(startPointImage, tileLength, tileLength, true);
@@ -603,7 +610,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                         matrix.postRotate(angle);
                         int[] centeredPixelCoordinate = tower.getCenteredPixel();
                         // 빔 길이를 타워 - 적 간 거리에 따라 조정
-                        scaledBeamImage = Bitmap.createScaledBitmap(beamImage, distance, 20, true);
+                        scaledBeamImage = Bitmap.createScaledBitmap(beamImage[tower.getTowerCode()], distance, 20, true);
                         // 각도 값에 따라 빔 그림 회전
                         Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBeamImage,0,0, scaledBeamImage.getWidth(), scaledBeamImage.getHeight(), matrix, true);
                     /*

@@ -25,7 +25,6 @@ public class Tower {
     private int y;
     // 중심 pixel 좌표
     private int[] centeredPixel;
-
     private String name;
 //    private String description;
     private int price;

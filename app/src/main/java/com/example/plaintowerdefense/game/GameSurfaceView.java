@@ -266,7 +266,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         ArrayList waveList = stage.getWaveList();
         // 현재 wave 반환 및 적 생성 정보 저장
         Wave wave = (Wave)waveList.get(stage.getCurrentWave()-1);
-        // wave 정보
+        // wave 정보 탑재
         waveEnemyInfo[MINION] = wave.getEnemyInfo("minion");
         waveEnemyInfo[BOSS] = wave.getEnemyInfo("boss");
 
@@ -354,6 +354,23 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                 waveEnemyInfo[MINION].postGenerationUpdate(counter);
                 // 적 생성
                 Enemy enemy = new Enemy(0);
+                int[] spawnCoordinate = new int[]{baseX+enemySpawnPoint[0]*tileLength + tileLength/2 - enemyScale/2,baseY+enemySpawnPoint[1]*tileLength + tileLength/2 - enemyScale/2,enemySpawnPoint[2]};
+                enemy.setCoordinate(spawnCoordinate);
+                // 적 중앙 좌표 설정
+                int[] centeredPixel = new int[]{enemy.getX()+enemyScale/2,enemy.getY()+enemyScale/2};
+                enemy.setCenteredPixel(centeredPixel);
+                enemyList.add(enemy);
+                // 갱신
+            }
+        }
+        // boss 생성
+        if(waveEnemyInfo[BOSS] != null){
+            // 생성 가능한지 확인 (남은 적 수, 시간)
+            if(waveEnemyInfo[BOSS].canGenerate(counter)){
+                // 적 정보 갱신
+                waveEnemyInfo[BOSS].postGenerationUpdate(counter);
+                // 적 생성
+                Enemy enemy = new Enemy(1);
                 int[] spawnCoordinate = new int[]{baseX+enemySpawnPoint[0]*tileLength + tileLength/2 - enemyScale/2,baseY+enemySpawnPoint[1]*tileLength + tileLength/2 - enemyScale/2,enemySpawnPoint[2]};
                 enemy.setCoordinate(spawnCoordinate);
                 // 적 중앙 좌표 설정

@@ -10,9 +10,10 @@ public class Enemy {
     int y;
     int[] centeredPixel;
     int direction;
+    int rewardGold;
 
     // 적 번호에 따른 초기화
-    public Enemy(int code) {
+    public Enemy(int code){
         enemyCode = code;
         switch(code){
             case 0:
@@ -20,18 +21,21 @@ public class Enemy {
                 healthPoint = 20; // 150 - 죽이기 어려움
                 attackPoint =1;
                 speed = 5;
+                rewardGold = 10;
                 break;
             case 1:
                 name = "boss";
                 healthPoint = 20;
                 attackPoint =1;
                 speed = 2;
+                rewardGold = 50;
                 break;
             case 2:
                 name = "other";
                 healthPoint = 10;
                 attackPoint = 4;
                 speed = 1;
+                rewardGold = 100;
                 break;
             default :
                 break;
@@ -124,5 +128,13 @@ public class Enemy {
     // 죽었는지 안죽었는지 확인
     public boolean isDead(){
         return healthPoint <= 0;
+    }
+
+    public int getRewardGold() {
+        return rewardGold;
+    }
+
+    public void setRewardGold(int rewardGold) {
+        this.rewardGold = rewardGold;
     }
 }

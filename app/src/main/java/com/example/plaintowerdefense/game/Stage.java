@@ -78,7 +78,20 @@ public class Stage {
             return enemyKilled.get(name);
         }
     }
-
+    // 적을 죽이고 보상을 얻는다
+    public void earnRewardGold(int reward){
+        this.playerGold += reward;
+    }
+    // 골드를 사용한다
+    public boolean useGold(int gold){
+        // 현재 골드가 골드를 사용하기에 충분하다면 사용하고 true, 아니면 false 반환
+        if(playerGold - gold >= 0){
+            playerGold -= gold;
+            return true;
+        }else{
+            return false;
+        }
+    }
     public int getStageCode() {
         return stageCode;
     }

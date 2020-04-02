@@ -269,8 +269,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         // wave 정보 탑재
         waveEnemyInfo[MINION] = wave.getEnemyInfo("minion");
         waveEnemyInfo[BOSS] = wave.getEnemyInfo("boss");
-
     }
+
     // rendering - 여러 그림들을 canvas에 그린다.
     public void doDraw(Canvas canvas){
         if(canvas != null){
@@ -397,6 +397,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
             Enemy enemy = iterator.next();
             // 적이 죽었을 경우 목록에서 제거한다
             if (enemy.isDead()) {
+                // 적이 죽었을 때 보상을 얻고 화면을 업데이트한다.
+                stage.earnRewardGold(enemy.getRewardGold());
+                ((GameActivity)getContext()).setCoinCountView(stage.getPlayerGold()+"");
                 // Remove the current element from the iterator and the list.
                 iterator.remove();
             }

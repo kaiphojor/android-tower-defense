@@ -43,10 +43,11 @@
 
         <TextView
             android:id="@+id/health_point_tv_game"
-            android:layout_width="wrap_content"
+            android:layout_width="35dp"
             android:layout_height="wrap_content"
             android:layout_weight="5"
             android:text="30"
+            android:textAlignment="center"
             android:textSize="24sp" />
 
         <ImageView
@@ -58,10 +59,11 @@
 
         <TextView
             android:id="@+id/coin_tv_game"
-            android:layout_width="wrap_content"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_weight="5"
             android:text="30"
+            android:textAlignment="center"
             android:textSize="24sp" />
 
         <ImageView

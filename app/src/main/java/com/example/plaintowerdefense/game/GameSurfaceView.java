@@ -59,6 +59,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
     // 타일, 적, focused image
     Bitmap tileImage;
     Bitmap enemyTileImage;
+    // starting, end point
+    Bitmap startPointImage;
+    Bitmap endPointImage;
     // 빔 이미지
     Bitmap focusedTileImage;
     // resized image
@@ -144,6 +147,10 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         enemyPelletImage = BitmapFactory.decodeResource(res,R.drawable.yellow_pellet);
         enemyPelletImage = BitmapFactory.decodeResource(res,R.drawable.yellow_pellet);
         beamImage = BitmapFactory.decodeResource(res,R.drawable.red_beam_horizontal);
+        startPointImage = BitmapFactory.decodeResource(res,R.drawable.watertex0);
+        endPointImage = BitmapFactory.decodeResource(res,R.drawable.deathtex3);
+        startPointImage = Bitmap.createScaledBitmap(startPointImage, tileLength, tileLength, true);
+        endPointImage = Bitmap.createScaledBitmap(endPointImage, tileLength, tileLength, true);
 
         enemyPelletImage = Bitmap.createScaledBitmap(enemyPelletImage,enemyScale,enemyScale,true);
         tileImageResized  = Bitmap.createScaledBitmap(tileImage, tileLength, tileLength, true);
@@ -530,8 +537,14 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                 // 적들이 지나가는 경로는 focus 갖지 못한다
                 if(tileMap[j][i] == 0){
                     canvas.drawBitmap(tileImageResized,null,rect,paint);
-                }else if(tileMap[j][i] == 1){
+                }else if(tileMap[j][i] >= 1){
                     canvas.drawBitmap(enemyTileImageResized,null,rect,paint);
+                    // 시작 지점 , 종료지점은 따로 처리한다
+                    if(tileMap[j][i] == 2){
+                        canvas.drawBitmap(startPointImage,null,rect,paint);
+                    }else if(tileMap[j][i] == 3){
+                        canvas.drawBitmap(endPointImage,null,rect,paint);
+                    }
                 }
             }
         }

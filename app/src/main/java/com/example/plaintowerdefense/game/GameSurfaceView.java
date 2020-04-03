@@ -1043,21 +1043,11 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                     e.printStackTrace();
                 }
                 // pause가 true면 pause로 상태 전환
-                pausePreference = context.getSharedPreferences("game", context.MODE_PRIVATE |context.MODE_WORLD_WRITEABLE);
-                isPause = pausePreference.getBoolean("isPause",false);
-                if(isPause){
-                    previousState = state;
-                    state = PAUSE;
-                }
+                checkPauseStatus();
                 break;
             case FIGHT :
                 // pause가 true면 pause로 상태 전환
-                pausePreference = context.getSharedPreferences("game", context.MODE_PRIVATE |context.MODE_WORLD_WRITEABLE);
-                isPause = pausePreference.getBoolean("isPause",false);
-                if(isPause){
-                    previousState = state;
-                    state = PAUSE;
-                }
+                checkPauseStatus();
                 counter++;
                 break;
             case PAUSE :
@@ -1081,15 +1071,19 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                 break;
             case FINISH :
                 // pause가 true면 pause로 상태 전환
-                pausePreference = context.getSharedPreferences("game", context.MODE_PRIVATE |context.MODE_WORLD_WRITEABLE);
-                isPause = pausePreference.getBoolean("isPause",false);
-                if(isPause){
-                    previousState = state;
-                    state = PAUSE;
-                }
+                checkPauseStatus();
                 break;
         }
 
+    }
+    public void checkPauseStatus(){
+        // pause가 true면 pause로 상태 전환
+        pausePreference = context.getSharedPreferences("game", context.MODE_PRIVATE |context.MODE_WORLD_WRITEABLE);
+        isPause = pausePreference.getBoolean("isPause",false);
+        if(isPause){
+            previousState = state;
+            state = PAUSE;
+        }
     }
     // rendering thread 초기화 - surfaceview를 일반 view가 아닌 layout으로 취급했을 때 필요한 것...
     public void resume() {

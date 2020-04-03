@@ -101,6 +101,20 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
     EnemyInfo[] waveEnemyInfo;
     static final int MINION = 0;
     static final int BOSS = 1;
+    /*
+    상태 전이 변수
+     */
+    static int state = -1;
+    static int previousState = -1;
+    static final int READY = -1;
+    static final int FIGHT = 0;
+    static final int PAUSE = 1;
+    static final int VICTORY = 2;
+    static final int DEFEAT = 3;
+    static final int FINISH = 4;
+
+
+
 
     // 리스너 객체 참조를 저장하는 변수
     private static OnTowerClickListener towerClickListener = null;
@@ -307,7 +321,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         // 타워 쿨타임 감소
         towerAttack();
         towerUpdate();
-        counter++;
+        stateProcess();
     }
     // touch 시 focus 얻는 이벤트
     @Override
@@ -991,6 +1005,50 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
             angle += 360;
         }
         return angle;
+    }
+    // 상태 제어
+    public void stateProcess(){
+        // 상태에 따라서 작업
+        /*
+            static final int READY = -1;
+    static final int FIGHT = 0;
+    static final int PAUSE = 1;
+    static final int VICTORY = 2;
+    static final int DEFEAT = 3;
+    static final int FINISH = 4;
+         */
+        switch(state){
+            // 준비 단계
+            case READY :
+                SharedPreferences sharedPreferences = context.getSharedPreferences("game", context.MODE_MULTI_PROCESS | context.MODE_WORLD_WRITEABLE);
+                try {
+                    // wave 시작버튼이 눌렸는지 확인하고 상태를 바꾼다
+                    boolean isWaveStart = sharedPreferences.getBoolean("isWaveStart",false);
+                    if(isWaveStart){
+                        // 상태 전환 및 이전 상태 저장
+                        previousState = state;
+                        state = FIGHT;
+                        // 값을 초기화
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("isWaveStart",false);
+                        editor.apply();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case FIGHT :
+                counter++;
+                break;
+            case PAUSE :
+                break;
+            case VICTORY :
+                break;
+            case DEFEAT :
+                break;
+            case FINISH :
+                break;
+        }
     }
     // rendering thread 초기화 - surfaceview를 일반 view가 아닌 layout으로 취급했을 때 필요한 것...
     public void resume() {

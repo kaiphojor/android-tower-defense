@@ -26,6 +26,13 @@
             android:text="타워디펜스"
             android:textSize="36sp" />
 
+        <Button
+            android:id="@+id/test_bt_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:text="Button" />
+
         <ImageView
             android:id="@+id/profile_iv_main"
             android:layout_width="50dp"

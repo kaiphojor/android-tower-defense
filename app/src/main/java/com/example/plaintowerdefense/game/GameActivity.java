@@ -196,6 +196,17 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
 //                    setMenuVisibility(false);
                 }
                 break;
+            case R.id.start_bt_game :
+                // wave 시작을 shared preference로 저장
+                SharedPreferences sharedPreferences = getSharedPreferences("game", MODE_MULTI_PROCESS | MODE_WORLD_WRITEABLE);
+                try {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("isWaveStart",true);
+                    editor.apply();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
         }
     }
 
@@ -212,7 +223,8 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+//        super.onBackPressed();
+
         // 음악 정지 - async
 //        musicPlayer.stop();
 

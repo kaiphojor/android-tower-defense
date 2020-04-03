@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.example.plaintowerdefense.game.PauseActivity;
 import com.example.plaintowerdefense.gem_shop.BuyGemActivity;
 import com.example.plaintowerdefense.social.SocialActivity;
 import com.example.plaintowerdefense.social.SocialListviewActivity;
@@ -192,6 +193,14 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 intent = new Intent(MainActivity.this, SocialListviewActivity.class);
+                startActivity(intent);
+            }
+        });
+        // 테스트 페이지 이동
+        findViewById(R.id.test_bt_main).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent = new Intent(MainActivity.this, PauseActivity.class);
                 startActivity(intent);
             }
         });

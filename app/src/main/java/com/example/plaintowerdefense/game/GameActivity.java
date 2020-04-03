@@ -100,33 +100,32 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
             // 타워 목록에서 타워를 클릭 했을 때
             @Override
             public void onTowerClick(View v, int position) {
-                Toast.makeText(getApplicationContext(),
-                        towerListAdapter.getItem(position).getName(),
-                        Toast.LENGTH_LONG).show();
-                // 돈이 충분하다면 shared preference 에 저장 ( GameActivity와 GameSurfaceView 통신용)
-                SharedPreferences sharedPreferences = getSharedPreferences("game", MODE_MULTI_PROCESS | MODE_WORLD_WRITEABLE);
-                try {
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    Tower tower = towerList.get(position);
-                    // json object에 클릭한 타워정보 저장
-                    JSONObject towerInfoJSON = new JSONObject();
-                    towerInfoJSON.put("towerCode", tower.getTowerCode());
-                    towerInfoJSON.put("name", tower.getName());
-                    towerInfoJSON.put("price", tower.getPrice());
-                    towerInfoJSON.put("image", tower.getImageResource());
-                    String towerInfoJSONString = towerInfoJSON.toString();
+            Toast.makeText(getApplicationContext(),
+                    towerListAdapter.getItem(position).getName(),
+                    Toast.LENGTH_LONG).show();
+            // 돈이 충분하다면 shared preference 에 저장 ( GameActivity와 GameSurfaceView 통신용)
+            SharedPreferences sharedPreferences = getSharedPreferences("game", MODE_MULTI_PROCESS | MODE_WORLD_WRITEABLE);
+            try {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                Tower tower = towerList.get(position);
+                // json object에 클릭한 타워정보 저장
+                JSONObject towerInfoJSON = new JSONObject();
+                towerInfoJSON.put("towerCode", tower.getTowerCode());
+                towerInfoJSON.put("name", tower.getName());
+                towerInfoJSON.put("price", tower.getPrice());
+                towerInfoJSON.put("image", tower.getImageResource());
+                String towerInfoJSONString = towerInfoJSON.toString();
 
-
-                    // tower click 여부와 tower 정보 shared preference에 저장
+                // tower click 여부와 tower 정보 shared preference에 저장
 //                    editor.putBoolean("isTowerClick", false);
-                    editor.putBoolean("isTowerClick", true);
-                    editor.putString("towerInfo", towerInfoJSONString.toString());
-                    editor.apply();
-                    // tower code는 제대로 전달됨
+                editor.putBoolean("isTowerClick", true);
+                editor.putString("towerInfo", towerInfoJSONString.toString());
+                editor.apply();
+                // tower code는 제대로 전달됨
 //                    Singleton.log("tower code : "+ tower.getTowerCode()+"");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             }
         });
         towerListView.setAdapter(towerListAdapter);
@@ -143,17 +142,32 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
         profileImageView = findViewById(R.id.profile_iv_game);
         startButton.setOnClickListener(this);
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         // mp3 초기화
         musicPlayer = MediaPlayer.create(GameActivity.this, R.raw.skull_fire);
         musicPlayer.setVolume(100, 100);
         musicPlayer.setLooping(true);
         // 준비되었을 때 시작하기 위한 listener
         musicPlayer.setOnPreparedListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!musicPlayer.isPlaying()){
+            musicPlayer.start();
+        }
+
+
+        // shared preference 에 pause 해제 정보 저장
+        SharedPreferences sharedPreferences = getSharedPreferences("game", MODE_MULTI_PROCESS | MODE_WORLD_WRITEABLE);
+        try {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("isPause",false);
+            editor.apply();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 //        musicPlayer.prepareAsync();
 //            musicPlayer.start();
 //            return null;
@@ -215,12 +229,28 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void onPause() {
         super.onPause();
-//         음악 중지
-        musicPlayer.stop();
-        musicPlayer.reset();
+        musicPlayer.pause();
 //        if(!backgroundMusic.isCancelled()){
 //            backgroundMusic.cancel(true);
 //        }
+
+        // shared preference 에 pause 정보 저장 -> game surfaceview에서 처리하도록하기위해
+        SharedPreferences sharedPreferences = getSharedPreferences("game", MODE_PRIVATE | MODE_WORLD_WRITEABLE);
+        try {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("isPause",true);
+            editor.apply();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+//         음악 중지
+        musicPlayer.stop();
+//        musicPlayer.reset();
     }
 
     @Override

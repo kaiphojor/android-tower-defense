@@ -72,6 +72,24 @@ public class StageSelectActivity extends BaseActivity implements View.OnClickLis
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        /*
+        게임에서의 진행상태 정보 초기화
+         */
+        // shared preference 에 pause 정보 저장 -> game surfaceview에서 처리하도록하기위해
+        SharedPreferences sharedPreferences = getSharedPreferences("game", MODE_PRIVATE | MODE_WORLD_WRITEABLE);
+        try {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("isPause",false);
+            editor.putBoolean("isWaveStart",false);
+            editor.apply();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         int id = v.getId();
         switch(id){

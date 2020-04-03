@@ -104,8 +104,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
     /*
     상태 전이 변수
      */
-    static int state = -1;
-    static int previousState = -1;
+    int state = -1;
+    int previousState = -1;
     static final int READY = -1;
     static final int FIGHT = 0;
     static final int PAUSE = 1;
@@ -113,6 +113,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
     static final int DEFEAT = 3;
     static final int FINISH = 4;
 
+    static boolean isPause;
+    static SharedPreferences pausePreference;
 
 
 
@@ -315,12 +317,15 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         towerInit();
         // 적 생성 및 이동
         enemyInit();
-        // 갱신 후 남은 적의 이동
-        enemyUpdate();
-        enemyMove();
-        // 타워 쿨타임 감소
-        towerAttack();
-        towerUpdate();
+        // 게임 중일 때에만 정보 갱신
+        if(state == FIGHT){
+            // 갱신 후 남은 적의 이동
+            enemyUpdate();
+            enemyMove();
+            // 타워 쿨타임 감소
+            towerAttack();
+            towerUpdate();
+        }
         stateProcess();
     }
     // touch 시 focus 얻는 이벤트
@@ -1008,6 +1013,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
     }
     // 상태 제어
     public void stateProcess(){
+        Singleton.log("state : " + state);
         // 상태에 따라서 작업
         /*
             static final int READY = -1;
@@ -1036,19 +1042,54 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                // pause가 true면 pause로 상태 전환
+                pausePreference = context.getSharedPreferences("game", context.MODE_PRIVATE |context.MODE_WORLD_WRITEABLE);
+                isPause = pausePreference.getBoolean("isPause",false);
+                if(isPause){
+                    previousState = state;
+                    state = PAUSE;
+                }
                 break;
             case FIGHT :
+                // pause가 true면 pause로 상태 전환
+                pausePreference = context.getSharedPreferences("game", context.MODE_PRIVATE |context.MODE_WORLD_WRITEABLE);
+                isPause = pausePreference.getBoolean("isPause",false);
+                if(isPause){
+                    previousState = state;
+                    state = PAUSE;
+                }
                 counter++;
                 break;
             case PAUSE :
+
+                // pause가 false면 이전 상태로 전환
+                pausePreference = context.getSharedPreferences("game", context.MODE_PRIVATE |context.MODE_WORLD_WRITEABLE);
+                try {
+                    isPause = pausePreference.getBoolean("isPause",false);
+                    if(!isPause){
+                        // 이전 상태로 복귀
+                        state = previousState;
+                        previousState = PAUSE;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             case VICTORY :
                 break;
             case DEFEAT :
                 break;
             case FINISH :
+                // pause가 true면 pause로 상태 전환
+                pausePreference = context.getSharedPreferences("game", context.MODE_PRIVATE |context.MODE_WORLD_WRITEABLE);
+                isPause = pausePreference.getBoolean("isPause",false);
+                if(isPause){
+                    previousState = state;
+                    state = PAUSE;
+                }
                 break;
         }
+
     }
     // rendering thread 초기화 - surfaceview를 일반 view가 아닌 layout으로 취급했을 때 필요한 것...
     public void resume() {

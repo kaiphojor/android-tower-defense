@@ -154,6 +154,15 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
 //        }catch(Exception e){
 //
 //        }
+        // shared preference 에 pause 정보 저장 -> game surfaceview에서 처리하도록하기위해
+        SharedPreferences gamePauseSharedPreference = getSharedPreferences("game", MODE_PRIVATE | MODE_WORLD_WRITEABLE);
+        try {
+            SharedPreferences.Editor gamePreferenceEditor = sharedPreferences.edit();
+            gamePreferenceEditor.putBoolean("isPause",false);
+            gamePreferenceEditor.apply();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     public Tower parseJSONTowerInfo(String jsonString){
         try{

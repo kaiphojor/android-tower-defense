@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.plaintowerdefense.BaseActivity;
 import com.example.plaintowerdefense.LoginSingleton;
+import com.example.plaintowerdefense.MainActivity;
 import com.example.plaintowerdefense.R;
 import com.example.plaintowerdefense.Singleton;
 import com.example.plaintowerdefense.game.bgm.MusicContext;
@@ -223,6 +224,9 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onBackPressed() {
+        // 일시정지
+        intent = new Intent(context, PauseActivity.class);
+        startActivity(intent);
 //        super.onBackPressed();
 
         // 음악 정지 - async

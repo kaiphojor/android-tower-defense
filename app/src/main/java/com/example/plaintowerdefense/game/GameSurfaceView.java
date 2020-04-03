@@ -1076,6 +1076,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         }
 
     }
+    // 일시정지를 눌렀는지 확인
     public void checkPauseStatus(){
         // pause가 true면 pause로 상태 전환
         pausePreference = context.getSharedPreferences("game", context.MODE_PRIVATE |context.MODE_WORLD_WRITEABLE);

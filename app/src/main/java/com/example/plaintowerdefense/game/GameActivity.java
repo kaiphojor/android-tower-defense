@@ -141,6 +141,7 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
             }
         });
         profileImageView = findViewById(R.id.profile_iv_game);
+        startButton.setOnClickListener(this);
 
     }
 
@@ -199,7 +200,7 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
                 break;
             case R.id.start_bt_game :
                 // wave 시작을 shared preference로 저장
-                SharedPreferences sharedPreferences = getSharedPreferences("game", MODE_MULTI_PROCESS | MODE_WORLD_WRITEABLE);
+                SharedPreferences sharedPreferences = getSharedPreferences("game", MODE_PRIVATE | MODE_WORLD_WRITEABLE);
                 try {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean("isWaveStart",true);

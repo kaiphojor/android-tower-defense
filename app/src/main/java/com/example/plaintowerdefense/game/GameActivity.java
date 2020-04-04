@@ -357,5 +357,24 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
             }
         });
     }
+    // 승리 activity 호출
+    public void showVictoryActivity() {
+        GameActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+                intent = new Intent(context,VictoryActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+    // 패배 activity 호출
+    public void showDefeatActivity() {
+        GameActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+                intent = new Intent(context,DefeatActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
 
 }

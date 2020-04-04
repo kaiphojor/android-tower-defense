@@ -1080,6 +1080,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
 
                             // 여기서 조정 - 승리 문구
                             ((GameActivity)getContext()).setWaveTextView("Victory!");
+                            ((GameActivity)getContext()).showVictoryActivity();
 
                         }else{ // 다음 wave로 넘어갔을 경우
                             // 상태 전환 및 이전 상태 저장
@@ -1096,8 +1097,13 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                         }
                     }else{
                         // 다 안죽었다면
-
                     }
+                }
+                // 패배 조건
+                if(stage.getPlayerHealthPoint() == 0){
+                    previousState = state;
+                    state = DEFEAT;
+                    ((GameActivity)getContext()).showDefeatActivity();
                 }
 
 

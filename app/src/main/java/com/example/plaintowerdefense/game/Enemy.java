@@ -19,7 +19,7 @@ public class Enemy {
             case 0:
                 name = "minion";
                 healthPoint = 20; // 150 - 죽이기 어려움
-                attackPoint =1;
+                attackPoint = 10;
                 speed = 5;
                 rewardGold = 10;
                 break;

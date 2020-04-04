@@ -1062,14 +1062,14 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                         }
                     }
                 }
-                Singleton.log("all gen : "+isAllEnemyGenerated);
+//                Singleton.log("all gen : "+isAllEnemyGenerated);
                 if(isAllEnemyGenerated){
-                    Singleton.log("all generated");
+//                    Singleton.log("all generated");
                     // 적이 다 죽었는지 확인
                     if(enemyList.isEmpty()){
                         // counter 초기화
                         counter = 0;
-                        Singleton.log("all generated and dead");
+//                        Singleton.log("all generated and dead");
                         // 다음 wave로 넘어감
                         stage.updateWaveEnd();
                         if(stage.getWaveNumber() < stage.getCurrentWave()){
@@ -1086,16 +1086,6 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                             previousState = state;
                             state = READY;
                             // is wave start -> false
-                            //
-//                            SharedPreferences gamePreference = context.getSharedPreferences("game", context.MODE_MULTI_PROCESS | context.MODE_WORLD_WRITEABLE);
-//                            try {
-//                                // 값을 초기화
-//                                SharedPreferences.Editor editor = gamePreference.edit();
-//                                editor.putBoolean("isWaveStart",false);
-//                                editor.apply();
-//                            } catch (Exception e) {
-//                                e.printStackTrace();
-//                            }
                             // wave start button을 다르게 처리한다
                             // 다음 wave의 enemy를 설정
                             Wave wave = (Wave)waveList.get(stage.getCurrentWave()-1);

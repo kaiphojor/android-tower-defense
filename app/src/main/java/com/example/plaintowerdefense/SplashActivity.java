@@ -58,6 +58,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
         // animation view 설정
         splashAnimationView = findViewById(R.id.lav_splash);
 
+//        splashAnimationView.setAnimation("loading_circle.json");
         splashAnimationView.setAnimation("loading_circle.json");
         // 반복 x
         splashAnimationView.loop(false);

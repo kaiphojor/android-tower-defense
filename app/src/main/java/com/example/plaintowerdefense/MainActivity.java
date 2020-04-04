@@ -21,7 +21,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.plaintowerdefense.game.PauseActivity;
+import com.example.plaintowerdefense.game.VictoryActivity;
 import com.example.plaintowerdefense.gem_shop.BuyGemActivity;
 import com.example.plaintowerdefense.social.SocialActivity;
 import com.example.plaintowerdefense.social.SocialListviewActivity;
@@ -121,6 +123,13 @@ public class MainActivity extends BaseActivity {
 
 //        animate(demoImage, imagesToShow, 0,true);
         fadeAnimation(demoImage, true, 0);
+
+
+
+//        LottieAnimationView animationView = (LottieAnimationView) findViewById(R.id.anim_main);
+//        animationView.setAnimation("video_anim.json");
+//        animationView.loop(true);
+//        animationView.playAnimation();
     }
 
     @Override
@@ -200,7 +209,7 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.test_bt_main).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intent = new Intent(MainActivity.this, PauseActivity.class);
+                intent = new Intent(MainActivity.this, VictoryActivity.class);
                 startActivity(intent);
             }
         });

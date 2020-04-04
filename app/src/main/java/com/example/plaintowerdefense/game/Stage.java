@@ -14,8 +14,9 @@ public class Stage {
     private int playerGold;
     // stage 별 할당된 player
     private int playerHealthPoint;
-    // 현재 phase
+    // 현재 wave
     private int currentWave;
+    private int waveNumber;
     // 죽인 적 정보
     public HashMap<String,Integer> enemyKilled;
     // 게임에서의 총 단계별 정보
@@ -53,6 +54,8 @@ public class Stage {
 //                wave.setEnemyInfo(new EnemyInfo("boss",1,100 *20+10+10,100));
                 // 정보를 다 추가한 wave를 wavelist에 등록
                 waveList.add(wave);
+                // 총 wave
+                waveNumber = waveList.size();
 
                 break;
             default :
@@ -92,6 +95,11 @@ public class Stage {
             return false;
         }
     }
+    // 다음 wave로 넘어갈때
+    public void updateWaveEnd(){
+        currentWave++;
+    }
+
     public int getStageCode() {
         return stageCode;
     }

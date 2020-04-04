@@ -97,6 +97,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
     // 스테이지 객체
     Stage stage;
     int stageLevel;
+    // wave의 list
+    ArrayList waveList;
+    int waveNumber;
     // 현재 wave에서 생성할 적 정보
     EnemyInfo[] waveEnemyInfo;
     static final int MINION = 0;
@@ -279,7 +282,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         ((GameActivity)getContext()).setCoinCountView(stage.getPlayerGold()+"");
         ((GameActivity)getContext()).setHealthPointView(stage.getPlayerHealthPoint()+"");
 
-        ArrayList waveList = stage.getWaveList();
+        waveList = stage.getWaveList();
         // 현재 wave 반환 및 적 생성 정보 저장
         Wave wave = (Wave)waveList.get(stage.getCurrentWave()-1);
         // wave 정보 탑재
@@ -1048,6 +1051,13 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
             case FIGHT :
                 // pause가 true면 pause로 상태 전환
                 checkPauseStatus();
+                // 적이 하나도 없으면 상태 ready로 전환.
+                // 현재 wave 반환 및 적 생성 정보 저장
+                Wave wave = (Wave)waveList.get(stage.getCurrentWave()-1);
+                // wave 정보 탑재
+                waveEnemyInfo[MINION] = wave.getEnemyInfo("minion");
+                waveEnemyInfo[BOSS] = wave.getEnemyInfo("boss");
+                // 다음 wave가 없으면 승리
                 counter++;
                 break;
             case PAUSE :

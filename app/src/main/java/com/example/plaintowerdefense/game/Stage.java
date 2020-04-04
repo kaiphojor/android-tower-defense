@@ -33,15 +33,15 @@ public class Stage {
         switch(stageCode){
             case 1:
                 mapInfo = new int[][]{
-                    {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0},
-                    {0,1,1,1,1, 0,0,0,0,0, 0,0,0,0,0, 0,0},
-                    {0,1,0,0,1, 0,1,1,1,0, 0,0,0,0,0, 0,0},
-                    {2,1,0,0,1, 0,1,0,1,0, 0,1,1,1,3, 0,0},
-                    {0,0,0,0,1, 0,1,0,1,1, 1,1,0,0,0, 0,0},
-                    {0,0,0,0,1, 1,1,0,0,0, 0,0,0,0,0, 0,0},
-                    {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0},
-                    {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0},
-                    {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0}
+                    {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
+                    {0,1,1,1,1, 0,0,0,0,0, 0,0,0,0,0, 0},
+                    {0,1,0,0,1, 0,1,1,1,0, 0,0,0,0,0, 0},
+                    {2,1,0,0,1, 0,1,0,1,0, 0,1,1,1,3, 0},
+                    {0,0,0,0,1, 0,1,0,1,1, 1,1,0,0,0, 0},
+                    {0,0,0,0,1, 1,1,0,0,0, 0,0,0,0,0, 0},
+                    {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
+                    {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
+                    {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0}
                 };
                 playerGold = 80;
                 playerCredit =0;
@@ -50,10 +50,13 @@ public class Stage {
                 // wave 초기화
                 Wave wave = new Wave();
                 // wave에 적 정보 추가( 어떤 적을, 몇명이나 , 어느 시점에서 , 어느 간격으로 생산할지 결정)
-                wave.setEnemyInfo(new EnemyInfo("minion",20,10,100));
+                wave.setEnemyInfo(new EnemyInfo("minion",5,10,100));
+                Wave wave2 = new Wave();
+                wave2.setEnemyInfo(new EnemyInfo("minion",10,10,100));
 //                wave.setEnemyInfo(new EnemyInfo("boss",1,100 *20+10+10,100));
                 // 정보를 다 추가한 wave를 wavelist에 등록
                 waveList.add(wave);
+                waveList.add(wave2);
                 // 총 wave
                 waveNumber = waveList.size();
 
@@ -162,5 +165,13 @@ public class Stage {
 
     public void setRetried(boolean retried) {
         isRetried = retried;
+    }
+
+    public int getWaveNumber() {
+        return waveNumber;
+    }
+
+    public void setWaveNumber(int waveNumber) {
+        this.waveNumber = waveNumber;
     }
 }

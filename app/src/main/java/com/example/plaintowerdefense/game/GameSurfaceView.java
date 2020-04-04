@@ -31,15 +31,15 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
     // new int[9][17];
     int[][] tileMap
             = new int[][]{
-            {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0},
-            {0,1,1,1,1, 0,0,0,0,0, 0,0,0,0,0, 0,0},
-            {0,1,0,0,1, 0,1,1,1,0, 0,0,0,0,0, 0,0},
-            {1,1,0,0,1, 0,1,0,1,0, 0,1,1,1,1, 0,0},
-            {0,0,0,0,1, 0,1,0,1,1, 1,1,0,0,0, 0,0},
-            {0,0,0,0,1, 1,1,0,0,0, 0,0,0,0,0, 0,0},
-            {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0},
-            {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0},
-            {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0}
+            {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
+            {0,1,1,1,1, 0,0,0,0,0, 0,0,0,0,0, 0},
+            {0,1,0,0,1, 0,1,1,1,0, 0,0,0,0,0, 0},
+            {1,1,0,0,1, 0,1,0,1,0, 0,1,1,1,1, 0},
+            {0,0,0,0,1, 0,1,0,1,1, 1,1,0,0,0, 0},
+            {0,0,0,0,1, 1,1,0,0,0, 0,0,0,0,0, 0},
+            {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
+            {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
+            {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0}
     };
     int[] focusedTileCoordinate = null;
 
@@ -118,7 +118,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
 
     static boolean isPause;
     static SharedPreferences pausePreference;
-
+    boolean isAllEnemyGenerated = false;
 
 
     // 리스너 객체 참조를 저장하는 변수
@@ -700,12 +700,12 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                         break;
                     }else{
                         // 공격하지 않음
-                        Singleton.log("can not attack - range");
+//                        Singleton.log("can not attack - range");
                     }
                 }
             }else{
                 // 빔을 보여줄 수 없음
-                Singleton.log("can not show beam");
+//                Singleton.log("can not show beam");
             }
 
 
@@ -1052,12 +1052,65 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                 // pause가 true면 pause로 상태 전환
                 checkPauseStatus();
                 // 적이 하나도 없으면 상태 ready로 전환.
-                // 현재 wave 반환 및 적 생성 정보 저장
-                Wave wave = (Wave)waveList.get(stage.getCurrentWave()-1);
-                // wave 정보 탑재
-                waveEnemyInfo[MINION] = wave.getEnemyInfo("minion");
-                waveEnemyInfo[BOSS] = wave.getEnemyInfo("boss");
-                // 다음 wave가 없으면 승리
+                // 적 목록이 다 있는지 확인
+                isAllEnemyGenerated = true;
+                // enemy info null check 하면서 다 죽었는지 확인
+                for(EnemyInfo enemyInfo : waveEnemyInfo){
+                    if(enemyInfo != null){
+                        if(enemyInfo.getNumber() != 0){
+                            isAllEnemyGenerated = false;
+                        }
+                    }
+                }
+                Singleton.log("all gen : "+isAllEnemyGenerated);
+                if(isAllEnemyGenerated){
+                    Singleton.log("all generated");
+                    // 적이 다 죽었는지 확인
+                    if(enemyList.isEmpty()){
+                        // counter 초기화
+                        counter = 0;
+                        Singleton.log("all generated and dead");
+                        // 다음 wave로 넘어감
+                        stage.updateWaveEnd();
+                        if(stage.getWaveNumber() < stage.getCurrentWave()){
+                            // 총 wave를 넘어선 경우 = 다음 wave가 없는 경우 = 승리
+                            // 상태 fight -> victory
+                            previousState = state;
+                            state = VICTORY;
+
+                            // 여기서 조정 - 승리 문구
+                            ((GameActivity)getContext()).setWaveTextView("Victory!");
+
+                        }else{ // 다음 wave로 넘어갔을 경우
+                            // 상태 전환 및 이전 상태 저장
+                            previousState = state;
+                            state = READY;
+                            // is wave start -> false
+                            //
+//                            SharedPreferences gamePreference = context.getSharedPreferences("game", context.MODE_MULTI_PROCESS | context.MODE_WORLD_WRITEABLE);
+//                            try {
+//                                // 값을 초기화
+//                                SharedPreferences.Editor editor = gamePreference.edit();
+//                                editor.putBoolean("isWaveStart",false);
+//                                editor.apply();
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            }
+                            // wave start button을 다르게 처리한다
+                            // 다음 wave의 enemy를 설정
+                            Wave wave = (Wave)waveList.get(stage.getCurrentWave()-1);
+                            // wave 정보 탑재
+                            waveEnemyInfo[MINION] = wave.getEnemyInfo("minion");
+                            waveEnemyInfo[BOSS] = wave.getEnemyInfo("boss");
+                            // 상태 전환
+                        }
+                    }else{
+                        // 다 안죽었다면
+
+                    }
+                }
+
+
                 counter++;
                 break;
             case PAUSE :
@@ -1076,6 +1129,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                 }
                 break;
             case VICTORY :
+                // 전환 할 때 승리에 해당하는 메소드 호출
+                // 전환 하고 나서는 딱히 해야할 것이 업삳
+                // 다른 activity를 열거나 함
                 break;
             case DEFEAT :
                 break;

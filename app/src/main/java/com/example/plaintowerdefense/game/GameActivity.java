@@ -358,10 +358,12 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
         });
     }
     // 승리 activity 호출
-    public void showVictoryActivity() {
+    public void showVictoryActivity(final int killed,final int passed) {
         GameActivity.this.runOnUiThread(new Runnable() {
             public void run() {
                 intent = new Intent(context,VictoryActivity.class);
+                intent.putExtra("killed",killed);
+                intent.putExtra("passed",passed);
                 startActivity(intent);
             }
         });

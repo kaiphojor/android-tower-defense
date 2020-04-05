@@ -287,6 +287,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         // 골드, 체력 세팅
         ((GameActivity)getContext()).setCoinCountView(stage.getPlayerGold()+"");
         ((GameActivity)getContext()).setHealthPointView(stage.getPlayerHealthPoint()+"");
+        ((GameActivity)getContext()).setWaveTextView("wave "+stage.getCurrentWave());
+
 
         waveList = stage.getWaveList();
         // 현재 wave 반환 및 적 생성 정보 저장
@@ -437,7 +439,6 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
     }
     // 적 이동 및 경로 끝에 도달했을 때 상태 갱신
     public void enemyMove(){
-
         //TODO :  그 이전에 일단 중앙으로 가야한다.
         // left top right bottom
         // 중심부에 오는지 확인
@@ -1090,7 +1091,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
 
                             // 여기서 조정 - 승리 문구
                             ((GameActivity)getContext()).setWaveTextView("Victory!");
-                            ((GameActivity)getContext()).showVictoryActivity();
+                            ((GameActivity)getContext()).showVictoryActivity(enemyKilled,enemyPassed);
 
                         }else{ // 다음 wave로 넘어갔을 경우
                             // 상태 전환 및 이전 상태 저장
@@ -1104,6 +1105,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                             waveEnemyInfo[MINION] = wave.getEnemyInfo("minion");
                             waveEnemyInfo[BOSS] = wave.getEnemyInfo("boss");
                             // 상태 전환
+                            // update
+                            ((GameActivity)getContext()).setWaveTextView("wave "+ stage.getCurrentWave());
                         }
                     }else{
                         // 다 안죽었다면

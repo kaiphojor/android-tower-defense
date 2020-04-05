@@ -27,7 +27,11 @@ public class VictoryActivity extends Activity implements View.OnClickListener {
     Button advertisementButton;
     TextView pressNextTextView;
 
-
+    int enemyKilled;
+    int enemyPassed;
+    int enemyTotal;
+    int starCount = 3;
+    int enemySlainPercentage;
     // 태그 = 현재 activity 이름
     private final String TAG = this.getClass().getSimpleName();
     // context = 현재 context
@@ -49,6 +53,23 @@ public class VictoryActivity extends Activity implements View.OnClickListener {
         startStarCountAnimation(starRatingBar);
         // listener
         pressNextTextView.setOnClickListener(this);
+        // 죽인 퍼센테이지에 따라서 별 등급 부여
+        intent = getIntent();
+        enemyKilled = intent.getIntExtra("killed",0);
+        enemyPassed = intent.getIntExtra("passed",0);
+        enemyTotal = enemyKilled + enemyPassed;
+        if(enemyTotal != 0){
+            enemySlainPercentage = 100 * enemyKilled / enemyTotal;
+        }
+//        if(enemySlainPercentage <50){
+//            starCount = 0;
+//        }else if(enemySlainPercentage < 75){
+//            starCount = 1;
+//        }else if(enemySlainPercentage < 100){
+//            starCount = 2;
+//        }else {
+//            starCount = 3;
+//        }
 
 //        LottieAnimationView video = findViewById(R.id.video_anim_victory);
 //        video.setAnimation("video_anim.json");
@@ -166,9 +187,9 @@ public class VictoryActivity extends Activity implements View.OnClickListener {
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator animation) {
                 int number = Integer.parseInt(animation.getAnimatedValue().toString());
-                int starNumber = 3 * number / 500;
-                ratingBar.setRating(3 * number / 500);
-//                ratingBar.setRating(starNumber);
+//                int starNumber = starCount * number / 500;
+                ratingBar.setRating(starCount * number / 500);
+//                ratingBar.setRating(starCount);
             }
         });
         animator.start();

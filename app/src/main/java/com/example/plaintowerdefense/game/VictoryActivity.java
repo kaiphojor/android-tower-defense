@@ -7,11 +7,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.plaintowerdefense.R;
 
 public class VictoryActivity extends Activity {
+    // view
+    RatingBar starRatingBar;
+    TextView rewardTextView;
+    Button shakeButton;
+    Button advertisementButton;
+    TextView pressNextTextView;
+
 
     // 태그 = 현재 activity 이름
     private final String TAG = this.getClass().getSimpleName();
@@ -27,6 +37,8 @@ public class VictoryActivity extends Activity {
                 WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_victory);
+
+        bindView();
 //        LottieAnimationView video = findViewById(R.id.video_anim_victory);
 //        video.setAnimation("video_anim.json");
 //        video.playAnimation();
@@ -51,5 +63,13 @@ public class VictoryActivity extends Activity {
 //
 //            }
 //        });
+    }
+    // view binding
+    public void bindView(){
+        starRatingBar = findViewById(R.id.star_rb_victory);
+        rewardTextView = findViewById(R.id.reward_tv_victory);
+        shakeButton = findViewById(R.id.shake_bonus_bt_victory);
+        advertisementButton = findViewById(R.id.advertisement_bonus_bt_victory);
+        pressNextTextView = findViewById(R.id.finish_bt_victory);
     }
 }

@@ -47,7 +47,6 @@
             android:id="@+id/reward_tv_victory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="0"
             android:layout_marginEnd="0dp"
             android:text="40"
             android:textColor="#FFFFFF"
@@ -71,7 +70,6 @@
             android:id="@+id/shake_bonus_bt_victory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="0"
             android:layout_marginEnd="20dp"
             android:text="흔들어서 보상2배" />
 
@@ -79,7 +77,6 @@
             android:id="@+id/advertisement_bonus_bt_victory"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
-            android:layout_marginTop="0"
             android:drawableLeft="@drawable/video_button_left"
             android:text="광고 - 보상2배" />
     </LinearLayout>

@@ -5,8 +5,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -14,7 +17,7 @@ import android.widget.TextView;
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.plaintowerdefense.R;
 
-public class VictoryActivity extends Activity {
+public class VictoryActivity extends Activity implements View.OnClickListener {
     // view
     RatingBar starRatingBar;
     TextView rewardTextView;
@@ -37,8 +40,10 @@ public class VictoryActivity extends Activity {
                 WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_victory);
-
+        // view binding
         bindView();
+        setUpFadeAnimation(pressNextTextView);
+
 //        LottieAnimationView video = findViewById(R.id.video_anim_victory);
 //        video.setAnimation("video_anim.json");
 //        video.playAnimation();
@@ -71,5 +76,63 @@ public class VictoryActivity extends Activity {
         shakeButton = findViewById(R.id.shake_bonus_bt_victory);
         advertisementButton = findViewById(R.id.advertisement_bonus_bt_victory);
         pressNextTextView = findViewById(R.id.finish_bt_victory);
+    }
+
+    // click listener 구현 부분
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch(id){
+            case R.id.finish_bt_victory :
+                break;
+            default :
+                break;
+        }
+    }
+    private void setUpFadeAnimation(final TextView textView) {
+        // Start from 0.1f if you desire 90% fade animation
+        final Animation fadeIn = new AlphaAnimation(0.0f, 1.0f);
+        // fade in 시간
+        fadeIn.setDuration(1000);
+        // 시작시간
+        fadeIn.setStartOffset(0000);
+        // End to 0.1f if you desire 90% fade animation
+        final Animation fadeOut = new AlphaAnimation(1.0f, 0.0f);
+        fadeOut.setDuration(1000);
+        fadeOut.setStartOffset(0000);
+
+        fadeIn.setAnimationListener(new Animation.AnimationListener(){
+            @Override
+            public void onAnimationEnd(Animation arg0) {
+                // start fadeOut when fadeIn ends (continue)
+                textView.startAnimation(fadeOut);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation arg0) {
+            }
+
+            @Override
+            public void onAnimationStart(Animation arg0) {
+            }
+        });
+
+        fadeOut.setAnimationListener(new Animation.AnimationListener(){
+            @Override
+            public void onAnimationEnd(Animation arg0) {
+                // start fadeIn when fadeOut ends (repeat)
+                textView.startAnimation(fadeIn);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation arg0) {
+            }
+
+            @Override
+            public void onAnimationStart(Animation arg0) {
+            }
+        });
+
+        textView.startAnimation(fadeOut);
     }
 }

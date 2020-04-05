@@ -119,8 +119,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
     static boolean isPause;
     static SharedPreferences pausePreference;
     boolean isAllEnemyGenerated = false;
-
-    int
+//
+//    int
 
 
     // 리스너 객체 참조를 저장하는 변수

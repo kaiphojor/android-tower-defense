@@ -120,6 +120,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
     static SharedPreferences pausePreference;
     boolean isAllEnemyGenerated = false;
 
+    int
+
 
     // 리스너 객체 참조를 저장하는 변수
     private static OnTowerClickListener towerClickListener = null;

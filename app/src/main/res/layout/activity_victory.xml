@@ -12,7 +12,7 @@
         android:id="@+id/title_tv_victory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="25dp"
         android:text="게임 종료"
         android:textColor="#FFFFFF"
         android:textSize="36sp"
@@ -20,68 +20,95 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/result_tv_victory"
+    <LinearLayout
+        android:id="@+id/reward_ll_victory"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/star_rb_victory">
+
+        <TextView
+            android:id="@+id/reward_text_tv_victory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="40dp"
+            android:text="전리품"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/reward_tv_victory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0"
+            android:layout_marginEnd="0dp"
+            android:text="40"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_victory"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reward_ll_victory">
+
+        <Button
+            android:id="@+id/shake_bonus_bt_victory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0"
+            android:layout_marginEnd="20dp"
+            android:text="흔들어서 보상2배" />
+
+        <Button
+            android:id="@+id/advertisement_bonus_bt_victory"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginTop="0"
+            android:drawableLeft="@drawable/video_button_left"
+            android:text="광고 - 보상2배" />
+    </LinearLayout>
+
+    <RatingBar
+        android:id="@+id/star_rb_victory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="승리!"
-        android:textColor="#FFFFFF"
-        android:textSize="36sp"
+        android:layout_marginTop="20dp"
+        android:max="3"
+        android:numStars="3"
+        android:rating="0"
+        android:stepSize="1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.499"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title_tv_victory" />
 
     <TextView
-        android:id="@+id/reward_text_tv_victory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="276dp"
-        android:layout_marginTop="32dp"
-        android:text="전리품"
+        android:id="@+id/finish_bt_victory"
+        android:layout_width="350dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="Press to next......"
         android:textColor="#FFFFFF"
-        android:textSize="24sp"
+        android:textSize="36sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/result_tv_victory" />
-
-    <TextView
-        android:id="@+id/reward_tv_victory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="60dp"
-        android:text="40"
-        android:textColor="#FFFFFF"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/reward_text_tv_victory"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.205"
-        app:layout_constraintStart_toEndOf="@+id/reward_text_tv_victory"
-        app:layout_constraintTop_toTopOf="@+id/reward_text_tv_victory"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <Button
-        android:id="@+id/shake_bonus_bt_victory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:text="흔들어서 보상2배"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.33"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/reward_text_tv_victory" />
-
-    <Button
-        android:id="@+id/advertisement_bonus_bt_victory"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_marginTop="28dp"
-        android:drawableLeft="@drawable/video_button_left"
-        android:text="광고 - 보상2배"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.2"
-        app:layout_constraintStart_toEndOf="@+id/shake_bonus_bt_victory"
-        app:layout_constraintTop_toBottomOf="@+id/reward_text_tv_victory" />
+        app:layout_constraintTop_toBottomOf="@+id/ll_victory" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

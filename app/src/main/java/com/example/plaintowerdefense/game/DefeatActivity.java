@@ -10,17 +10,20 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.plaintowerdefense.MainActivity;
 import com.example.plaintowerdefense.R;
 
-public class DefeatActivity extends Activity {
-
+public class DefeatActivity extends Activity implements View.OnClickListener{
+    Button gemRetryButton;
+    Button advertisementRetryButton;
     static TextView timerTextView;
     static String timerString;
     static boolean canBackToMenu;
@@ -90,8 +93,10 @@ public class DefeatActivity extends Activity {
         timerTextView = findViewById(R.id.timer_tv_defeat);
 //        timerTextView;
         timerTextView.addTextChangedListener(textWatcher);
-
-
+        advertisementRetryButton = findViewById(R.id.advertisement_retry_bt_defeat);
+        gemRetryButton = findViewById(R.id.gem_retry_bt_defeat);
+        advertisementRetryButton.setOnClickListener(this);
+        gemRetryButton.setOnClickListener(this);
 
     }
 
@@ -148,5 +153,17 @@ public class DefeatActivity extends Activity {
         });
 
         textView.startAnimation(fadeOut);
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch(id){
+            case R.id.advertisement_retry_bt_defeat :
+                break;
+            case R.id.gem_retry_bt_defeat :
+                mHandler.removeCallbacksAndMessages(null);
+                break;
+        }
     }
 }

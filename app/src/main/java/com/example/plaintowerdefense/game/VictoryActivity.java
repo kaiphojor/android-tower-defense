@@ -1,6 +1,7 @@
 package com.example.plaintowerdefense.game;
 
 import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -43,6 +44,7 @@ public class VictoryActivity extends Activity implements View.OnClickListener {
         // view binding
         bindView();
         setUpFadeAnimation(pressNextTextView);
+        startCountAnimation(rewardTextView,0,50);
 
 //        LottieAnimationView video = findViewById(R.id.video_anim_victory);
 //        video.setAnimation("video_anim.json");
@@ -89,6 +91,7 @@ public class VictoryActivity extends Activity implements View.OnClickListener {
                 break;
         }
     }
+    // fade in and out 애니메이션 효과
     private void setUpFadeAnimation(final TextView textView) {
         // Start from 0.1f if you desire 90% fade animation
         final Animation fadeIn = new AlphaAnimation(0.0f, 1.0f);
@@ -134,5 +137,17 @@ public class VictoryActivity extends Activity implements View.OnClickListener {
         });
 
         textView.startAnimation(fadeOut);
+    }
+    // number counter 효과
+    private void startCountAnimation(final TextView textView,int start,int end) {
+        ValueAnimator animator = ValueAnimator.ofInt(start, end); //0 is min number, 600 is max number
+        // 스르륵 흐르는 애니메이션 시간
+        animator.setDuration(500); //Duration is in milliseconds
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            public void onAnimationUpdate(ValueAnimator animation) {
+                textView.setText(animation.getAnimatedValue().toString());
+            }
+        });
+        animator.start();
     }
 }

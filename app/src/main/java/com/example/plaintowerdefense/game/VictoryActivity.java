@@ -194,4 +194,9 @@ public class VictoryActivity extends Activity implements View.OnClickListener {
         });
         animator.start();
     }
+
+    @Override
+    public void onBackPressed() {
+        // back button 에서 행동이 못나오게 한다
+    }
 }

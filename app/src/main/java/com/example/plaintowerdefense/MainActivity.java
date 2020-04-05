@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.example.plaintowerdefense.game.DefeatActivity;
 import com.example.plaintowerdefense.game.PauseActivity;
 import com.example.plaintowerdefense.game.VictoryActivity;
 import com.example.plaintowerdefense.gem_shop.BuyGemActivity;
@@ -68,7 +69,7 @@ public class MainActivity extends BaseActivity {
 
     private static ImageView tv;
 
-
+//    final AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,7 +210,7 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.test_bt_main).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intent = new Intent(MainActivity.this, VictoryActivity.class);
+                intent = new Intent(MainActivity.this, DefeatActivity.class);
                 startActivity(intent);
             }
         });

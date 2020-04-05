@@ -119,8 +119,12 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
     static boolean isPause;
     static SharedPreferences pausePreference;
     boolean isAllEnemyGenerated = false;
-//
-//    int
+    // 별 계산 용
+    /*
+    0% 0star 50% 1star 75% 2star 100% 3star
+     */
+    int enemyKilled = 0;
+    int enemyPassed = 0;
 
 
     // 리스너 객체 참조를 저장하는 변수
@@ -426,6 +430,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                 ((GameActivity)getContext()).setCoinCountView(stage.getPlayerGold()+"");
                 // Remove the current element from the iterator and the list.
                 iterator.remove();
+                // 죽인 적 추가
+                enemyKilled++;
             }
         }
     }
@@ -498,6 +504,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                 stage.setPlayerHealthPoint(remainingHealthPoint);
                 // 적 삭제
                 iterator.remove();
+                // 지나간 적 추가
+                enemyPassed++;
             // 적이 진행중이라면 이동한 적의 중앙 좌표를 설정한다
             }else {
                 // 적 중앙 좌표 설정

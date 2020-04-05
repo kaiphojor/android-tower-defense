@@ -83,6 +83,7 @@
 
     <RatingBar
         android:id="@+id/star_rb_victory"
+        style="@android:style/Widget.Holo.RatingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -96,11 +97,11 @@
 
     <TextView
         android:id="@+id/finish_bt_victory"
-        android:layout_width="350dp"
+        android:layout_width="wrap_content"
         android:layout_height="70dp"
         android:layout_marginTop="20dp"
         android:gravity="center"
-        android:text="Press to next......"
+        android:text="press this to continue"
         android:textColor="#FFFFFF"
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"

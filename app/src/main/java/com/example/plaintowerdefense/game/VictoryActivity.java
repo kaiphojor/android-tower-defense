@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.plaintowerdefense.R;
+import com.example.plaintowerdefense.stage_select.StageSelectActivity;
 
 public class VictoryActivity extends Activity implements View.OnClickListener {
     // view
@@ -45,6 +46,9 @@ public class VictoryActivity extends Activity implements View.OnClickListener {
         bindView();
         setUpFadeAnimation(pressNextTextView);
         startCountAnimation(rewardTextView,0,50);
+        startStarCountAnimation(starRatingBar);
+        // listener
+        pressNextTextView.setOnClickListener(this);
 
 //        LottieAnimationView video = findViewById(R.id.video_anim_victory);
 //        video.setAnimation("video_anim.json");
@@ -85,7 +89,11 @@ public class VictoryActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         int id = v.getId();
         switch(id){
+            // 스테이지 선택으로 돌아간다
             case R.id.finish_bt_victory :
+                intent = new Intent(context, StageSelectActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 break;
             default :
                 break;
@@ -146,6 +154,21 @@ public class VictoryActivity extends Activity implements View.OnClickListener {
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator animation) {
                 textView.setText(animation.getAnimatedValue().toString());
+            }
+        });
+        animator.start();
+    }
+    // star counter 효과
+    private void startStarCountAnimation(final RatingBar ratingBar) {
+        ValueAnimator animator = ValueAnimator.ofInt(0, 500); //0 is min number, 600 is max number
+        // 스르륵 흐르는 애니메이션 시간
+        animator.setDuration(1000); //Duration is in milliseconds
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int number = Integer.parseInt(animation.getAnimatedValue().toString());
+                int starNumber = 3 * number / 500;
+                ratingBar.setRating(3 * number / 500);
+//                ratingBar.setRating(starNumber);
             }
         });
         animator.start();

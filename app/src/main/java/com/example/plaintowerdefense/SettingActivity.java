@@ -54,7 +54,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.sign_out_bt_setting).setOnClickListener(this);
         // 현재 user 정보 초기화
         userInfo = UserInfoSingleton.getInstance();
-        userInfo.initUserInfo(context,LoginSingleton.getmAuth());
+//        userInfo.initUserInfo(context,LoginSingleton.getmAuth());
         userInfo.setGemUi(gemNumberTextView);
     }
 

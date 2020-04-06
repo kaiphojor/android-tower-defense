@@ -26,6 +26,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import org.json.JSONObject;
+
 public class LoginSingleton {
     // firebase 인증
     private static FirebaseAuth mAuth;
@@ -72,8 +74,19 @@ public class LoginSingleton {
             // 로그인이 되었다면 nickname을 상단에 세팅.
             // 프로필 사진 또한 설정한다
             SharedPreferences sharedPreference = context.getSharedPreferences("sharedPreference",context.MODE_PRIVATE);
-            String nickname = sharedPreference.getString("nickname","");
-            String imageUri = sharedPreference.getString("profileImage","");
+//            String nickname = sharedPreference.getString("nickname","");
+//            String imageUri = sharedPreference.getString("profileImage","");
+            String nickname="";
+            String imageUri="";
+            String userInfoString = sharedPreference.getString(currentUser.getEmail(),"");
+            try{
+                JSONObject userInfoObject = new JSONObject(userInfoString);
+                nickname = userInfoObject.getString("nickname");
+                imageUri = userInfoObject.getString("imageUri");
+            }catch(Exception e){
+
+            }
+
             // 이미지 선택 없을 시 기본 이미지, 선택 했을 경우 해당 이미지로 설정
             Bitmap originalBm = imageUri.contentEquals("") ?
                     BitmapFactory.decodeResource(context.getResources(), R.drawable.team_nova)

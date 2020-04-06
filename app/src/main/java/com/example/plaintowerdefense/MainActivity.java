@@ -90,7 +90,7 @@ public class MainActivity extends BaseActivity {
 
         // 체크박스 클릭여부, 체크박스 마지막 클릭 시간을 판단해서 팝업을 내보낸다
         // 체크 박스 클릭시 다음날에 팝업이 뜨게된다
-        sharedPreference = getSharedPreferences("setting", MODE_WORLD_READABLE | MODE_WORLD_WRITEABLE);
+        sharedPreference = getSharedPreferences("setting",MODE_PRIVATE | MODE_WORLD_WRITEABLE);
         // shared preference를 불러온다. 구분자 $ 의 왼쪽은 pop up를 띄우는지 여부, 오른쪽은 마지막 pop up checkbox 클릭 시간
         String popUpStatusString = sharedPreference.getString("popUpStatus", "true&none");
         String[] popUpStatus = popUpStatusString.split("&");

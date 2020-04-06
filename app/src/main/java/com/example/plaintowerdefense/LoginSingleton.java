@@ -86,7 +86,7 @@ public class LoginSingleton {
     }
 
     // 파이어베이스 - 구글 연동 인증 -> 닉네임 세팅
-    private static void firebaseAuthWithGoogle(GoogleSignInAccount account) {
+    public static void firebaseAuthWithGoogle(GoogleSignInAccount account) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
 
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
@@ -147,5 +147,12 @@ public class LoginSingleton {
 //            findViewById(R.id.signInButton).setVisibility(View.VISIBLE);
 //            findViewById(R.id.signOutAndDisconnect).setVisibility(View.GONE);
         }
+    }
+
+    public static GoogleSignInClient getmGoogleSignInClient() {
+        return mGoogleSignInClient;
+    }
+    public static FirebaseAuth getmAuth(){
+        return mAuth;
     }
 }

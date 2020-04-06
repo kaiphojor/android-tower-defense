@@ -82,7 +82,8 @@ public class LoginActivity extends BaseActivity {
     public void onStart() {
         super.onStart();
         LoginSingleton.loginOnStart(nicknameView,profileView);
-
+        mGoogleSignInClient = LoginSingleton.getmGoogleSignInClient();
+        mAuth = LoginSingleton.getmAuth();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);

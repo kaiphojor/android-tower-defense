@@ -56,6 +56,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         // 로그인한 계정에 따라 닉네임/프로필 세팅
         LoginSingleton.getInstance(context);
         LoginSingleton.loginOnStart(nicknameView,profileImageView);
+        mGoogleSignInClient = LoginSingleton.getmGoogleSignInClient();
+        mAuth = LoginSingleton.getmAuth();
     }
 
 
@@ -92,12 +94,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         int id = v.getId();
 
         // 로그아웃시 해당 메소드를 호출한다
-        if(id == R.id.sign_out_bt_setting){
-            signOut();
-        }
         switch(id){
             case R.id.sign_out_bt_setting :
                 signOut();
+
                 break;
             case R.id.crash_log_bt_setting :
                 intent = new Intent(context, CrashLogActivity.class);

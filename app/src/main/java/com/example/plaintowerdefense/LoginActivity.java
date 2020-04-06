@@ -28,6 +28,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 public class LoginActivity extends BaseActivity {
@@ -191,7 +192,13 @@ public class LoginActivity extends BaseActivity {
                             // 이전에 가입했다면 main page 이동
                             SharedPreferences sharedPreference = getSharedPreferences("sharedPreference", MODE_PRIVATE);
                             String text = sharedPreference.getString("nickname","");
+
                             if(text.contentEquals("")){
+                                // 새로 만들 때
+                                String userString = user.getEmail();
+                                int reward = 0;
+                                int gemCount = 0;
+                                JSONObject userObject = new JSONObject();
                                 intent = new Intent(context,IdSettingActivity.class);
                             }else{
                                 intent = new Intent(context,MainActivity.class);

@@ -23,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.plaintowerdefense.id_setting.ImageResizeUtils;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.soundcloud.android.crop.Crop;
@@ -94,6 +96,8 @@ public class IdSettingActivity extends BaseActivity implements View.OnClickListe
                 SharedPreferences.Editor editor = sharedPreference.edit();
                 editor.putString("nickname",nickname);
                 editor.putString("profileImage",imageUri);
+                // 유저 정보 등록
+                registerUserInfo(nickname,imageUri);
                 editor.apply();
                 // activity stack을 다 비우고 main 만 남게 한다
                 intent = new Intent(context,MainActivity.class);
@@ -290,5 +294,16 @@ public class IdSettingActivity extends BaseActivity implements View.OnClickListe
         File image = File.createTempFile(imageFileName, ".jpg", storageDir);
 
         return image;
+    }
+
+    // 사용자 정보를 등록한다
+    public void registerUserInfo(String nickname,String imageUri){
+        LoginSingleton.getInstance(context);
+        LoginSingleton.loginOnCreate();
+        FirebaseAuth mAuth = LoginSingleton.getmAuth();
+        FirebaseUser user = mAuth.getCurrentUser();
+        UserInfoSingleton userInfo = UserInfoSingleton.getInstance();
+        userInfo.setUserInfo(context,user,nickname,imageUri);
+
     }
 }

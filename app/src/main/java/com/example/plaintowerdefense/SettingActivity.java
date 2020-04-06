@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class SettingActivity extends BaseActivity implements View.OnClickListener{
 
     Button crashLogButton;
+    TextView gemNumberTextView;
     // 닉네임 표시용
     // 로그인 용
     TextView nicknameView;
@@ -36,6 +37,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private FirebaseAuth mAuth;
     // google 로그인 클라이언트. 로그아웃하는데 필요
     private GoogleSignInClient mGoogleSignInClient;
+    // 현재 user 정보
+    UserInfoSingleton userInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,10 +47,15 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         // 로그인 상태 표시
         nicknameView = findViewById(R.id.username_tv_setting);
         profileImageView = findViewById(R.id.profile_iv_setting);
+        gemNumberTextView = findViewById(R.id.gem_number_tv_setting);
         crashLogButton = findViewById(R.id.crash_log_bt_setting);
         crashLogButton.setOnClickListener(this);
         // click listener 등록
         findViewById(R.id.sign_out_bt_setting).setOnClickListener(this);
+        // 현재 user 정보 초기화
+        userInfo = UserInfoSingleton.getInstance();
+        userInfo.initUserInfo(context,LoginSingleton.getmAuth());
+        userInfo.setGemUi(gemNumberTextView);
     }
 
     @Override

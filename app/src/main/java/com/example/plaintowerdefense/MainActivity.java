@@ -21,10 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.example.plaintowerdefense.game.DefeatActivity;
-import com.example.plaintowerdefense.game.PauseActivity;
-import com.example.plaintowerdefense.game.VictoryActivity;
 import com.example.plaintowerdefense.gem_shop.BuyGemActivity;
 import com.example.plaintowerdefense.social.SocialActivity;
 import com.example.plaintowerdefense.social.SocialListviewActivity;
@@ -49,6 +46,7 @@ public class MainActivity extends BaseActivity {
     TextView socialTextView;
     TextView loginTextView;
     TextView listviewView;
+    TextView gemNumberTextView;
 
     Intent intent;
 
@@ -62,6 +60,8 @@ public class MainActivity extends BaseActivity {
     private FirebaseAuth mAuth;
     // google 로그인
     private GoogleSignInClient mGoogleSignInClient;
+    // 현재 user 정보
+    UserInfoSingleton userInfo;
 
     SharedPreferences sharedPreference;
     // 이미지 갈아끼워주는 역할
@@ -78,9 +78,14 @@ public class MainActivity extends BaseActivity {
         //view binding
         nicknameTextView = findViewById(R.id.nickname_tv_main);
         profileImageView = findViewById(R.id.profile_iv_main);
+        gemNumberTextView = findViewById(R.id.gem_number_tv_main);
         // 로그인 변수 초기화
         LoginSingleton login = LoginSingleton.getInstance(context);
         login.loginOnCreate();
+        // 현재 user 정보 초기화
+        userInfo = UserInfoSingleton.getInstance();
+        userInfo.initUserInfo(context,login.getmAuth());
+        userInfo.setGemUi(gemNumberTextView);
 
         // 클릭 이벤트 따로 분리
         buttonClick();
@@ -443,4 +448,9 @@ public class MainActivity extends BaseActivity {
 //            }
         }
     };
+    // user가 가진 보석 숫자를 표시해준다
+    public void setGemUi(final TextView gemTextView){
+        int gemCount = userInfo.getGem();
+        gemTextView.setText(String.valueOf(gemCount));
+    }
 }

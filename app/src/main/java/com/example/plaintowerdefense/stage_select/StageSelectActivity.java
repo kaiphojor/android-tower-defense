@@ -23,7 +23,6 @@ public class StageSelectActivity extends BaseActivity implements View.OnClickLis
     ImageView profileImageView;
     TextView gemNumberTextView;
     // 임시 버튼
-    Button temporaryGameStartButton;
     private ViewPager stageViewPager;
     private StageAdapter stageAdapter;
 
@@ -43,8 +42,6 @@ public class StageSelectActivity extends BaseActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stage_select);
         // binding & listener 등록
-        temporaryGameStartButton = findViewById(R.id.temporary_start_bt_stage_select);
-        temporaryGameStartButton.setOnClickListener(this);
         // view pager 초기화
         stageViewPager = findViewById(R.id.vp_stage_select);
         stageAdapter = new StageAdapter(this);
@@ -95,11 +92,11 @@ public class StageSelectActivity extends BaseActivity implements View.OnClickLis
     public void onClick(View v) {
         int id = v.getId();
         switch(id){
-            case R.id.temporary_start_bt_stage_select:
-                intent = new Intent(context, GameLoadingActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                startActivity(intent);
-                break;
+//            case R.id.temporary_start_bt_stage_select:
+//                intent = new Intent(context, GameLoadingActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+//                startActivity(intent);
+//                break;
             case R.id.previous_stage_iv_stage_select :
                 stageViewPager.arrowScroll(View.FOCUS_LEFT);
                 break;

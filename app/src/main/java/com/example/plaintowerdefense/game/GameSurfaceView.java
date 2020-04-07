@@ -558,13 +558,23 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                     String towerInfoJSONString = sharedPreferences.getString("towerInfo","error");
                     Singleton.log(towerInfoJSONString);
                     Tower tower = parseJSONTowerInfo(towerInfoJSONString);
-                    // 좌표, 타워정보  리스트에 저장
-                    tower.setX(focusedTileCoordinate[1]);
-                    tower.setY(focusedTileCoordinate[0]);
-                    // 중심 픽셀 좌표 등록
-                    int[] centeredCoordinate = getCenteredCoordinate(new int[]{focusedTileCoordinate[1],focusedTileCoordinate[0]});
-                    tower.setCenteredPixel(centeredCoordinate);
-                    towerList.add(tower);
+                    // 현재 가진 돈으로 tower를 구매 가능하다면
+                    if(tower.getPrice() <= stage.getPlayerGold()){
+                        // 구매후 남은 골드 UI 업데이트
+                        int goldLeft = stage.getPlayerGold() - tower.getPrice();
+                        stage.setPlayerGold(goldLeft);
+                        ((GameActivity)getContext()).setCoinCountView(goldLeft+"");
+
+                        // 좌표, 타워정보  리스트에 저장
+                        tower.setX(focusedTileCoordinate[1]);
+                        tower.setY(focusedTileCoordinate[0]);
+                        // 중심 픽셀 좌표 등록
+                        int[] centeredCoordinate = getCenteredCoordinate(new int[]{focusedTileCoordinate[1],focusedTileCoordinate[0]});
+                        tower.setCenteredPixel(centeredCoordinate);
+                        towerList.add(tower);
+                    }else{
+                        Singleton.toast("골드가 부족합니다",false);
+                    }
                     // 다 사용한 shared preference 비워주기
                     editor.putString("towerInfo","");
                     editor.putBoolean("isTowerClick",false);

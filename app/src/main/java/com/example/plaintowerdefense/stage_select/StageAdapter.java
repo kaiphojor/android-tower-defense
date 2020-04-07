@@ -60,7 +60,7 @@ public class StageAdapter extends PagerAdapter {
             page = inflater.inflate(R.layout.page_stage,container,false);
             // view binding
             levelTextView = page.findViewById(R.id.level_tv_stage);
-            final String levelString = "Level "+(position+1);
+            final String levelString = "Stage "+(position+1);
             final int level = position + 1;
             levelTextView.setText(levelString);
             starRatingBar = page.findViewById(R.id.rb_stage);
@@ -91,6 +91,7 @@ public class StageAdapter extends PagerAdapter {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    // loading activity로 이동. activity stack
                     Intent intent = new Intent(context, GameLoadingActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     context.startActivity(intent);

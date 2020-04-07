@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:alpha="1"
             tools:srcCompat="@tools:sample/backgrounds/scenic[17]" />
+
     </FrameLayout>
 
     <TextView
@@ -52,5 +53,15 @@
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/level_tv_stage" />
+
+    <ImageView
+        android:id="@+id/clear_iv_stage"
+        android:layout_width="150dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="10dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@+id/fl_stage"
+        app:layout_constraintTop_toBottomOf="@+id/rb_stage"
+        app:srcCompat="@drawable/stage_clear" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

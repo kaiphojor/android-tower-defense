@@ -17,6 +17,8 @@ import com.example.plaintowerdefense.GameLoadingActivity;
 import com.example.plaintowerdefense.R;
 import com.example.plaintowerdefense.Singleton;
 import com.example.plaintowerdefense.game.tower_list.Tower;
+import com.example.plaintowerdefense.user_info.StageInfo;
+import com.example.plaintowerdefense.user_info.UserInfoSingleton;
 
 import org.json.JSONObject;
 import org.w3c.dom.Text;
@@ -28,13 +30,15 @@ public class StageAdapter extends PagerAdapter {
     TextView levelTextView;
     RatingBar starRatingBar;
     ImageView stageImageView;
+    ImageView clearImageView;
     int levelNumber;
     int starNumber;
-
+    StageInfo[] stageInfo;
     // activity의 context를 전달받아서 저장
     public StageAdapter(Context context) {
         super();
         this.context = context;
+        stageInfo = UserInfoSingleton.getInstance().getStageInfo();
     }
 
     @Override
@@ -61,7 +65,16 @@ public class StageAdapter extends PagerAdapter {
             levelTextView.setText(levelString);
             starRatingBar = page.findViewById(R.id.rb_stage);
             stageImageView = page.findViewById(R.id.iv_stage);
+            clearImageView = page.findViewById(R.id.clear_iv_stage);
+
+            // 이미지 설정 -> 스테이지 별로 교체해야..
             stageImageView.setImageResource(R.drawable.seele_logo);
+            boolean isClear = stageInfo[position].isClear();
+            int starCount = stageInfo[position].getStarNumber();
+            if(isClear){
+                clearImageView.setVisibility(View.VISIBLE);
+            }
+            starRatingBar.setRating(starCount);
             // click listener
             page.setOnClickListener(new View.OnClickListener(){
                 @Override

@@ -56,7 +56,7 @@ public class UserInfoSingleton {
         email = mAuth.getCurrentUser().getEmail();
         String userInfoString = sharedPreference.getString(email, "");
         if (!userInfoString.contentEquals("")) {
-            // 있으면 불러오기
+            // json 정보 있으면 불러오기
             try {
                 JSONObject jsonUserInfo = new JSONObject(userInfoString);
                 Log.i("json result after sign in", userInfoString);
@@ -375,6 +375,10 @@ public class UserInfoSingleton {
     // 스테이지 진행 결과 불러오기
     public StageInfo getStageInfo(int stageLevel) {
         return stageInfo[stageLevel - 1];
+    }
+
+    public StageInfo[] getStageInfo() {
+        return stageInfo;
     }
 
     // 스테이지 진행 결과 저장하기

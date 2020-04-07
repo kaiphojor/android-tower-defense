@@ -83,6 +83,14 @@ public class UserInfoSingleton {
                     achievementInfo[i] = (boolean) jsonArrayAchievement.get(i);
                     Log.i("json boolean from array", achievementInfo[i] + "");
                 }
+
+                String enemyKilledString = jsonUserInfo.getString("enemyKilled");
+                JSONArray jsonArrayEnemyKilled = new JSONArray(enemyKilledString);
+                enemyKilled = new int[jsonArrayEnemyKilled.length()];
+                for (int i = 0; i < jsonArrayEnemyKilled.length(); i++) {
+                    enemyKilled[i] = (int) jsonArrayEnemyKilled.get(i);
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -392,8 +400,12 @@ public class UserInfoSingleton {
     }
 
     // 기존 죽인 횟수에 추가
-    public void setEnemyKilled(Context context, int enemyCode, int killCount) {
-        this.enemyKilled[enemyCode] += killCount;
+    public void setEnemyKilled(Context context,int[] killCount) {
+        for(int i=0; i<enemyKilled.length ;i++){
+            if(killCount[i] != -1){
+                enemyKilled[i] += killCount[i];
+            }
+        }
         // 저장후 shared preference에 변경한 내용을 반영
         updateUserInfo(context);
     }

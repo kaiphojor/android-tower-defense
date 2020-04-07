@@ -361,12 +361,17 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
         });
     }
     // 승리 activity 호출
-    public void showVictoryActivity(final int killed,final int passed) {
+    public void showVictoryActivity(final int killed,final int passed,final int[] killCount) {
         GameActivity.this.runOnUiThread(new Runnable() {
             public void run() {
                 intent = new Intent(context,VictoryActivity.class);
                 intent.putExtra("killed",killed);
                 intent.putExtra("passed",passed);
+                intent.putExtra("enemy0",killCount[0]);
+                intent.putExtra("enemy1",killCount[1]);
+                intent.putExtra("enemy2",killCount[2]);
+                intent.putExtra("enemy3",killCount[3]);
+                intent.putExtra("enemy4",killCount[4]);
                 startActivity(intent);
             }
         });

@@ -125,6 +125,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
      */
     int enemyKilled = 0;
     int enemyPassed = 0;
+    int killCount[];
 
 
     // 리스너 객체 참조를 저장하는 변수
@@ -166,6 +167,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         enemyPathMap = new HashMap<String,Integer>();
         // 적 경로 초기화
         setEnemyPath();
+        killCount = new int[5];
 
         // 이미지 위치
         pImage = new Point(0, 0);
@@ -429,6 +431,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
             if (enemy.isDead()) {
                 // 적이 죽었을 때 보상을 얻고 화면을 업데이트한다.
                 stage.earnRewardGold(enemy.getRewardGold());
+                killCount[enemy.getEnemyCode()] += 1;
                 ((GameActivity)getContext()).setCoinCountView(stage.getPlayerGold()+"");
                 // Remove the current element from the iterator and the list.
                 iterator.remove();
@@ -1091,7 +1094,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
 
                             // 여기서 조정 - 승리 문구
                             ((GameActivity)getContext()).setWaveTextView("Victory!");
-                            ((GameActivity)getContext()).showVictoryActivity(enemyKilled,enemyPassed);
+                            ((GameActivity)getContext()).showVictoryActivity(enemyKilled,enemyPassed,killCount);
 
                         }else{ // 다음 wave로 넘어갔을 경우
                             // 상태 전환 및 이전 상태 저장

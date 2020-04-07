@@ -41,6 +41,8 @@ public class VictoryActivity extends Activity implements View.OnClickListener {
     // 현재 user 정보
     UserInfoSingleton userInfo;
     int stageLevel;
+    // 적 종류별 죽인 횟수
+    int[] killCount;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // 반투명 처리
@@ -55,6 +57,7 @@ public class VictoryActivity extends Activity implements View.OnClickListener {
         userInfo = UserInfoSingleton.getInstance();
         // view binding
         bindView();
+        killCount = new int[5];
 
         // listener
         pressNextTextView.setOnClickListener(this);
@@ -68,10 +71,16 @@ public class VictoryActivity extends Activity implements View.OnClickListener {
         }catch(Exception e){
             e.printStackTrace();
         }
-        // 죽인 퍼센테이지에 따라서 별 등급 부여
+        // intent 받기
         intent = getIntent();
+        killCount[0] = intent.getIntExtra("enemy0",-1);
+        killCount[1] = intent.getIntExtra("enemy1",-1);
+        killCount[2] = intent.getIntExtra("enemy2",-1);
+        killCount[3] = intent.getIntExtra("enemy3",-1);
+        killCount[4] = intent.getIntExtra("enemy4",-1);
         enemyKilled = intent.getIntExtra("killed",0);
         enemyPassed = intent.getIntExtra("passed",0);
+        // 죽인 퍼센테이지에 따라서 별 등급 부여
         enemyTotal = enemyKilled + enemyPassed;
         if(enemyTotal != 0){
             enemySlainPercentage = 100 * enemyKilled / enemyTotal;
@@ -95,9 +104,17 @@ public class VictoryActivity extends Activity implements View.OnClickListener {
             }
             userInfo.setStageInfo(context,stageLevel,stageuserInfo);
         }
-
+        // 죽인 적 점수 계산
+        int reward = 0;
+        userInfo.setEnemyKilled(context,killCount);
+        for(int i=0; i<killCount.length; i++){
+            if(killCount[i]!=-1){
+                reward += killCount[i] * (i+1);
+            }
+        }
+        // 애니메이션 설정 및 실행
         setUpFadeAnimation(pressNextTextView);
-        startCountAnimation(rewardTextView,0,50);
+        startCountAnimation(rewardTextView,0,reward);
         startStarCountAnimation(starRatingBar);
 
 

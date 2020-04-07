@@ -577,6 +577,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                         // 골드 부족 토스트
                         ((GameActivity)getContext()).showInsufficientGoldToast();
                     }
+                    // menu tab을 닫아준다
+                    ((GameActivity)getContext()).setMenuVisibility(false);
                     // 다 사용한 shared preference 비워주기
                     editor.putString("towerInfo","");
                     editor.putBoolean("isTowerClick",false);

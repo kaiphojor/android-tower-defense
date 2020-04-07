@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E6000000"
-    tools:context=".game.DefeatActivity">
+    tools:context=".game.game_result.DefeatActivity">
 
         <TextView
             android:id="@+id/title_tv_defeat"

@@ -19,11 +19,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".game.DefeatActivity"
+        <activity android:name=".game.game_result.DefeatActivity"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" ></activity>
         <activity
-            android:name=".game.VictoryActivity"
+            android:name=".game.game_result.VictoryActivity"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
         <activity

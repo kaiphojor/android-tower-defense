@@ -1,4 +1,4 @@
-package com.example.plaintowerdefense.game;
+package com.example.plaintowerdefense.game.game_result;
 
 import androidx.appcompat.app.AppCompatActivity;
 

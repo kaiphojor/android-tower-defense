@@ -23,7 +23,7 @@ import android.widget.ViewSwitcher;
 
 import com.example.plaintowerdefense.deprecated.DrawerTestActivity;
 import com.example.plaintowerdefense.error_collect.BaseActivity;
-import com.example.plaintowerdefense.game.DefeatActivity;
+import com.example.plaintowerdefense.game.game_result.DefeatActivity;
 import com.example.plaintowerdefense.gem_shop.BuyGemActivity;
 import com.example.plaintowerdefense.social.SocialActivity;
 import com.example.plaintowerdefense.social.SocialListviewActivity;

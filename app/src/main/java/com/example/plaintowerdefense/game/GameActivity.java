@@ -12,12 +12,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.plaintowerdefense.error_collect.BaseActivity;
 import com.example.plaintowerdefense.LoginSingleton;
 import com.example.plaintowerdefense.R;
 import com.example.plaintowerdefense.Singleton;
+import com.example.plaintowerdefense.game.game_result.DefeatActivity;
+import com.example.plaintowerdefense.game.game_result.VictoryActivity;
 import com.example.plaintowerdefense.user_info.UserInfoSingleton;
 import com.example.plaintowerdefense.game.bgm.MusicPlayerSingleton;
 import com.example.plaintowerdefense.game.tower_list.Tower;
@@ -364,7 +365,7 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
     public void showVictoryActivity(final int killed,final int passed,final int[] killCount) {
         GameActivity.this.runOnUiThread(new Runnable() {
             public void run() {
-                intent = new Intent(context,VictoryActivity.class);
+                intent = new Intent(context, VictoryActivity.class);
                 intent.putExtra("killed",killed);
                 intent.putExtra("passed",passed);
                 intent.putExtra("enemy0",killCount[0]);
@@ -380,7 +381,7 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
     public void showDefeatActivity() {
         GameActivity.this.runOnUiThread(new Runnable() {
             public void run() {
-                intent = new Intent(context,DefeatActivity.class);
+                intent = new Intent(context, DefeatActivity.class);
                 startActivity(intent);
             }
         });

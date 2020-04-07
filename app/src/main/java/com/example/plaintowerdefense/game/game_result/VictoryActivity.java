@@ -1,4 +1,4 @@
-package com.example.plaintowerdefense.game;
+package com.example.plaintowerdefense.game.game_result;
 
 import android.animation.ValueAnimator;
 import android.app.Activity;

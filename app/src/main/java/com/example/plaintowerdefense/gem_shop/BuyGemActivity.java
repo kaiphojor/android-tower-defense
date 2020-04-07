@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.example.plaintowerdefense.BaseActivity;
 import com.example.plaintowerdefense.LoginSingleton;
 import com.example.plaintowerdefense.R;
+import com.example.plaintowerdefense.UserInfoSingleton;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,12 +36,17 @@ public class BuyGemActivity extends BaseActivity {
     // 로그인 용
     TextView idTextView;
     ImageView profileImageView;
+
+    TextView gemNumberTextView;
     // 태그 = 현재 activity 이름
     private final String TAG = this.getClass().getSimpleName();
     // context = 현재 context
     private Context context = this;
     // intent
     Intent intent;
+
+    // 현재 user 정보
+    UserInfoSingleton userInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +76,12 @@ public class BuyGemActivity extends BaseActivity {
         recyclerView = findViewById(R.id.gem_rv_buy_gem);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(this,3)) ;
+
+        gemNumberTextView = findViewById(R.id.gem_number_tv_buy_gem);
+
+        // 현재 user 정보 초기화
+        userInfo = UserInfoSingleton.getInstance();
+        userInfo.setGemUi(gemNumberTextView);
     }
     /*
     전체 activity 공통 - 프로필 사진& 닉네임 설정

@@ -25,6 +25,7 @@ import com.example.plaintowerdefense.LoginSingleton;
 import com.example.plaintowerdefense.MainActivity;
 import com.example.plaintowerdefense.R;
 import com.example.plaintowerdefense.Singleton;
+import com.example.plaintowerdefense.UserInfoSingleton;
 import com.example.plaintowerdefense.game.bgm.MusicContext;
 import com.example.plaintowerdefense.game.bgm.MusicPlayerSingleton;
 import com.example.plaintowerdefense.game.tower_list.Tower;
@@ -42,6 +43,7 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
     Button startButton;
     TextView waveTextView;
 
+    TextView gemNumberTextView;
     // 임시
     Button temporaryResultButton;
     TextView temporaryTextView;
@@ -67,6 +69,8 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
     // mp3 player singleton
     MediaPlayer musicPlayer = MusicPlayerSingleton.getInstance();
 
+    // 현재 user 정보
+    UserInfoSingleton userInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +82,7 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
         healthPointView = findViewById(R.id.health_point_tv_game);
         coinCountView = findViewById(R.id.coin_tv_game);
         waveTextView = findViewById(R.id.wave_tv_game);
+        gemNumberTextView = findViewById(R.id.gem_number_tv_game);
 
         temporaryResultButton = findViewById(R.id.temporary_bt_game);
         temporaryResultButton.setOnClickListener(this);
@@ -148,6 +153,13 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
         musicPlayer.setLooping(true);
         // 준비되었을 때 시작하기 위한 listener
         musicPlayer.setOnPreparedListener(this);
+
+
+
+        // 현재 user 정보 초기화
+        userInfo = UserInfoSingleton.getInstance();
+        userInfo.setGemUi(gemNumberTextView);
+
     }
 
     @Override

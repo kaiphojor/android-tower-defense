@@ -18,6 +18,7 @@ import com.example.plaintowerdefense.BaseActivity;
 import com.example.plaintowerdefense.GameLoadingActivity;
 import com.example.plaintowerdefense.LoginSingleton;
 import com.example.plaintowerdefense.R;
+import com.example.plaintowerdefense.UserInfoSingleton;
 import com.example.plaintowerdefense.game.GameActivity;
 import com.example.plaintowerdefense.game.RewardActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,6 +27,7 @@ public class StageSelectActivity extends BaseActivity implements View.OnClickLis
     // 로그인 용
     TextView idTextView;
     ImageView profileImageView;
+    TextView gemNumberTextView;
     // 임시 버튼
     Button temporaryGameStartButton;
     private ViewPager stageViewPager;
@@ -40,7 +42,8 @@ public class StageSelectActivity extends BaseActivity implements View.OnClickLis
     // context = 현재 context
     private Context context = this;
     Intent intent;
-
+    // 현재 user 정보
+    UserInfoSingleton userInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +64,11 @@ public class StageSelectActivity extends BaseActivity implements View.OnClickLis
         //login 상태 관련 view
         idTextView = findViewById(R.id.username_tv_stage_select);
         profileImageView = findViewById(R.id.profile_iv_stage_select);
+        gemNumberTextView = findViewById(R.id.gem_number_tv_stage_select);
+
+        // 현재 user 정보 초기화
+        userInfo = UserInfoSingleton.getInstance();
+        userInfo.setGemUi(gemNumberTextView);
     }
 
     @Override

@@ -110,6 +110,16 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
             e.printStackTrace();
         }
 
+        // 계정 정보 초기화
+//        SharedPreferences shared = getSharedPreferences("sharedPreference",MODE_PRIVATE);
+//        SharedPreferences.Editor sharedEditor = shared.edit();
+//        try{
+//            sharedEditor.putString("jihoopark7666@gmail.com","");
+//            sharedEditor.apply();
+//        }catch(Exception e){
+//            e.printStackTrace();
+//        }
+
 //        try{
 //            // 저장한 shared preference 불러 오기
 //            sharedPreferences = getSharedPreferences("game",MODE_WORLD_READABLE);

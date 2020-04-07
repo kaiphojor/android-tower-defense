@@ -1,4 +1,4 @@
-package com.example.plaintowerdefense;
+package com.example.plaintowerdefense.error_collect;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;

@@ -1,10 +1,10 @@
 package com.example.plaintowerdefense.game;
 
-import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -15,8 +15,9 @@ import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.example.plaintowerdefense.R;
+import com.example.plaintowerdefense.user_info.StageInfo;
+import com.example.plaintowerdefense.user_info.UserInfoSingleton;
 import com.example.plaintowerdefense.stage_select.StageSelectActivity;
 
 public class VictoryActivity extends Activity implements View.OnClickListener {
@@ -37,6 +38,9 @@ public class VictoryActivity extends Activity implements View.OnClickListener {
     // context = 현재 context
     private Context context = this;
     Intent intent;
+    // 현재 user 정보
+    UserInfoSingleton userInfo;
+    int stageLevel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // 반투명 처리
@@ -46,13 +50,24 @@ public class VictoryActivity extends Activity implements View.OnClickListener {
                 WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_victory);
+
+        // 현재 user 정보 초기화
+        userInfo = UserInfoSingleton.getInstance();
         // view binding
         bindView();
-        setUpFadeAnimation(pressNextTextView);
-        startCountAnimation(rewardTextView,0,50);
-        startStarCountAnimation(starRatingBar);
+
         // listener
         pressNextTextView.setOnClickListener(this);
+        SharedPreferences gamePreference = getSharedPreferences("game",MODE_PRIVATE);
+        SharedPreferences.Editor editor = gamePreference.edit();
+        try{
+            stageLevel = gamePreference.getInt("stageLevel",0);
+            // stage 선택 shared preference reset
+            editor.putInt("stageLevel",0);
+            editor.apply();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         // 죽인 퍼센테이지에 따라서 별 등급 부여
         intent = getIntent();
         enemyKilled = intent.getIntExtra("killed",0);
@@ -61,15 +76,31 @@ public class VictoryActivity extends Activity implements View.OnClickListener {
         if(enemyTotal != 0){
             enemySlainPercentage = 100 * enemyKilled / enemyTotal;
         }
-//        if(enemySlainPercentage <50){
-//            starCount = 0;
-//        }else if(enemySlainPercentage < 75){
-//            starCount = 1;
-//        }else if(enemySlainPercentage < 100){
-//            starCount = 2;
-//        }else {
-//            starCount = 3;
-//        }
+        if (enemySlainPercentage < 50) {
+            starCount = 0;
+        } else if (enemySlainPercentage < 75) {
+            starCount = 1;
+        } else if (enemySlainPercentage < 100) {
+            starCount = 2;
+        } else {
+            starCount = 3;
+        }
+        // 승리한 후 stage 정보 갱신
+        if(stageLevel != 0){
+            StageInfo stageuserInfo = userInfo.getStageInfo(stageLevel);
+            stageuserInfo.setClear(true);
+            // 별을 이전 보다 더 획득했다면 기록 갱신
+            if(starCount > stageuserInfo.getStarNumber()){
+                stageuserInfo.setStarNumber(starCount);
+            }
+            userInfo.setStageInfo(context,stageLevel,stageuserInfo);
+        }
+
+        setUpFadeAnimation(pressNextTextView);
+        startCountAnimation(rewardTextView,0,50);
+        startStarCountAnimation(starRatingBar);
+
+
 
 //        LottieAnimationView video = findViewById(R.id.video_anim_victory);
 //        video.setAnimation("video_anim.json");

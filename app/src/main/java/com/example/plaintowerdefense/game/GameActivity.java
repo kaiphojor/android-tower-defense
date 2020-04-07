@@ -1,18 +1,12 @@
 package com.example.plaintowerdefense.game;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,17 +14,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.plaintowerdefense.BaseActivity;
+import com.example.plaintowerdefense.error_collect.BaseActivity;
 import com.example.plaintowerdefense.LoginSingleton;
-import com.example.plaintowerdefense.MainActivity;
 import com.example.plaintowerdefense.R;
 import com.example.plaintowerdefense.Singleton;
-import com.example.plaintowerdefense.UserInfoSingleton;
-import com.example.plaintowerdefense.game.bgm.MusicContext;
+import com.example.plaintowerdefense.user_info.UserInfoSingleton;
 import com.example.plaintowerdefense.game.bgm.MusicPlayerSingleton;
 import com.example.plaintowerdefense.game.tower_list.Tower;
 import com.example.plaintowerdefense.game.tower_list.TowerListAdapter;
-import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONObject;
 

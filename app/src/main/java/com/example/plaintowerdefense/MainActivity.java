@@ -21,11 +21,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.example.plaintowerdefense.deprecated.DrawerTestActivity;
+import com.example.plaintowerdefense.error_collect.BaseActivity;
 import com.example.plaintowerdefense.game.DefeatActivity;
 import com.example.plaintowerdefense.gem_shop.BuyGemActivity;
 import com.example.plaintowerdefense.social.SocialActivity;
 import com.example.plaintowerdefense.social.SocialListviewActivity;
 import com.example.plaintowerdefense.stage_select.StageSelectActivity;
+import com.example.plaintowerdefense.user_info.UserInfoSingleton;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 //import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.auth.FirebaseAuth;

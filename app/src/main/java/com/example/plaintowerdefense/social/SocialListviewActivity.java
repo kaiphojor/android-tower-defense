@@ -1,7 +1,6 @@
 package com.example.plaintowerdefense.social;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.plaintowerdefense.BaseActivity;
+import com.example.plaintowerdefense.error_collect.BaseActivity;
 import com.example.plaintowerdefense.LoginSingleton;
 import com.example.plaintowerdefense.R;
 import com.example.plaintowerdefense.Singleton;

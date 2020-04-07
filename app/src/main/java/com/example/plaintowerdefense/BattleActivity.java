@@ -1,8 +1,8 @@
 package com.example.plaintowerdefense;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
+
+import com.example.plaintowerdefense.error_collect.BaseActivity;
 
 public class BattleActivity extends BaseActivity {
 

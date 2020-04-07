@@ -14,7 +14,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.plaintowerdefense.BaseActivity;
+import com.example.plaintowerdefense.error_collect.BaseActivity;
 import com.example.plaintowerdefense.LoginSingleton;
 import com.example.plaintowerdefense.R;
 import com.example.plaintowerdefense.Singleton;

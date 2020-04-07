@@ -1,8 +1,9 @@
-package com.example.plaintowerdefense;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.example.plaintowerdefense.deprecated;
 
 import android.os.Bundle;
+
+import com.example.plaintowerdefense.R;
+import com.example.plaintowerdefense.error_collect.BaseActivity;
 
 public class MultiPlayActivity extends BaseActivity {
 

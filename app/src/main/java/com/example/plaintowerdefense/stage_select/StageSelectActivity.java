@@ -1,27 +1,21 @@
 package com.example.plaintowerdefense.stage_select;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.plaintowerdefense.BaseActivity;
+import com.example.plaintowerdefense.error_collect.BaseActivity;
 import com.example.plaintowerdefense.GameLoadingActivity;
 import com.example.plaintowerdefense.LoginSingleton;
 import com.example.plaintowerdefense.R;
-import com.example.plaintowerdefense.UserInfoSingleton;
-import com.example.plaintowerdefense.game.GameActivity;
-import com.example.plaintowerdefense.game.RewardActivity;
-import com.google.firebase.auth.FirebaseAuth;
+import com.example.plaintowerdefense.user_info.UserInfoSingleton;
 
 public class StageSelectActivity extends BaseActivity implements View.OnClickListener{
     // 로그인 용

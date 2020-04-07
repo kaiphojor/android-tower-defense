@@ -1,6 +1,5 @@
 package com.example.plaintowerdefense;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
@@ -22,7 +21,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.plaintowerdefense.error_collect.BaseActivity;
 import com.example.plaintowerdefense.id_setting.ImageResizeUtils;
+import com.example.plaintowerdefense.user_info.UserInfoSingleton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.gun0912.tedpermission.PermissionListener;

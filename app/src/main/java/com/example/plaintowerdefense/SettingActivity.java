@@ -11,7 +11,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.plaintowerdefense.error_collect.BaseActivity;
 import com.example.plaintowerdefense.error_collect.CrashLogActivity;
+import com.example.plaintowerdefense.user_info.UserInfoSingleton;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

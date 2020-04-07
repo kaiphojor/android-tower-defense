@@ -1,11 +1,10 @@
-package com.example.plaintowerdefense;
+package com.example.plaintowerdefense.user_info;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -30,30 +29,7 @@ public class UserInfoSingleton {
     int stageNumber;
     StageInfo[] stageInfo;
     boolean[] achievementInfo;
-    public class StageInfo{
-        boolean isClear;
-        int starNumber;
-        public StageInfo(boolean isClear, int starNumber) {
-            this.isClear = isClear;
-            this.starNumber = starNumber;
-        }
-        public boolean isClear() {
-            return isClear;
-        }
 
-        public void setClear(boolean clear) {
-            isClear = clear;
-        }
-
-        public int getStarNumber() {
-            return starNumber;
-        }
-
-
-        public void setStarNumber(int starNumber) {
-            this.starNumber = starNumber;
-        }
-    }
     public UserInfoSingleton() {
     }
     // user가 가진 보석 숫자를 표시해준다
@@ -196,7 +172,7 @@ public class UserInfoSingleton {
         // 없으면 새로 만듬
     }
     // 업데이트한 정보 shared preference에 저장
-    public void updateUserInfo(){
+    public void updateUserInfo(Context context){
         // 대충 shared preference로 정보 불러와서 저장.
         SharedPreferences sharedPreference = context.getSharedPreferences("sharedPreference",context.MODE_PRIVATE|context.MODE_WORLD_WRITEABLE);
 //        String email = user.getEmail();
@@ -342,13 +318,15 @@ public class UserInfoSingleton {
     public void setStageNumber(int stageNumber) {
         this.stageNumber = stageNumber;
     }
-
-    public StageInfo[] getStageInfo() {
-        return stageInfo;
+    // 스테이지 진행 결과 불러오기
+    public StageInfo getStageInfo(int stageLevel) {
+        return stageInfo[stageLevel-1];
     }
-
-    public void setStageInfo(StageInfo[] stageInfo) {
-        this.stageInfo = stageInfo;
+    // 스테이지 진행 결과 저장하기
+    public void setStageInfo(Context context,int stageLevel,StageInfo stageResult) {
+        stageInfo[stageLevel-1] = stageResult;
+        // 저장후 shared preference에 변경한 내용을 반영
+        updateUserInfo(context);
     }
 
     public boolean[] getAchievementInfo() {

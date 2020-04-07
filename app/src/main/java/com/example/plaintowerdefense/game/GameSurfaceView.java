@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
 import com.example.plaintowerdefense.R;
 import com.example.plaintowerdefense.Singleton;
@@ -573,7 +574,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                         tower.setCenteredPixel(centeredCoordinate);
                         towerList.add(tower);
                     }else{
-                        Singleton.toast("골드가 부족합니다",false);
+                        // 골드 부족 토스트
+                        ((GameActivity)getContext()).showInsufficientGoldToast();
                     }
                     // 다 사용한 shared preference 비워주기
                     editor.putString("towerInfo","");

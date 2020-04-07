@@ -96,9 +96,9 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
             // 타워 목록에서 타워를 클릭 했을 때
             @Override
             public void onTowerClick(View v, int position) {
-            Toast.makeText(getApplicationContext(),
-                    towerListAdapter.getItem(position).getName(),
-                    Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(),
+//                        towerListAdapter.getItem(position).getName(),
+//                        Toast.LENGTH_LONG).show();
             // 돈이 충분하다면 shared preference 에 저장 ( GameActivity와 GameSurfaceView 통신용)
             SharedPreferences sharedPreferences = getSharedPreferences("game", MODE_MULTI_PROCESS | MODE_WORLD_WRITEABLE);
             try {
@@ -382,6 +382,14 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
             public void run() {
                 intent = new Intent(context,DefeatActivity.class);
                 startActivity(intent);
+            }
+        });
+    }
+    // gold 부족 toast
+    public void showInsufficientGoldToast() {
+        GameActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+                Singleton.toast("골드가 부족합니다",false);
             }
         });
     }

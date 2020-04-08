@@ -7,10 +7,11 @@ public class FadingImage {
     int y;
     float alpha;
 
-    public FadingImage(int x, int y, float alpha) {
+    public FadingImage(int x, int y) {
         this.x = x;
         this.y = y;
-        this.alpha = alpha;
+//        this.alpha = alpha;
+        // alpha 값 1.0 (opaque) 0.0 (transparent)
         alpha = 1.0f;
     }
 

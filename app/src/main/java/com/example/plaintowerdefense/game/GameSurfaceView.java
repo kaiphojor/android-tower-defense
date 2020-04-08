@@ -26,6 +26,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHolder.Callback{
@@ -65,12 +66,14 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
     Bitmap endPointImage;
     // 빔 이미지
     Bitmap focusedTileImage;
+    Bitmap coinImage;
     // resized image
     Bitmap[] beamImage;
     Bitmap enemyPelletImage;
     Bitmap tileImageResized;
     Bitmap enemyTileImageResized;
     Bitmap scaledBeamImage;
+    Bitmap resizedCoinImage;
 
     // 게임 진행 제어하는 counter
     int counter = 0;
@@ -128,7 +131,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
     int enemyPassed = 0;
     int killCount[];
 
-    ArrayList textList;
+    ArrayList<FadingImage> getCoinList;
 
 
     // 리스너 객체 참조를 저장하는 변수
@@ -171,6 +174,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         // 적 경로 초기화
         setEnemyPath();
         killCount = new int[5];
+        getCoinList = new ArrayList<>();
 
         // 이미지 위치
         pImage = new Point(0, 0);
@@ -180,6 +184,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         focusedTileImage =BitmapFactory.decodeResource(res, R.drawable.focused_pixel_500);
         enemyPelletImage = BitmapFactory.decodeResource(res,R.drawable.yellow_pellet);
         enemyPelletImage = BitmapFactory.decodeResource(res,R.drawable.yellow_pellet);
+        coinImage = BitmapFactory.decodeResource(res,R.drawable.coin);
         // 빔 이미지 load
         beamImage = new Bitmap[6];
         beamImage[0] = BitmapFactory.decodeResource(res,R.drawable.red_beam_horizontal);
@@ -197,6 +202,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         tileImageResized  = Bitmap.createScaledBitmap(tileImage, tileLength, tileLength, true);
         enemyTileImageResized  = Bitmap.createScaledBitmap(enemyTileImage, tileLength, tileLength, true);
         focusedTileImage  = Bitmap.createScaledBitmap(focusedTileImage, tileLength, tileLength, true);
+        resizedCoinImage = Bitmap.createScaledBitmap(coinImage, tileLength, tileLength, true);
 
 //        scaledBeamImage = Bitmap.createScaledBitmap(beamImage, 300, 30, true);
 
@@ -322,7 +328,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
 
             // 타워가 공격하는 그림 그리기
             drawTowerAttack(canvas,paint);
-
+            // 적이 죽었을 때 사라지는 코인 이펙트
+            drawGetCoin(canvas,paint);
             // focus 얻음 표시 그리기
             drawFocus(canvas,paint);
         }
@@ -432,6 +439,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
             Enemy enemy = iterator.next();
             // 적이 죽었을 경우 목록에서 제거한다
             if (enemy.isDead()) {
+                // 코인 뜨는 것
+                getCoinList.add(new FadingImage(enemy.getX(),enemy.getY()));
                 // 적이 죽었을 때 보상을 얻고 화면을 업데이트한다.
                 stage.earnRewardGold(enemy.getRewardGold());
                 killCount[enemy.getEnemyCode()] += 1;
@@ -674,6 +683,15 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         if(!enemyList.isEmpty()){
             for(Enemy enemy : enemyList){
                 canvas.drawBitmap(enemyPelletImage,enemy.getX(),enemy.getY(),paint);
+            }
+        }
+    }
+    // 코인 얻었을 때 나타나는 코인 그림 표시
+    public void drawGetCoin(Canvas canvas,Paint paint){
+        if(!getCoinList.isEmpty()){
+            for(FadingImage fadingImage : getCoinList){
+                canvas.drawBitmap(resizedCoinImage,fadingImage.getX(),fadingImage.getY(),paint);
+
             }
         }
     }

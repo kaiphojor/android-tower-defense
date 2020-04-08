@@ -348,6 +348,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
             // 타워 쿨타임 감소
             towerAttack();
             towerUpdate();
+            coinImageMove();
         }
         stateProcess();
     }
@@ -641,6 +642,19 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
 
         }
     }
+    // coin image 이동
+    public void coinImageMove(){
+        if(!getCoinList.isEmpty()){
+            for(FadingImage fadingImage : getCoinList){
+                fadingImage.move();
+                // alpha 값이 0이면 지운다
+                if(fadingImage.getAlpha()<= 0){
+                    // 지운다
+                }
+
+            }
+        }
+    }
 
     /*
     그림 그리는 메소드 - doDraw에서 호출
@@ -690,8 +704,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
     public void drawGetCoin(Canvas canvas,Paint paint){
         if(!getCoinList.isEmpty()){
             for(FadingImage fadingImage : getCoinList){
-                canvas.drawBitmap(resizedCoinImage,fadingImage.getX(),fadingImage.getY(),paint);
-
+                Paint opacitiyChangedPaint = new Paint();
+                opacitiyChangedPaint.setAlpha(fadingImage.getAlpha());
+                canvas.drawBitmap(resizedCoinImage,fadingImage.getX(),fadingImage.getY(),opacitiyChangedPaint);
             }
         }
     }

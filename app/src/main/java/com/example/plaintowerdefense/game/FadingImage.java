@@ -5,14 +5,14 @@ import android.graphics.Point;
 public class FadingImage {
     int x;
     int y;
-    float alpha;
+    int alpha;
 
     public FadingImage(int x, int y) {
         this.x = x;
         this.y = y;
 //        this.alpha = alpha;
         // alpha 값 1.0 (opaque) 0.0 (transparent)
-        alpha = 1.0f;
+        alpha = 255;
     }
 
     public void setXY(int[] coordinate){
@@ -38,16 +38,16 @@ public class FadingImage {
         this.y = y;
     }
 
-    public float getAlpha() {
+    public int getAlpha() {
         return alpha;
     }
 
-    public void setAlpha(float alpha) {
+    public void setAlpha(int alpha) {
         this.alpha = alpha;
     }
     public void move(){
         y -= 1;
-        alpha -= 0.01f;
+        alpha -= 1;
     }
     public boolean canErase(){
         return alpha <= 0;

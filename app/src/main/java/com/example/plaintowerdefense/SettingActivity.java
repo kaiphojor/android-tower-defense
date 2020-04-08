@@ -45,16 +45,11 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private GoogleSignInClient mGoogleSignInClient;
     // 현재 user 정보
     UserInfoSingleton userInfo;
-
-    // 음량 조절 용
+    // 음량 조절 용 view
     CheckBox bgmCheckBox;
     CheckBox sfxCheckBox;
     SeekBar bgmVolumeSeekBar;
     SeekBar sfxVolumeSeekBar;
-    boolean isBgmMute = false;
-    int bgmVolume = 100;
-    boolean isSfxMute = false;
-    int sfxVolume = 100;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,6 +134,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
         }
     }
+    // sound 설정 불러오기 & 조정하기
     public void initSoundSetting(){
         bgmCheckBox = findViewById(R.id.mute_sound_cb_setting);
         sfxCheckBox = findViewById(R.id.mute_effect_cb_setting);

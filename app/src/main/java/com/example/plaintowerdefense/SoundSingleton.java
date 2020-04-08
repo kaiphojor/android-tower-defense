@@ -8,10 +8,6 @@ import org.json.JSONObject;
 public class SoundSingleton {
 
 
-//    boolean isBgmMute = false;
-//    int bgmVolume = 100;
-//    boolean isSfxMute = false;
-//    int sfxVolume = 100;
     static boolean bgmMute;
     static int bgmVolume;
     static boolean sfxMute;

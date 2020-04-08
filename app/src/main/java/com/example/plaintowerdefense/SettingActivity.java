@@ -21,8 +21,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
-import org.json.JSONObject;
-
 public class SettingActivity extends BaseActivity implements View.OnClickListener{
 
 
@@ -70,51 +68,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         gemNumberTextView = findViewById(R.id.gem_number_tv_setting);
         crashLogButton = findViewById(R.id.crash_log_bt_setting);
         crashLogButton.setOnClickListener(this);
-
-        bgmCheckBox = findViewById(R.id.mute_sound_cb_setting);
-        sfxCheckBox = findViewById(R.id.mute_effect_cb_setting);
-        bgmVolumeSeekBar = findViewById(R.id.change_background_sb_setting);
-        sfxVolumeSeekBar = findViewById(R.id.change_effect_sb_setting);
-        //TODO : singleton 화 하자
-        SharedPreferences soundPreference = getSharedPreferences("setting",MODE_PRIVATE);
-        try{
-            String soundString = soundPreference.getString("sound","");
-            // 없으면 새로 만들기
-            if(soundString.contentEquals("")){
-                JSONObject soundJsonObject = new JSONObject();
-                // bgm 음소거 여부, 음량 조절 . 적용시 0.01f 에 곱해서 적용
-                JSONObject bgmJsonObject = new JSONObject();
-                bgmJsonObject.put("isMute",false);
-                bgmJsonObject.put("volume",100);
-                soundJsonObject.put("bgm",bgmJsonObject);
-                // 효과음 음소거 여부, 음량 조절 . 적용시 0.01f 에 곱해서 적용
-                JSONObject sfxJsonObject = new JSONObject();
-                sfxJsonObject.put("isMute",false);
-                sfxJsonObject.put("volume",100);
-                soundJsonObject.put("sfx",sfxJsonObject);
-                // shared preference 에 저장
-                SharedPreferences.Editor editor = soundPreference.edit();
-                editor.putString("sound",soundJsonObject.toString());
-                editor.apply();
-            }else{
-                //있으면 불러온다
-                JSONObject soundJsonObject = new JSONObject(soundString);
-                String bgmString = soundJsonObject.getString("bgm");
-                // bgm 음소거 여부, 음량 조절 . 적용시 0.01f 에 곱해서 적용
-                JSONObject bgmJsonObject = new JSONObject(bgmString);
-                bgmJsonObject.getBoolean("isMute");
-                bgmJsonObject.put("volume",100);
-                soundJsonObject.put("bgm",bgmJsonObject);
-                // 효과음 음소거 여부, 음량 조절 . 적용시 0.01f 에 곱해서 적용
-                JSONObject sfxJsonObject = new JSONObject();
-                sfxJsonObject.put("isMute",false);
-                sfxJsonObject.put("volume",100);
-                soundJsonObject.put("sfx",sfxJsonObject);
-            }
-
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        // 음량 정보 초기화
+        initSoundSetting();
 
         // click listener 등록
         findViewById(R.id.sign_out_bt_setting).setOnClickListener(this);
@@ -183,5 +138,65 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 startActivity(intent);
                 break;
         }
+    }
+    public void initSoundSetting(){
+        bgmCheckBox = findViewById(R.id.mute_sound_cb_setting);
+        sfxCheckBox = findViewById(R.id.mute_effect_cb_setting);
+        bgmVolumeSeekBar = findViewById(R.id.change_background_sb_setting);
+        sfxVolumeSeekBar = findViewById(R.id.change_effect_sb_setting);
+
+//        SoundSingleton soundSingleton = SoundSingleton.getInstance();
+        // sound singleton 초기화 후 view에 세팅
+        SoundSingleton.initSoundSingleton(context);
+        bgmCheckBox.setChecked(SoundSingleton.isBgmMute());
+        bgmVolumeSeekBar.setProgress(SoundSingleton.getBgmVolume());
+        sfxCheckBox.setChecked(SoundSingleton.isSfxMute());
+        sfxVolumeSeekBar.setProgress(SoundSingleton.getSfxVolume());
+
+        bgmCheckBox.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                // bgm 음소거 여부 저장
+                SoundSingleton.setBgmMute(bgmCheckBox.isChecked());
+                SoundSingleton.updateSoundSingleton(context);
+            }
+        });
+        sfxCheckBox.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                // 효과음 음소거 여부 저장
+                SoundSingleton.setSfxMute(sfxCheckBox.isChecked());
+                SoundSingleton.updateSoundSingleton(context);
+            }
+        });
+        // bgm 음량 조정 및 저장
+        bgmVolumeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                SoundSingleton.setBgmVolume(progress);
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                SoundSingleton.updateSoundSingleton(context);
+            }
+        });
+        // 효과음 음량 조정 및 저장
+        sfxVolumeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                SoundSingleton.setSfxVolume(progress);
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                SoundSingleton.updateSoundSingleton(context);
+            }
+        });
+
     }
 }

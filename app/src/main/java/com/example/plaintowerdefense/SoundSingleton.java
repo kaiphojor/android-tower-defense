@@ -2,9 +2,6 @@ package com.example.plaintowerdefense;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.widget.TextView;
-
-import com.example.plaintowerdefense.user_info.UserInfoSingleton;
 
 import org.json.JSONObject;
 
@@ -15,9 +12,9 @@ public class SoundSingleton {
 //    int bgmVolume = 100;
 //    boolean isSfxMute = false;
 //    int sfxVolume = 100;
-    static boolean isBgmMute;
+    static boolean bgmMute;
     static int bgmVolume;
-    static boolean isSfxMute;
+    static boolean sfxMute;
     static int sfxVolume;
 
     static SoundSingleton instance;
@@ -56,9 +53,9 @@ public class SoundSingleton {
                 editor.putString("sound",soundJsonObject.toString());
                 editor.apply();
                 // 값 초기화
-                isBgmMute = false;
+                bgmMute = false;
                 bgmVolume = 100;
-                isSfxMute = false;
+                sfxMute = false;
                 sfxVolume = 100;
             }else{
                 //있으면 불러온다
@@ -66,12 +63,12 @@ public class SoundSingleton {
                 // bgm 음소거 여부, 음량 조절 . 적용시 0.01f 에 곱해서 적용
                 String bgmString = soundJsonObject.getString("bgm");
                 JSONObject bgmJsonObject = new JSONObject(bgmString);
-                isBgmMute = bgmJsonObject.getBoolean("isMute");
+                bgmMute = bgmJsonObject.getBoolean("isMute");
                 bgmVolume = bgmJsonObject.getInt("volume");
                 // 효과음 음소거 여부, 음량 조절 . 적용시 0.01f 에 곱해서 적용
                 String sfxString = soundJsonObject.getString("sfx");
                 JSONObject sfxJsonObject = new JSONObject(sfxString);
-                isSfxMute = sfxJsonObject.getBoolean("isMute");
+                sfxMute = sfxJsonObject.getBoolean("isMute");
                 sfxVolume = sfxJsonObject.getInt("volume");
             }
         }catch(Exception e){
@@ -79,18 +76,18 @@ public class SoundSingleton {
         }
     }
     // 변경사항을 shared preference에 반영한다
-    public void updateSoundSingleton(Context context){
+    public static void updateSoundSingleton(Context context){
         SharedPreferences soundPreference = context.getSharedPreferences("setting",context.MODE_PRIVATE);
         try{
             JSONObject soundJsonObject = new JSONObject();
             // bgm 음소거 여부, 음량 조절 . 적용시 0.01f 에 곱해서 적용
             JSONObject bgmJsonObject = new JSONObject();
-            bgmJsonObject.put("isMute",isBgmMute);
+            bgmJsonObject.put("isMute", bgmMute);
             bgmJsonObject.put("volume",bgmVolume);
             soundJsonObject.put("bgm",bgmJsonObject);
             // 효과음 음소거 여부, 음량 조절 . 적용시 0.01f 에 곱해서 적용
             JSONObject sfxJsonObject = new JSONObject();
-            sfxJsonObject.put("isMute",isSfxMute);
+            sfxJsonObject.put("isMute", sfxMute);
             sfxJsonObject.put("volume",sfxVolume);
             soundJsonObject.put("sfx",sfxJsonObject);
             // shared preference 에 저장
@@ -102,12 +99,12 @@ public class SoundSingleton {
         }
     }
 
-    public static boolean isIsBgmMute() {
-        return isBgmMute;
+    public static boolean isBgmMute() {
+        return bgmMute;
     }
 
-    public static void setIsBgmMute(boolean isBgmMute) {
-        SoundSingleton.isBgmMute = isBgmMute;
+    public static void setBgmMute(boolean bgmMute) {
+        SoundSingleton.bgmMute = bgmMute;
     }
 
     public static int getBgmVolume() {
@@ -118,12 +115,12 @@ public class SoundSingleton {
         SoundSingleton.bgmVolume = bgmVolume;
     }
 
-    public static boolean isIsSfxMute() {
-        return isSfxMute;
+    public static boolean isSfxMute() {
+        return sfxMute;
     }
 
-    public static void setIsSfxMute(boolean isSfxMute) {
-        SoundSingleton.isSfxMute = isSfxMute;
+    public static void setSfxMute(boolean sfxMute) {
+        SoundSingleton.sfxMute = sfxMute;
     }
 
     public static int getSfxVolume() {

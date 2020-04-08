@@ -8,8 +8,8 @@ public class FadingImage {
     int alpha;
 
     public FadingImage(int x, int y) {
-        this.x = x-40;
-        this.y = y-40;
+        this.x = x-25;
+        this.y = y-25;
 //        this.alpha = alpha;
         // alpha 값 1.0 (opaque) 0.0 (transparent)
         alpha = 255;

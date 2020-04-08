@@ -413,4 +413,13 @@ public class UserInfoSingleton {
         // 저장후 shared preference에 변경한 내용을 반영
         updateUserInfo(context);
     }
+    // reset data
+    public void resetGameData(){
+        for (int i = 0; i < stageInfo.length; i++) {
+            stageInfo[i] = new StageInfo(false, 0);
+        }
+        for (int i = 0; i < enemyKilled.length; i++) {
+            enemyKilled[i] = 0;
+        }
+    }
 }

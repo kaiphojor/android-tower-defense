@@ -201,6 +201,13 @@
                     android:textSize="24sp" />
 
                 <Button
+                    android:id="@+id/reset_data_bt_setting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="reset data" />
+
+                <Button
                     android:id="@+id/button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

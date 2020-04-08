@@ -8,8 +8,8 @@ public class FadingImage {
     int alpha;
 
     public FadingImage(int x, int y) {
-        this.x = x;
-        this.y = y;
+        this.x = x-40;
+        this.y = y-40;
 //        this.alpha = alpha;
         // alpha 값 1.0 (opaque) 0.0 (transparent)
         alpha = 255;
@@ -47,7 +47,7 @@ public class FadingImage {
     }
     public void move(){
         y -= 1;
-        alpha -= 1;
+        alpha -= 6;
     }
     public boolean canErase(){
         return alpha <= 0;

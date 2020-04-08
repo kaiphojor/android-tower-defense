@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener{
 
+    Button resetDataButton;
     Button crashLogButton;
     TextView gemNumberTextView;
     // 닉네임 표시용
@@ -46,6 +47,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
+        resetDataButton = findViewById(R.id.reset_data_bt_setting);
+        resetDataButton.setOnClickListener(this);
         // 로그인 상태 표시
         nicknameView = findViewById(R.id.username_tv_setting);
         profileImageView = findViewById(R.id.profile_iv_setting);
@@ -104,6 +107,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
         // 로그아웃시 해당 메소드를 호출한다
         switch(id){
+            case R.id.reset_data_bt_setting :
+                userInfo.resetGameData();
+                // 저장후 shared preference에 변경한 내용을 반영
+                userInfo.updateUserInfo(context);
+                Singleton.toast("게임 기록이 초기화 되었습니다.",false);
+                break;
             case R.id.sign_out_bt_setting :
                 signOut();
 

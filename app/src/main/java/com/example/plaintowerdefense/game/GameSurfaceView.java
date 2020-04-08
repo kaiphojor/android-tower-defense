@@ -202,7 +202,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         tileImageResized  = Bitmap.createScaledBitmap(tileImage, tileLength, tileLength, true);
         enemyTileImageResized  = Bitmap.createScaledBitmap(enemyTileImage, tileLength, tileLength, true);
         focusedTileImage  = Bitmap.createScaledBitmap(focusedTileImage, tileLength, tileLength, true);
-        resizedCoinImage = Bitmap.createScaledBitmap(coinImage, tileLength, tileLength, true);
+        resizedCoinImage = Bitmap.createScaledBitmap(coinImage, 80,80, true);
 
 //        scaledBeamImage = Bitmap.createScaledBitmap(beamImage, 300, 30, true);
 
@@ -348,8 +348,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
             // 타워 쿨타임 감소
             towerAttack();
             towerUpdate();
-            coinImageMove();
         }
+        coinImageMove();
         stateProcess();
     }
     // touch 시 focus 얻는 이벤트
@@ -645,13 +645,16 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
     // coin image 이동
     public void coinImageMove(){
         if(!getCoinList.isEmpty()){
-            for(FadingImage fadingImage : getCoinList){
+            // iterator 쓰는 건 for each 에서는 현재 element를 제거할 수 없기 때문
+            for (Iterator<FadingImage> iterator = getCoinList.iterator(); iterator.hasNext();) {
+                FadingImage fadingImage = iterator.next();
                 fadingImage.move();
                 // alpha 값이 0이면 지운다
                 if(fadingImage.getAlpha()<= 0){
                     // 지운다
-                }
+                    iterator.remove();
 
+                }
             }
         }
     }

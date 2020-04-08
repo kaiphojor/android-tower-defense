@@ -147,7 +147,6 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
         musicPlayer.setOnPreparedListener(this);
 
 
-
         // 현재 user 정보 초기화
         userInfo = UserInfoSingleton.getInstance();
         userInfo.setGemUi(gemNumberTextView);

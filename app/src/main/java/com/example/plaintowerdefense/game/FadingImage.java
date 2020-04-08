@@ -12,6 +12,7 @@ public class FadingImage {
         this.y = y-25;
 //        this.alpha = alpha;
         // alpha 값 1.0 (opaque) 0.0 (transparent)
+        // 0 ~ 255 범위. 하지만 메소드안에서
         alpha = 255;
     }
 

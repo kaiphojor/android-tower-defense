@@ -8,7 +8,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.plaintowerdefense.error_collect.BaseActivity;
@@ -19,7 +21,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
+import org.json.JSONObject;
+
 public class SettingActivity extends BaseActivity implements View.OnClickListener{
+
 
     Button resetDataButton;
     Button crashLogButton;
@@ -42,6 +47,16 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private GoogleSignInClient mGoogleSignInClient;
     // 현재 user 정보
     UserInfoSingleton userInfo;
+
+    // 음량 조절 용
+    CheckBox bgmCheckBox;
+    CheckBox sfxCheckBox;
+    SeekBar bgmVolumeSeekBar;
+    SeekBar sfxVolumeSeekBar;
+    boolean isBgmMute = false;
+    int bgmVolume = 100;
+    boolean isSfxMute = false;
+    int sfxVolume = 100;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +70,52 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         gemNumberTextView = findViewById(R.id.gem_number_tv_setting);
         crashLogButton = findViewById(R.id.crash_log_bt_setting);
         crashLogButton.setOnClickListener(this);
+
+        bgmCheckBox = findViewById(R.id.mute_sound_cb_setting);
+        sfxCheckBox = findViewById(R.id.mute_effect_cb_setting);
+        bgmVolumeSeekBar = findViewById(R.id.change_background_sb_setting);
+        sfxVolumeSeekBar = findViewById(R.id.change_effect_sb_setting);
+        //TODO : singleton 화 하자
+        SharedPreferences soundPreference = getSharedPreferences("setting",MODE_PRIVATE);
+        try{
+            String soundString = soundPreference.getString("sound","");
+            // 없으면 새로 만들기
+            if(soundString.contentEquals("")){
+                JSONObject soundJsonObject = new JSONObject();
+                // bgm 음소거 여부, 음량 조절 . 적용시 0.01f 에 곱해서 적용
+                JSONObject bgmJsonObject = new JSONObject();
+                bgmJsonObject.put("isMute",false);
+                bgmJsonObject.put("volume",100);
+                soundJsonObject.put("bgm",bgmJsonObject);
+                // 효과음 음소거 여부, 음량 조절 . 적용시 0.01f 에 곱해서 적용
+                JSONObject sfxJsonObject = new JSONObject();
+                sfxJsonObject.put("isMute",false);
+                sfxJsonObject.put("volume",100);
+                soundJsonObject.put("sfx",sfxJsonObject);
+                // shared preference 에 저장
+                SharedPreferences.Editor editor = soundPreference.edit();
+                editor.putString("sound",soundJsonObject.toString());
+                editor.apply();
+            }else{
+                //있으면 불러온다
+                JSONObject soundJsonObject = new JSONObject(soundString);
+                String bgmString = soundJsonObject.getString("bgm");
+                // bgm 음소거 여부, 음량 조절 . 적용시 0.01f 에 곱해서 적용
+                JSONObject bgmJsonObject = new JSONObject(bgmString);
+                bgmJsonObject.getBoolean("isMute");
+                bgmJsonObject.put("volume",100);
+                soundJsonObject.put("bgm",bgmJsonObject);
+                // 효과음 음소거 여부, 음량 조절 . 적용시 0.01f 에 곱해서 적용
+                JSONObject sfxJsonObject = new JSONObject();
+                sfxJsonObject.put("isMute",false);
+                sfxJsonObject.put("volume",100);
+                soundJsonObject.put("sfx",sfxJsonObject);
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
         // click listener 등록
         findViewById(R.id.sign_out_bt_setting).setOnClickListener(this);
         // 현재 user 정보 초기화

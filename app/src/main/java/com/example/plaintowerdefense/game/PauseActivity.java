@@ -13,6 +13,7 @@ import android.widget.Button;
 
 import com.example.plaintowerdefense.MainActivity;
 import com.example.plaintowerdefense.R;
+import com.example.plaintowerdefense.SoundSingleton;
 
 public class PauseActivity extends Activity implements View.OnClickListener {
     Button homeButton;
@@ -41,7 +42,15 @@ public class PauseActivity extends Activity implements View.OnClickListener {
         homeButton.setOnClickListener(this);
         resumeButton.setOnClickListener(this);
         muteButton.setOnClickListener(this);
+        // sound 설정 가져오기
+        SoundSingleton.initSoundSingleton(context);
+        boolean isBgmMute = SoundSingleton.isBgmMute();
+        // 음소거면 음소거 그림, 아니면 그냥 그림
+        if(isBgmMute){
 
+        }else{
+
+        }
     }
 
     @Override
@@ -59,6 +68,10 @@ public class PauseActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.mute_bt_pause :
                 // 음량 조절
+                boolean isMute = SoundSingleton.isBgmMute();
+                SoundSingleton.setBgmMute(!isMute);
+                SoundSingleton.updateSoundSingleton(context);
+                // 사진 교체
                 break;
         }
 

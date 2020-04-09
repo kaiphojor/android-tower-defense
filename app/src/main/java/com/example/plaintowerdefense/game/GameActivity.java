@@ -123,12 +123,10 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
 
             }
         });
-        // sound 설정 가져오기
-        SoundSingleton.initSoundSingleton(context);
-        bgmVolume = 0.01f * SoundSingleton.getBgmVolume();
+
         // mp3 초기화
         musicPlayer = MediaPlayer.create(GameActivity.this, R.raw.skull_fire);
-        musicPlayer.setVolume(bgmVolume,bgmVolume);
+
         musicPlayer.setLooping(true);
         // 준비되었을 때 시작하기 위한 listener
         musicPlayer.setOnPreparedListener(this);
@@ -143,6 +141,14 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void onResume() {
         super.onResume();
+        // sound 설정 가져오기
+        SoundSingleton.initSoundSingleton(context);
+        boolean isBgmMute = SoundSingleton.isBgmMute();
+        // 음소거 여부를 고려한 설정
+        bgmVolume = isBgmMute ? 0f : 0.01f * SoundSingleton.getBgmVolume();
+        musicPlayer.setVolume(bgmVolume,bgmVolume);
+
+
         if(!musicPlayer.isPlaying()){
             musicPlayer.start();
         }

@@ -15,27 +15,27 @@
         android:text="일시정지"
         android:textColor="#FFFFFF"
         android:textSize="36sp"
-        app:layout_constraintBottom_toTopOf="@+id/resume_bt_pause"
+        app:layout_constraintBottom_toTopOf="@+id/resume_gif_pause"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/home_bt_pause"
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/home_gif_pause"
         android:layout_width="150dp"
         android:layout_height="140dp"
-        android:text="HOME"
+        android:src="@drawable/home_animation"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/resume_bt_pause"
+        app:layout_constraintEnd_toStartOf="@+id/resume_gif_pause"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/resume_bt_pause"
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/resume_gif_pause"
         android:layout_width="150dp"
         android:layout_height="140dp"
-        android:text="RESUME"
+        android:src="@drawable/back_spin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,7 +49,7 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/resume_bt_pause"
+        app:layout_constraintStart_toEndOf="@+id/resume_gif_pause"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.498" />
 
@@ -60,7 +60,7 @@
         android:src="@drawable/audio_play"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/resume_bt_pause"
+        app:layout_constraintStart_toEndOf="@+id/resume_gif_pause"
         app:layout_constraintTop_toTopOf="parent" />
 
 

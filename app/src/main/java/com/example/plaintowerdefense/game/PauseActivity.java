@@ -1,8 +1,5 @@
 package com.example.plaintowerdefense.game;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.animation.Animator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +9,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.example.plaintowerdefense.MainActivity;
 import com.example.plaintowerdefense.R;
 import com.example.plaintowerdefense.SoundSingleton;
@@ -20,8 +16,8 @@ import com.example.plaintowerdefense.SoundSingleton;
 import pl.droidsonroids.gif.GifImageView;
 
 public class PauseActivity extends Activity implements View.OnClickListener {
-    Button homeButton;
-    Button resumeButton;
+    GifImageView homeButton;
+    GifImageView resumeButton;
     Button muteButton;
 
     Intent intent;
@@ -41,8 +37,8 @@ public class PauseActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pause);
 
-        homeButton = findViewById(R.id.home_bt_pause);
-        resumeButton = findViewById(R.id.resume_bt_pause);
+        homeButton = findViewById(R.id.home_gif_pause);
+        resumeButton = findViewById(R.id.resume_gif_pause);
         muteButton = findViewById(R.id.mute_bt_pause);
         bgmMuteView = findViewById(R.id.mute_gif_pause);
         homeButton.setOnClickListener(this);
@@ -87,13 +83,13 @@ public class PauseActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         int id = v.getId();
         switch(id){
-            case R.id.home_bt_pause :
+            case R.id.home_gif_pause:
                 // main activity로 돌아감
                 intent = new Intent(context, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 break;
-            case R.id.resume_bt_pause :
+            case R.id.resume_gif_pause:
                 onBackPressed();
                 break;
             case R.id.mute_gif_pause :

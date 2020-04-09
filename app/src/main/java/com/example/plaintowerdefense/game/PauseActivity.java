@@ -96,9 +96,14 @@ public class PauseActivity extends Activity implements View.OnClickListener {
             case R.id.resume_bt_pause :
                 onBackPressed();
                 break;
-            case R.id.mute_bt_pause :
+            case R.id.mute_gif_pause :
                 // 음량 조절
                 boolean isMute = SoundSingleton.isBgmMute();
+                if(isMute){
+                    bgmMuteView.setImageResource(R.drawable.audio_play);
+                }else{
+                    bgmMuteView.setImageResource(R.drawable.audio_mute);
+                }
                 SoundSingleton.setBgmMute(!isMute);
                 SoundSingleton.updateSoundSingleton(context);
                 // 사진 교체

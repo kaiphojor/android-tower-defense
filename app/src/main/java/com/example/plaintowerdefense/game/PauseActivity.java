@@ -18,7 +18,6 @@ import pl.droidsonroids.gif.GifImageView;
 public class PauseActivity extends Activity implements View.OnClickListener {
     GifImageView homeButton;
     GifImageView resumeButton;
-    Button muteButton;
 
     Intent intent;
     GifImageView bgmMuteView;
@@ -39,34 +38,10 @@ public class PauseActivity extends Activity implements View.OnClickListener {
 
         homeButton = findViewById(R.id.home_gif_pause);
         resumeButton = findViewById(R.id.resume_gif_pause);
-        muteButton = findViewById(R.id.mute_bt_pause);
         bgmMuteView = findViewById(R.id.mute_gif_pause);
         homeButton.setOnClickListener(this);
         resumeButton.setOnClickListener(this);
-        muteButton.setOnClickListener(this);
         bgmMuteView.setOnClickListener(this);
-
-//        animationView = findViewById(R.id.sound_anim_pause);
-//
-//        animationView.setAnimation("audio_play_icon.json");
-//        animationView.loop(true);
-//        animationView.addAnimatorListener(new Animator.AnimatorListener(){
-//            @Override
-//            public void onAnimationStart(Animator animation) {
-//            }
-//            @Override
-//            public void onAnimationEnd(Animator animation) {
-//            }
-//
-//            @Override
-//            public void onAnimationCancel(Animator animation) {
-//            }
-//
-//            @Override
-//            public void onAnimationRepeat(Animator animation) {
-//            }
-//        });
-//        animationView.playAnimation();
 
         // sound 설정 가져오기
         SoundSingleton.initSoundSingleton(context);
@@ -89,7 +64,7 @@ public class PauseActivity extends Activity implements View.OnClickListener {
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 break;
-            case R.id.resume_gif_pause:
+            case R.id.resume_gif_pause :
                 onBackPressed();
                 break;
             case R.id.mute_gif_pause :

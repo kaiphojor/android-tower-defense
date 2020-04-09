@@ -12,7 +12,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.plaintowerdefense.SoundSingleton;
 import com.example.plaintowerdefense.error_collect.BaseActivity;
 import com.example.plaintowerdefense.LoginSingleton;
 import com.example.plaintowerdefense.R;
@@ -60,7 +62,7 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
 //    MediaPlayer musicPlayer;
     // mp3 player singleton
     MediaPlayer musicPlayer = MusicPlayerSingleton.getInstance();
-
+    float bgmVolume;
     // 현재 user 정보
     UserInfoSingleton userInfo;
     @Override
@@ -70,20 +72,7 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
         setContentView(R.layout.activity_game);
         Singleton.getInstance(context);
         // view 연결 & click listener 등록
-        startButton = findViewById(R.id.start_bt_game);
-        healthPointView = findViewById(R.id.health_point_tv_game);
-        coinCountView = findViewById(R.id.coin_tv_game);
-        waveTextView = findViewById(R.id.wave_tv_game);
-        gemNumberTextView = findViewById(R.id.gem_number_tv_game);
-
-        temporaryResultButton = findViewById(R.id.temporary_bt_game);
-        temporaryResultButton.setOnClickListener(this);
-        temporaryTextView = findViewById(R.id.test_tv_game);
-        sideMenuLayout = findViewById(R.id.menu_ll_game);
-        sideMenuButton = findViewById(R.id.menu_bt_game);
-        sideMenuButton.setOnClickListener(this);
-        towerListView = findViewById(R.id.menu_lv_game);
-        gameView = findViewById(R.id.sv_game);
+        bindView();
         // tower 목록 초기화
         towerList = new ArrayList<Tower>();
         towerList.add(new Tower(0, getString(R.string.tower_code_1), 10, R.drawable.red_tile));
@@ -97,9 +86,7 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
             // 타워 목록에서 타워를 클릭 했을 때
             @Override
             public void onTowerClick(View v, int position) {
-//            Toast.makeText(getApplicationContext(),
-//                        towerListAdapter.getItem(position).getName(),
-//                        Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(),towerListAdapter.getItem(position).getName(),Toast.LENGTH_LONG).show();
             // 돈이 충분하다면 shared preference 에 저장 ( GameActivity와 GameSurfaceView 통신용)
             SharedPreferences sharedPreferences = getSharedPreferences("game", MODE_MULTI_PROCESS | MODE_WORLD_WRITEABLE);
             try {
@@ -136,12 +123,12 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
 
             }
         });
-        profileImageView = findViewById(R.id.profile_iv_game);
-        startButton.setOnClickListener(this);
-
+        // sound 설정 가져오기
+        SoundSingleton.initSoundSingleton(context);
+        bgmVolume = 0.01f * SoundSingleton.getBgmVolume();
         // mp3 초기화
         musicPlayer = MediaPlayer.create(GameActivity.this, R.raw.skull_fire);
-        musicPlayer.setVolume(100, 100);
+        musicPlayer.setVolume(bgmVolume,bgmVolume);
         musicPlayer.setLooping(true);
         // 준비되었을 때 시작하기 위한 listener
         musicPlayer.setOnPreparedListener(this);
@@ -392,6 +379,25 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
                 Singleton.toast("골드가 부족합니다",false);
             }
         });
+    }
+    // view 연결 & click listener 등록
+    public void bindView(){
+        startButton = findViewById(R.id.start_bt_game);
+        healthPointView = findViewById(R.id.health_point_tv_game);
+        coinCountView = findViewById(R.id.coin_tv_game);
+        waveTextView = findViewById(R.id.wave_tv_game);
+        gemNumberTextView = findViewById(R.id.gem_number_tv_game);
+
+        temporaryResultButton = findViewById(R.id.temporary_bt_game);
+        temporaryResultButton.setOnClickListener(this);
+        temporaryTextView = findViewById(R.id.test_tv_game);
+        sideMenuLayout = findViewById(R.id.menu_ll_game);
+        sideMenuButton = findViewById(R.id.menu_bt_game);
+        sideMenuButton.setOnClickListener(this);
+        towerListView = findViewById(R.id.menu_lv_game);
+        gameView = findViewById(R.id.sv_game);
+        profileImageView = findViewById(R.id.profile_iv_game);
+        startButton.setOnClickListener(this);
     }
 
 

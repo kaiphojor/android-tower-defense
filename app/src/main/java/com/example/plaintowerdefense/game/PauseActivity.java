@@ -2,6 +2,7 @@ package com.example.plaintowerdefense.game;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -11,9 +12,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.plaintowerdefense.MainActivity;
 import com.example.plaintowerdefense.R;
 import com.example.plaintowerdefense.SoundSingleton;
+
+import pl.droidsonroids.gif.GifImageView;
 
 public class PauseActivity extends Activity implements View.OnClickListener {
     Button homeButton;
@@ -21,6 +25,7 @@ public class PauseActivity extends Activity implements View.OnClickListener {
     Button muteButton;
 
     Intent intent;
+    GifImageView bgmMuteView;
 
     // 태그 = 현재 activity 이름
     private final String TAG = this.getClass().getSimpleName();
@@ -39,17 +44,42 @@ public class PauseActivity extends Activity implements View.OnClickListener {
         homeButton = findViewById(R.id.home_bt_pause);
         resumeButton = findViewById(R.id.resume_bt_pause);
         muteButton = findViewById(R.id.mute_bt_pause);
+        bgmMuteView = findViewById(R.id.mute_gif_pause);
         homeButton.setOnClickListener(this);
         resumeButton.setOnClickListener(this);
         muteButton.setOnClickListener(this);
+        bgmMuteView.setOnClickListener(this);
+
+//        animationView = findViewById(R.id.sound_anim_pause);
+//
+//        animationView.setAnimation("audio_play_icon.json");
+//        animationView.loop(true);
+//        animationView.addAnimatorListener(new Animator.AnimatorListener(){
+//            @Override
+//            public void onAnimationStart(Animator animation) {
+//            }
+//            @Override
+//            public void onAnimationEnd(Animator animation) {
+//            }
+//
+//            @Override
+//            public void onAnimationCancel(Animator animation) {
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animator animation) {
+//            }
+//        });
+//        animationView.playAnimation();
+
         // sound 설정 가져오기
         SoundSingleton.initSoundSingleton(context);
         boolean isBgmMute = SoundSingleton.isBgmMute();
         // 음소거면 음소거 그림, 아니면 그냥 그림
         if(isBgmMute){
-
+            bgmMuteView.setImageResource(R.drawable.audio_mute);
         }else{
-
+            bgmMuteView.setImageResource(R.drawable.audio_play);
         }
     }
 

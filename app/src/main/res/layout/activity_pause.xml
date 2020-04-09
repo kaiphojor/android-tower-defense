@@ -52,4 +52,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.498" />
 
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/mute_gif_pause"
+        android:layout_width="150dp"
+        android:layout_height="140dp"
+        android:src="@drawable/audio_play"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/resume_bt_pause"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

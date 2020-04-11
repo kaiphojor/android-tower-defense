@@ -21,6 +21,7 @@ import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
+import com.vortexghost.plaintowerdefense.BuildConfig;
 import com.vortexghost.plaintowerdefense.Singleton;
 import com.vortexghost.plaintowerdefense.error_collect.BaseActivity;
 import com.vortexghost.plaintowerdefense.LoginSingleton;
@@ -72,8 +73,8 @@ public class BuyGemActivity extends BaseActivity implements BillingProcessor.IBi
         recycler view 표현
          */
         gemListData = new ArrayList<>();
-        gemListData.add(new Gem("보석 1개",300,R.drawable.diamond,1,"gem_1"));
-        gemListData.add(new Gem("보석 5개",1500,R.drawable.diamond_5,5,"gem_5"));
+//        gemListData.add(new Gem("보석 1개",300,R.drawable.diamond,1,"gem_1"));
+//        gemListData.add(new Gem("보석 5개",1500,R.drawable.diamond_5,5,"gem_5"));
         gemListData.add(new Gem("보석 10개",3000,R.drawable.diamond_10,10,"gem_10"));
         gemListData.add(new Gem("보석 20개",6000,R.drawable.diamond_20,20,"gem_20"));
         gemListData.add(new Gem("보석 50개",12000,R.drawable.diamond_50,50,"gem_50"));
@@ -92,9 +93,9 @@ public class BuyGemActivity extends BaseActivity implements BillingProcessor.IBi
                 int price = gemData.getPrice();
                 String gemString = gemData.getTitle();
                 int amount = gemData.getAmount();
-                Singleton.toast(gemString + " " + amount + "개 "+price + "원",false);
+//                Singleton.toast(gemString + " " + amount + "개 "+price + "원",false);
 //                connectBillingClient();
-                buyItem();
+                buyItem(selectedItem);
 //                출처: https://jizard.tistory.com/164 [GEUMSON]
             }
         }) ;
@@ -110,8 +111,8 @@ public class BuyGemActivity extends BaseActivity implements BillingProcessor.IBi
         userInfo.setGemUi(gemNumberTextView);
         // singleton 초기화
         Singleton.getInstance(context);
-        // 결제도구
-        billingProcessor = new BillingProcessor(this, Config.GooglePlayLicenseKey, this);
+        // 결제 라이브러리 초기화 . api key는 gitignore에 추가한 파일에서 가져온다
+        billingProcessor = new BillingProcessor(this, BuildConfig.GOOGLE_PLAY_LICENSE_KEY, this);
         billingProcessor.initialize();
     }
     /*
@@ -247,8 +248,9 @@ public class BuyGemActivity extends BaseActivity implements BillingProcessor.IBi
 //         storage.setPurchasedRemoveAds(billingProcessor.isPurchased(selectedItem.getStockKeepingUnit()));
 
      }
-     public void buyItem(){
-         billingProcessor.purchase(this, selectedItem.getStockKeepingUnit());
+     public void buyItem(Gem gem){
+        Singleton.toast(gem.getStockKeepingUnit(),false);
+        billingProcessor.purchase(this, gem.getStockKeepingUnit());
 
      }
 

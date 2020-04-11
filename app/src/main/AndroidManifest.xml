@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.plaintowerdefense">
+    package="com.vortexghost.plaintowerdefense">
     <!-- 플레이스토어에 이런 기능을 사용한다고 알림 -->
     <!-- 가속도계 센서 - 진동, 운동가속을 감지하는 기능 사용 -->
     <uses-feature
@@ -11,7 +11,8 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
+<!--    결제모듈용-->
+    <uses-permission android:name="com.android.vending.BILLING"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -19,43 +20,43 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".game.game_result.DefeatActivity"
+        <activity android:name="com.vortexghost.plaintowerdefense.game.game_result.DefeatActivity"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" ></activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"/>
         <activity
-            android:name=".game.game_result.VictoryActivity"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
-        <activity
-            android:name=".game.PauseActivity"
+            android:name="com.vortexghost.plaintowerdefense.game.game_result.VictoryActivity"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
         <activity
-            android:name=".GameLoadingActivity"
+            android:name="com.vortexghost.plaintowerdefense.game.PauseActivity"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
+        <activity
+            android:name="com.vortexghost.plaintowerdefense.GameLoadingActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name=".error_collect.CrashLogActivity"
+            android:name="com.vortexghost.plaintowerdefense.error_collect.CrashLogActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name=".error_collect.BaseActivity"
+            android:name="com.vortexghost.plaintowerdefense.error_collect.BaseActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name=".social.SocialActivity"
+            android:name="com.vortexghost.plaintowerdefense.social.SocialActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name=".social.SocialTestActivity"
+            android:name="com.vortexghost.plaintowerdefense.social.SocialTestActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name=".social.SocialListviewActivity"
+            android:name="com.vortexghost.plaintowerdefense.social.SocialListviewActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name=".deprecated.DrawerTestActivity"
+            android:name="com.vortexghost.plaintowerdefense.deprecated.DrawerTestActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.NoActionBar" /> <!-- 사진 촬영을 위한 provider -->
         <provider
@@ -72,23 +73,23 @@
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name=".game.GameActivity"
+            android:name="com.vortexghost.plaintowerdefense.game.GameActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name=".game.RewardActivity"
+            android:name="com.vortexghost.plaintowerdefense.game.RewardActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name=".game.misc.SurfaceViewTest"
+            android:name="com.vortexghost.plaintowerdefense.game.misc.SurfaceViewTest"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name=".IdSettingActivity"
+            android:name="com.vortexghost.plaintowerdefense.IdSettingActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name=".SplashActivity"
+            android:name="com.vortexghost.plaintowerdefense.SplashActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
             <intent-filter>
@@ -98,43 +99,43 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SignUpActivity"
+            android:name="com.vortexghost.plaintowerdefense.SignUpActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name=".LoginActivity"
+            android:name="com.vortexghost.plaintowerdefense.LoginActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name=".deprecated.HandBookActivity"
+            android:name="com.vortexghost.plaintowerdefense.deprecated.HandBookActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name=".gem_shop.BuyGemActivity"
+            android:name="com.vortexghost.plaintowerdefense.gem_shop.BuyGemActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name=".deprecated.LeaderBoardActivity"
+            android:name="com.vortexghost.plaintowerdefense.deprecated.LeaderBoardActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name=".deprecated.MultiPlayActivity"
+            android:name="com.vortexghost.plaintowerdefense.deprecated.MultiPlayActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name=".SettingActivity"
+            android:name="com.vortexghost.plaintowerdefense.SettingActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name=".BattleActivity"
+            android:name="com.vortexghost.plaintowerdefense.BattleActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name=".stage_select.StageSelectActivity"
+            android:name="com.vortexghost.plaintowerdefense.stage_select.StageSelectActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.vortexghost.plaintowerdefense.MainActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
     </application>

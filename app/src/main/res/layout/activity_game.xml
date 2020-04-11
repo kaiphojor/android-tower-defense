@@ -107,7 +107,7 @@
     <!--        android:layout_width="0dp"-->
     <!--        android:layout_height="360dp"-->
 
-    <com.example.plaintowerdefense.game.GameSurfaceView
+    <com.vortexghost.plaintowerdefense.game.GameSurfaceView
         android:id="@+id/sv_game"
         android:layout_width="0dp"
         android:layout_height="0dp"

@@ -6,12 +6,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.billingclient.api.BillingClient;
+import com.vortexghost.plaintowerdefense.Singleton;
 import com.vortexghost.plaintowerdefense.error_collect.BaseActivity;
 import com.vortexghost.plaintowerdefense.LoginSingleton;
 import com.vortexghost.plaintowerdefense.R;
+import com.vortexghost.plaintowerdefense.social.UserRecyclerViewAdapter;
 import com.vortexghost.plaintowerdefense.user_info.UserInfoSingleton;
 
 import java.util.ArrayList;
@@ -64,6 +68,18 @@ public class BuyGemActivity extends BaseActivity {
         // data를 adapter에 담고 recyclerview 표시
         adapter = new GemRecyclerViewAdapter(context);
         adapter.setData(gemListData);
+        adapter.setOnItemClickListener(new GemRecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                int id = v.getId();
+                Gem gemData = gemListData.get(position);
+                int price = gemData.getPrice();
+                String gemString = gemData.getTitle();
+                int amount = gemData.getAmount();
+                Singleton.toast(gemString + " " + amount + "개 "+price + "원",false);
+            }
+        }) ;
+
         recyclerView = findViewById(R.id.gem_rv_buy_gem);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(this,3)) ;

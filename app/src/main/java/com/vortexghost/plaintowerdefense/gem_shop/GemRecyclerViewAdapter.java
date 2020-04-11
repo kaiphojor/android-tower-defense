@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.vortexghost.plaintowerdefense.R;
 import com.vortexghost.plaintowerdefense.Singleton;
+import com.vortexghost.plaintowerdefense.social.UserRecyclerViewAdapter;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -22,6 +23,18 @@ public class GemRecyclerViewAdapter extends RecyclerView.Adapter<GemRecyclerView
     ArrayList<Gem> data;
     // context;
     Context context;
+
+    // item click listener
+    public interface OnItemClickListener {
+        void onItemClick(View v, int position);
+    }
+
+    // 리스너 객체 참조를 저장하는 변수
+    private OnItemClickListener itemClickListener = null;
+    // OnItemClickListener 리스너 객체 참조를 어댑터에 전달하는 메서드
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.itemClickListener = listener;
+    }
 
     public GemRecyclerViewAdapter(Context context) {
         this.context = context;
@@ -44,7 +57,7 @@ public class GemRecyclerViewAdapter extends RecyclerView.Adapter<GemRecyclerView
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder,final int position) {
         if(getItemCount() > 0){
             if(position < getItemCount()){
                 final ViewHolder viewHolder = holder;
@@ -55,10 +68,9 @@ public class GemRecyclerViewAdapter extends RecyclerView.Adapter<GemRecyclerView
                 viewHolder.buyButton.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View v) {
-                        int price = viewHolder.gemData.getPrice();
-                        String gemString = viewHolder.gemData.getTitle();
-                        int amount = viewHolder.gemData.getAmount();
-                        Singleton.toast(gemString + " " + amount + "개 "+price + "원",false);
+                        if (itemClickListener != null) {
+                            itemClickListener.onItemClick(v,position);
+                        }
                     }
                 });
             }
@@ -92,6 +104,23 @@ public class GemRecyclerViewAdapter extends RecyclerView.Adapter<GemRecyclerView
             imageView = itemView.findViewById(R.id.image_iv_gem);
 
             promotionTimeLeftStringTextView = itemView.findViewById(R.id.promote_time_tv_gem);
+
+//            // 아이템 클릭 이벤트 처리.
+//            buyButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    int pos = getAdapterPosition();
+//                    if (pos != RecyclerView.NO_POSITION) {
+//                        // listener 객체의 메서드 호출 -> activity에서 처리
+//                        if (itemClickListener != null) {
+//                            itemClickListener.onItemClick(v,pos);
+//                        }
+//                    }
+//                    // TODO : process click event.
+//                }
+//            });
+
+
         }
         // 값 설정
         public void setData(Gem gem,Context context){

@@ -80,7 +80,9 @@ dependencies {
 
     // google play 결제용
     implementation 'com.android.billingclient:billing:2.2.0'
+    implementation 'com.anjlab.android.iab.v3:library:1.0.44'
 
+//    출처: https://jizard.tistory.com/164 [GEUMSON]
 
     //    annotationProcessor 'com.google.auto.value:auto-value:1.5.2'
 //    implementation 'com.google.firebase:firebase-admin:6.8.1'

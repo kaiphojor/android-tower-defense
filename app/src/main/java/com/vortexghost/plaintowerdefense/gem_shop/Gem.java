@@ -15,6 +15,7 @@ public class Gem {
     int promotedPrice;
     String promoteString;
     Date promoteDate;
+    String stockKeepingUnit;
 
     public Gem(String title, int price, int imageResource) {
         this.title = title;
@@ -22,11 +23,12 @@ public class Gem {
         this.imageResource = imageResource;
     }
 
-    public Gem(String title, int price, int imageResource, int amount) {
+    public Gem(String title, int price, int imageResource, int amount,String stockKeepingUnit) {
         this.title = title;
         this.price = price;
         this.imageResource = imageResource;
         this.amount = amount;
+        this.stockKeepingUnit = stockKeepingUnit;
     }
 
     public int getAmount() {
@@ -99,5 +101,13 @@ public class Gem {
 
     public void setPromoteString(String promoteString) {
         this.promoteString = promoteString;
+    }
+
+    public String getStockKeepingUnit() {
+        return stockKeepingUnit;
+    }
+
+    public void setStockKeepingUnit(String stockKeepingUnit) {
+        this.stockKeepingUnit = stockKeepingUnit;
     }
 }

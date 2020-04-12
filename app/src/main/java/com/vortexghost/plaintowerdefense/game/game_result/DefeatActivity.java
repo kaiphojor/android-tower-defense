@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -16,8 +17,19 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdCallback;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.vortexghost.plaintowerdefense.MainActivity;
 import com.vortexghost.plaintowerdefense.R;
+import com.vortexghost.plaintowerdefense.Singleton;
 
 public class DefeatActivity extends Activity implements View.OnClickListener{
     Button gemRetryButton;
@@ -30,7 +42,10 @@ public class DefeatActivity extends Activity implements View.OnClickListener{
     // context = 현재 context
     private Context context = this;
     Intent intent;
-
+    // 보상형 광고 객체
+    private RewardedAd rewardedAd;
+    // 보상형광고 load 시 콜백
+    RewardedAdLoadCallback adLoadCallback;
     private final static Handler mHandler = new Handler() {
         public void handleMessage(Message msg){
             timerString = msg.what/1000+"초 후 메뉴 이동";
@@ -96,6 +111,33 @@ public class DefeatActivity extends Activity implements View.OnClickListener{
         advertisementRetryButton.setOnClickListener(this);
         gemRetryButton.setOnClickListener(this);
 
+        // 모바일 광고 초기화
+//        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+//            @Override
+//            public void onInitializationComplete(InitializationStatus initializationStatus) {
+//            }
+//        });
+        // 보상형광고 객체 초기화 및 광고 load callback 초기화
+        rewardedAd = new RewardedAd(this,
+                "ca-app-pub-3940256099942544/5224354917");
+
+        adLoadCallback = new RewardedAdLoadCallback() {
+            @Override
+            public void onRewardedAdLoaded() {
+                // Ad successfully loaded.
+                Singleton.getInstance(context);
+                Singleton.toast("load complete",false);
+
+            }
+
+            @Override
+            public void onRewardedAdFailedToLoad(int errorCode) {
+                // Ad failed to load.
+            }
+        };
+
+        // 광고 로드
+        rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
     }
 
     @Override
@@ -158,6 +200,29 @@ public class DefeatActivity extends Activity implements View.OnClickListener{
         int id = v.getId();
         switch(id){
             case R.id.advertisement_retry_bt_defeat :
+                if (rewardedAd.isLoaded()) {
+                    RewardedAdCallback adCallback = new RewardedAdCallback() {
+                        public void onRewardedAdOpened() {
+                            // Ad opened.
+                        }
+
+                        public void onRewardedAdClosed() {
+                            // Ad closed.
+                        }
+
+                        public void onUserEarnedReward(@NonNull RewardItem reward) {
+                            // User earned reward.
+                            // 50 gold를 더 얻고 재시작. 재시작 표시 하기
+                        }
+
+                        public void onRewardedAdFailedToShow(int errorCode) {
+                            // Ad failed to display
+                        }
+                    };
+                    rewardedAd.show(((Activity)context) , adCallback);
+                } else {
+                    Log.d("TAG", "The rewarded ad wasn't loaded yet.");
+                }
                 break;
             case R.id.gem_retry_bt_defeat :
                 mHandler.removeCallbacksAndMessages(null);

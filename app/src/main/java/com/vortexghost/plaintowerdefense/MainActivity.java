@@ -232,7 +232,6 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-
     private void signIn() {
 
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();

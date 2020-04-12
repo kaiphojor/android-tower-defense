@@ -86,6 +86,8 @@ dependencies {
     // google play 결제용
     implementation 'com.android.billingclient:billing:2.2.0'
     implementation 'com.anjlab.android.iab.v3:library:1.0.44'
+    // 애드몹 광고 다는 용
+    implementation 'com.google.android.gms:play-services-ads:19.0.1'
 
 //    출처: https://jizard.tistory.com/164 [GEUMSON]
 

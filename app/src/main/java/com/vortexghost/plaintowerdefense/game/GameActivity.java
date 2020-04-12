@@ -147,11 +147,9 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
         bgmVolume = isBgmMute ? 0f : 0.01f * SoundSingleton.getBgmVolume();
         musicPlayer.setVolume(bgmVolume,bgmVolume);
 
-
         if(!musicPlayer.isPlaying()){
             musicPlayer.start();
         }
-
 
         // shared preference 에 pause 해제 정보 저장
         SharedPreferences sharedPreferences = getSharedPreferences("game", MODE_MULTI_PROCESS | MODE_WORLD_WRITEABLE);

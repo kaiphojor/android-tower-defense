@@ -22,6 +22,7 @@ import com.vortexghost.plaintowerdefense.game.tower_list.Tower;
 
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -1078,7 +1079,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         return angle;
     }
     // 재시작 했을 때 wave정보, player 정보를 reset 한다
-    public void 
+    public void prepareRetry(){
+
+    }
     // 상태 제어
     public void stateProcess(){
         Singleton.log("state : " + state);
@@ -1161,6 +1164,16 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                             // 상태 전환
                             // update
                             ((GameActivity)getContext()).setWaveTextView("wave "+ stage.getCurrentWave());
+                            // 게임
+                            SharedPreferences preferences = context.getSharedPreferences("game", context.MODE_MULTI_PROCESS | context.MODE_WORLD_WRITEABLE);
+                            try {
+                                // 값을 초기화
+                                SharedPreferences.Editor editor = preferences.edit();
+                                editor.putBoolean("isWaveStart",false);
+                                editor.apply();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     }else{
                         // 다 안죽었다면
@@ -1168,6 +1181,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                 }
                 // 패배 조건
                 if(stage.getPlayerHealthPoint() == 0){
+                    counter = 0;
                     previousState = state;
                     state = DEFEAT;
                     ((GameActivity)getContext()).showDefeatActivity();
@@ -1183,6 +1197,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                 try {
                     isPause = pausePreference.getBoolean("isPause",false);
                     if(!isPause){
+
+
                         // 이전 상태로 복귀
                         state = previousState;
                         previousState = PAUSE;
@@ -1209,8 +1225,27 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                             SharedPreferences.Editor preferenceEditor = gamePreference.edit();
                             preferenceEditor.putBoolean("retried",true);
                             preferenceEditor.putBoolean("canRetry",false);
+                            preferenceEditor.putBoolean("isWaveStart",false);
+                            // 체력 다시 충전
+                            stage.setPlayerHealthPoint(stage.getInitialPlayerHealthPoint());
+                            // 50골드 추가
+                            stage.setPlayerGold(stage.getPlayerGold()+50);
+                            // 적 목록 초기화
+                            enemyList = new ArrayList<Enemy>();
 
-                            state = PAUSE;
+                            // 골드, 체력 update
+                            ((GameActivity)getContext()).setCoinCountView(stage.getPlayerGold()+"");
+                            ((GameActivity)getContext()).setHealthPointView(stage.getPlayerHealthPoint()+"");
+                            ((GameActivity)getContext()).setWaveTextView("wave "+stage.getCurrentWave());
+
+                            // 현재 wave 반환 및 적 생성 정보 저장
+                            Wave wave = (Wave)waveList.get(stage.getCurrentWave()-1);
+                            // wave 정보 탑재
+                            waveEnemyInfo[MINION] = wave.getEnemyInfo("minion");
+                            waveEnemyInfo[BOSS] = wave.getEnemyInfo("boss");
+
+                            
+                            state = READY;
                             previousState = PAUSE;
                             preferenceEditor.apply();
                         }

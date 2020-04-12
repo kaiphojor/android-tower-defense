@@ -14,6 +14,7 @@ public class Stage {
     private int playerGold;
     // stage 별 할당된 player
     private int playerHealthPoint;
+    private int initialPlayerHealthPoint;
     // 현재 wave
     private int currentWave;
     private int waveNumber;
@@ -46,6 +47,7 @@ public class Stage {
                 playerGold = 80;
                 playerCredit =0;
                 playerHealthPoint = 100;
+                initialPlayerHealthPoint = playerHealthPoint;
                 enemyKilled = new HashMap<>();
                 // wave 초기화
                 Wave wave = new Wave();
@@ -173,5 +175,13 @@ public class Stage {
 
     public void setWaveNumber(int waveNumber) {
         this.waveNumber = waveNumber;
+    }
+
+    public int getInitialPlayerHealthPoint() {
+        return initialPlayerHealthPoint;
+    }
+
+    public void setInitialPlayerHealthPoint(int initialPlayerHealthPoint) {
+        this.initialPlayerHealthPoint = initialPlayerHealthPoint;
     }
 }

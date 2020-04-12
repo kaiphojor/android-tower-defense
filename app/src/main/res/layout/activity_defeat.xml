@@ -54,7 +54,6 @@
         android:layout_marginStart="210dp"
         android:layout_marginTop="12dp"
         android:gravity="center"
-        android:text="5초 후 메뉴이동......"
         android:textAlignment="textStart"
         android:textColor="#FFFFFF"
         android:textSize="36sp"

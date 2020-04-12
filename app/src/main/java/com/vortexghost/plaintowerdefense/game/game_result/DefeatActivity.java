@@ -85,11 +85,10 @@ public class DefeatActivity extends Activity implements View.OnClickListener{
 
         }
     };
+
     @Override
     protected void onResume() {
         super.onResume();
-        // 앱 시작과 동시에 핸들러에 메세지 전달
-        mHandler.sendEmptyMessage(5000);
 
     }
 
@@ -127,12 +126,15 @@ public class DefeatActivity extends Activity implements View.OnClickListener{
                 // Ad successfully loaded.
                 Singleton.getInstance(context);
                 Singleton.toast("load complete",false);
-
+                // 앱 시작과 동시에 핸들러에 메세지 전달
+                mHandler.sendEmptyMessage(5000);
             }
 
             @Override
             public void onRewardedAdFailedToLoad(int errorCode) {
                 // Ad failed to load.
+                // 앱 시작과 동시에 핸들러에 메세지 전달
+                mHandler.sendEmptyMessage(5000);
             }
         };
 
@@ -201,6 +203,7 @@ public class DefeatActivity extends Activity implements View.OnClickListener{
         switch(id){
             case R.id.advertisement_retry_bt_defeat :
                 if (rewardedAd.isLoaded()) {
+                    mHandler.removeCallbacksAndMessages(null);
                     RewardedAdCallback adCallback = new RewardedAdCallback() {
                         public void onRewardedAdOpened() {
                             // Ad opened.
@@ -208,6 +211,9 @@ public class DefeatActivity extends Activity implements View.OnClickListener{
 
                         public void onRewardedAdClosed() {
                             // Ad closed.
+                            intent = new Intent(context, MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
                         }
 
                         public void onUserEarnedReward(@NonNull RewardItem reward) {
@@ -217,6 +223,9 @@ public class DefeatActivity extends Activity implements View.OnClickListener{
 
                         public void onRewardedAdFailedToShow(int errorCode) {
                             // Ad failed to display
+                            intent = new Intent(context, MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
                         }
                     };
                     rewardedAd.show(((Activity)context) , adCallback);

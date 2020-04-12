@@ -8,17 +8,17 @@
     android:background="#E6000000"
     tools:context=".game.game_result.DefeatActivity">
 
-        <TextView
-            android:id="@+id/title_tv_defeat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:text="게임 종료"
-            android:textColor="#FFFFFF"
-            android:textSize="36sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/title_tv_defeat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="패배!"
+        android:textColor="#FFFFFF"
+        android:textSize="36sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -36,14 +36,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="30dp"
-            android:text="50 재도전" />
+            android:text="50 재도전"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/advertisement_retry_bt_defeat"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:drawableLeft="@drawable/video_button_left"
-            android:text="광고시청 재도전" />
+            android:text="광고시청하고 재도전하기"
+            android:visibility="invisible" />
 
     </LinearLayout>
 

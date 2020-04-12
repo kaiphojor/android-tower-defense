@@ -1134,8 +1134,14 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                         }
                     }
                 }
-//                Singleton.log("all gen : "+isAllEnemyGenerated);
-                if(isAllEnemyGenerated){
+                // 패배 조건
+                if(stage.getPlayerHealthPoint() == 0){
+                    counter = 0;
+                    previousState = state;
+                    state = DEFEAT;
+                    ((GameActivity)getContext()).showDefeatActivity();
+                }else if(isAllEnemyGenerated){
+//                    Singleton.log("all gen : "+isAllEnemyGenerated);
 //                    Singleton.log("all generated");
                     // 적이 다 죽었는지 확인
                     if(enemyList.isEmpty()){
@@ -1151,7 +1157,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                             state = VICTORY;
 
                             // 여기서 조정 - 승리 문구
-                            ((GameActivity)getContext()).setWaveTextView("Victory!");
+//                            ((GameActivity)getContext()).setWaveTextView("Victory!");
                             ((GameActivity)getContext()).showVictoryActivity(enemyKilled,enemyPassed,killCount);
 
                         }else{ // 다음 wave로 넘어갔을 경우
@@ -1187,13 +1193,6 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                     }else{
                         // 다 안죽었다면
                     }
-                }
-                // 패배 조건
-                if(stage.getPlayerHealthPoint() == 0){
-                    counter = 0;
-                    previousState = state;
-                    state = DEFEAT;
-                    ((GameActivity)getContext()).showDefeatActivity();
                 }
 
 

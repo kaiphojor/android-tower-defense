@@ -58,6 +58,9 @@ public class StageSelectActivity extends BaseActivity implements View.OnClickLis
         // 현재 user 정보 초기화
         userInfo = UserInfoSingleton.getInstance();
         userInfo.setGemUi(gemNumberTextView);
+
+
+
     }
 
     @Override
@@ -82,6 +85,16 @@ public class StageSelectActivity extends BaseActivity implements View.OnClickLis
             editor.putBoolean("isWaveStart",false);
             editor.apply();
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // 재시작 정보 초기화
+        SharedPreferences gameSharedPreference = getSharedPreferences("game",MODE_PRIVATE);
+        try{
+            SharedPreferences.Editor editor = gameSharedPreference.edit();
+            editor.putBoolean("retried",false);
+            editor.putBoolean("canRetry",false);
+            editor.apply();
+        }catch(Exception e){
             e.printStackTrace();
         }
     }

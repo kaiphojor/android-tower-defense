@@ -112,12 +112,10 @@ public class DefeatActivity extends Activity implements View.OnClickListener{
         advertisementRetryButton.setOnClickListener(this);
         gemRetryButton.setOnClickListener(this);
 
-        // 모바일 광고 초기화
-//        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-//            @Override
-//            public void onInitializationComplete(InitializationStatus initializationStatus) {
-//            }
-//        });
+        // 재시작한 적이 없다면 광고 재시작 버튼을 보이게 한다.
+        SharedPreferences gameSharedPreference = getSharedPreferences("game",MODE_PRIVATE);
+        final boolean isRetried = gameSharedPreference.getBoolean("retried",false);
+
         // 보상형광고 객체 초기화 및 광고 load callback 초기화
         rewardedAd = new RewardedAd(this,
                 "ca-app-pub-3940256099942544/5224354917");
@@ -129,6 +127,9 @@ public class DefeatActivity extends Activity implements View.OnClickListener{
 //                Singleton.getInstance(context);
 //                Singleton.toast("load complete",false);
                 // 앱 시작과 동시에 핸들러에 메세지 전달
+                if(!isRetried){
+                    advertisementRetryButton.setVisibility(View.VISIBLE);
+                }
                 mHandler.sendEmptyMessage(5000);
             }
 
@@ -136,12 +137,16 @@ public class DefeatActivity extends Activity implements View.OnClickListener{
             public void onRewardedAdFailedToLoad(int errorCode) {
                 // Ad failed to load.
                 // 앱 시작과 동시에 핸들러에 메세지 전달
+                if(!isRetried){
+                    advertisementRetryButton.setVisibility(View.VISIBLE);
+                }
                 mHandler.sendEmptyMessage(5000);
             }
         };
 
         // 광고 로드
         rewardedAd.loadAd(new AdRequest.Builder().build(), adLoadCallback);
+
     }
 
     @Override

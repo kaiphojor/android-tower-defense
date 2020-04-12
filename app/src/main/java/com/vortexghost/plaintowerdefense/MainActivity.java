@@ -73,7 +73,6 @@ public class MainActivity extends BaseActivity {
     private static ImageView tv;
 
 //    final AlertDialog alertDialog;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

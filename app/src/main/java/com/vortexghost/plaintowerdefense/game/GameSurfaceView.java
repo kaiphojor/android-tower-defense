@@ -298,7 +298,6 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         ((GameActivity)getContext()).setHealthPointView(stage.getPlayerHealthPoint()+"");
         ((GameActivity)getContext()).setWaveTextView("wave "+stage.getCurrentWave());
 
-
         waveList = stage.getWaveList();
         // 현재 wave 반환 및 적 생성 정보 저장
         Wave wave = (Wave)waveList.get(stage.getCurrentWave()-1);
@@ -1078,6 +1077,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         }
         return angle;
     }
+    // 재시작 했을 때 wave정보, player 정보를 reset 한다
+    public void 
     // 상태 제어
     public void stateProcess(){
         Singleton.log("state : " + state);
@@ -1196,6 +1197,27 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                 // 다른 activity를 열거나 함
                 break;
             case DEFEAT :
+                SharedPreferences gamePreference = context.getSharedPreferences("game",context.MODE_PRIVATE|context.MODE_WORLD_WRITEABLE);
+                try {
+                    // 재시작한 적이 없는지 확인
+                    boolean isRetried = gamePreference.getBoolean("retried",false);
+                    if(!isRetried){
+                        // 재시작 할 수 있는지 확인
+                        boolean canRetry = gamePreference.getBoolean("canRetry",false);
+                        if(canRetry){
+                            // 재시작시 변수 초기화, 상태 전환, 적 재배치, 추가 골드, player hp 회복
+                            SharedPreferences.Editor preferenceEditor = gamePreference.edit();
+                            preferenceEditor.putBoolean("retried",true);
+                            preferenceEditor.putBoolean("canRetry",false);
+
+                            state = PAUSE;
+                            previousState = PAUSE;
+                            preferenceEditor.apply();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             case FINISH :
                 // pause가 true면 pause로 상태 전환

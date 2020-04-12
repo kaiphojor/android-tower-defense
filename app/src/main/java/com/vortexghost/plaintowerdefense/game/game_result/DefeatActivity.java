@@ -3,6 +3,7 @@ package com.vortexghost.plaintowerdefense.game.game_result;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -46,6 +47,7 @@ public class DefeatActivity extends Activity implements View.OnClickListener{
     private RewardedAd rewardedAd;
     // 보상형광고 load 시 콜백
     RewardedAdLoadCallback adLoadCallback;
+    boolean isGetAdReward = false;
     private final static Handler mHandler = new Handler() {
         public void handleMessage(Message msg){
             timerString = msg.what/1000+"초 후 메뉴 이동";
@@ -124,8 +126,8 @@ public class DefeatActivity extends Activity implements View.OnClickListener{
             @Override
             public void onRewardedAdLoaded() {
                 // Ad successfully loaded.
-                Singleton.getInstance(context);
-                Singleton.toast("load complete",false);
+//                Singleton.getInstance(context);
+//                Singleton.toast("load complete",false);
                 // 앱 시작과 동시에 핸들러에 메세지 전달
                 mHandler.sendEmptyMessage(5000);
             }
@@ -207,21 +209,49 @@ public class DefeatActivity extends Activity implements View.OnClickListener{
                     RewardedAdCallback adCallback = new RewardedAdCallback() {
                         public void onRewardedAdOpened() {
                             // Ad opened.
+                            Singleton.getInstance(context);
+                            Singleton.log("광고열림");
                         }
 
                         public void onRewardedAdClosed() {
                             // Ad closed.
-                            intent = new Intent(context, MainActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
+                            Singleton.getInstance(context);
+                            Singleton.log("광고닫힘");
+                            // 보상 받았을 때만 이동
+                            if(isGetAdReward) {
+//                                intent = new Intent(context, MainActivity.class);
+//                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                                startActivity(intent);
+                                // 재시작 여부, 이전에 재시작 했는지 여부 저장
+                                SharedPreferences sharedPreferences = getSharedPreferences("game",MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                try{
+                                    // 이전에 재시작했는지
+                                    editor.putBoolean("retried",false);
+                                    // 재시작 할 수 있는지 여부
+                                    editor.putBoolean("canRetry",true);
+                                    editor.apply();
+                                }catch(Exception e){
+                                    e.printStackTrace();
+                                }
+                                DefeatActivity.super.onBackPressed();
+                            }else {
+                                mHandler.sendEmptyMessage(5000);
+                            }
                         }
 
                         public void onUserEarnedReward(@NonNull RewardItem reward) {
                             // User earned reward.
                             // 50 gold를 더 얻고 재시작. 재시작 표시 하기
+                            Singleton.getInstance(context);
+                            Singleton.log("보상받음");
+                            isGetAdReward = true;
                         }
 
                         public void onRewardedAdFailedToShow(int errorCode) {
+
+                            Singleton.getInstance(context);
+                            Singleton.log("광고못열음");
                             // Ad failed to display
                             intent = new Intent(context, MainActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

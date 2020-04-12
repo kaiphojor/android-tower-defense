@@ -1,8 +1,10 @@
 package com.vortexghost.plaintowerdefense.game;
 
 
+import androidx.annotation.NonNull;
+
 // stage 에서 다룰 적 정보
-public class EnemyInfo{
+public class EnemyInfo implements Cloneable{
     public String name;
     // minion 수
     public int number;
@@ -58,5 +60,12 @@ public class EnemyInfo{
 
     public void setGenerationGap(int generationGap) {
         this.generationGap = generationGap;
+    }
+
+    // deep copy 위한
+    @NonNull
+    @Override
+    public EnemyInfo clone() throws CloneNotSupportedException {
+        return (EnemyInfo)super.clone();
     }
 }

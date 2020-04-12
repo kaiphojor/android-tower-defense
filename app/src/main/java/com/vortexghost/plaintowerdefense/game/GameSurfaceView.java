@@ -303,8 +303,12 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         // 현재 wave 반환 및 적 생성 정보 저장
         Wave wave = (Wave)waveList.get(stage.getCurrentWave()-1);
         // wave 정보 탑재
-        waveEnemyInfo[MINION] = wave.getEnemyInfo("minion");
-        waveEnemyInfo[BOSS] = wave.getEnemyInfo("boss");
+        try{
+            waveEnemyInfo[MINION] = wave.getEnemyInfo("minion").clone();
+            waveEnemyInfo[BOSS] = wave.getEnemyInfo("boss").clone();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     // rendering - 여러 그림들을 canvas에 그린다.
@@ -1159,8 +1163,13 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                             // 다음 wave의 enemy를 설정
                             Wave wave = (Wave)waveList.get(stage.getCurrentWave()-1);
                             // wave 정보 탑재
-                            waveEnemyInfo[MINION] = wave.getEnemyInfo("minion");
-                            waveEnemyInfo[BOSS] = wave.getEnemyInfo("boss");
+
+                            try{
+                                waveEnemyInfo[MINION] = wave.getEnemyInfo("minion").clone();
+                                waveEnemyInfo[BOSS] = wave.getEnemyInfo("boss").clone();
+                            }catch(Exception e){
+                                e.printStackTrace();
+                            }
                             // 상태 전환
                             // update
                             ((GameActivity)getContext()).setWaveTextView("wave "+ stage.getCurrentWave());
@@ -1241,10 +1250,13 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                             // 현재 wave 반환 및 적 생성 정보 저장
                             Wave wave = (Wave)waveList.get(stage.getCurrentWave()-1);
                             // wave 정보 탑재
-                            waveEnemyInfo[MINION] = wave.getEnemyInfo("minion");
-                            waveEnemyInfo[BOSS] = wave.getEnemyInfo("boss");
+                            try{
+                                waveEnemyInfo[MINION] = wave.getEnemyInfo("minion").clone();
+                                waveEnemyInfo[BOSS] = wave.getEnemyInfo("boss").clone();
+                            }catch(Exception e){
+                                e.printStackTrace();
+                            }
 
-                            
                             state = READY;
                             previousState = PAUSE;
                             preferenceEditor.apply();

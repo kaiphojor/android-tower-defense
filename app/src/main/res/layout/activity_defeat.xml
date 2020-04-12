@@ -51,13 +51,13 @@
         android:id="@+id/timer_tv_defeat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="210dp"
+        android:layout_marginTop="12dp"
         android:gravity="center"
         android:text="5초 후 메뉴이동......"
+        android:textAlignment="textStart"
         android:textColor="#FFFFFF"
         android:textSize="36sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.499"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 

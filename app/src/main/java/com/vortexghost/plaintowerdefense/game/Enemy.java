@@ -25,29 +25,29 @@ public class Enemy {
                 break;
             case 1:
                 name = "dichotomy";
-                healthPoint = 20;
-                attackPoint =1;
-                speed = 2;
-                rewardGold = 50;
+                healthPoint = 10;
+                attackPoint = 5;
+                speed = 20;
+                rewardGold = 5;
                 break;
             case 2:
                 name = "purple";
-                healthPoint = 10;
-                attackPoint = 4;
+                healthPoint = 25;
+                attackPoint = 15;
                 speed = 4;
-                rewardGold = 100;
+                rewardGold = 30;
                 break;
             case 3:
                 name = "noise";
-                healthPoint = 10;
-                attackPoint = 4;
-                speed = 20;
-                rewardGold = 100;
+                healthPoint = 35;
+                attackPoint = 25;
+                speed = 2;
+                rewardGold = 50;
                 break;
             case 4:
                 name = "sahaquiel";
-                healthPoint = 10;
-                attackPoint = 4;
+                healthPoint = 100;
+                attackPoint = 50;
                 speed = 1;
                 rewardGold = 100;
                 break;

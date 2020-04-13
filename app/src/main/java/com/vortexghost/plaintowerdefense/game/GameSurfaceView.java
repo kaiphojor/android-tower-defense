@@ -277,6 +277,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                 continue;
             // surfaceview의 pixel 수정. 수정이 끝난 canvas가 최종적으로 surface에 그려짐
             try{
+
                 canvas = holder.lockCanvas();
 
                 // 그림 그리는 부분

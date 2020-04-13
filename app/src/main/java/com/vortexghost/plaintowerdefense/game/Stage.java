@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Stage {
+    private String stageName;
     private int stageCode;
     private int[][] mapInfo;
     // 플레이어가 게임 종료후 받을 보상
@@ -24,15 +25,22 @@ public class Stage {
     public ArrayList<Wave> waveList;
     // 재도전 했는지 여부
     public boolean isRetried;
+    // 적 생산 위치, 진행방향(서쪽에서 시작해서 시계 방향 순서로 0,1,2,3 할당)
+    public int[] startingPoint;
 
     public Stage(int stageCode) {
         this.stageCode = stageCode;
         this.currentWave = 1;
         this.isRetried = false;
         this.waveList = new ArrayList<>();
-
+        Wave wave1;
+        Wave wave2;
+        Wave wave3;
+        Wave wave4;
+        Wave wave5;
         switch(stageCode){
             case 1:
+                stageName = "snake";
                 mapInfo = new int[][]{
                     {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
                     {0,1,1,1,1, 0,0,0,0,0, 0,0,0,0,0, 0},
@@ -44,29 +52,253 @@ public class Stage {
                     {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
                     {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0}
                 };
+                for(int y=0; y<mapInfo.length; y++){
+                    for(int x=0; x<mapInfo[0].length; x++){
+                        if(mapInfo[y][x]==2){
+                            startingPoint = new int[]{x,y,2};
+                            break;
+                        }
+                    }
+                }
                 playerGold = 80;
                 playerCredit =0;
                 playerHealthPoint = 100;
                 initialPlayerHealthPoint = playerHealthPoint;
                 enemyKilled = new HashMap<>();
                 // wave 초기화
-                Wave wave = new Wave();
+                wave1 = new Wave();
                 // wave에 적 정보 추가( 어떤 적을, 몇명이나 , 어느 시점에서 , 어느 간격으로 생산할지 결정)
-                wave.setEnemyInfo(new EnemyInfo(0,5,10,30));
-                wave.setEnemyInfo(new EnemyInfo(1,5,20,30));
-                wave.setEnemyInfo(new EnemyInfo(2,5,30,30));
-                wave.setEnemyInfo(new EnemyInfo(3,5,40,30));
-                wave.setEnemyInfo(new EnemyInfo(4,1,100,30));
+                wave1.setEnemyInfo(new EnemyInfo(0,5,10,30));
+                wave1.setEnemyInfo(new EnemyInfo(1,5,20,30));
+                wave1.setEnemyInfo(new EnemyInfo(2,5,30,30));
 
-                Wave wave2 = new Wave();
+                wave2 = new Wave();
                 wave2.setEnemyInfo(new EnemyInfo(0,10,10,100));
+                wave2.setEnemyInfo(new EnemyInfo(3,5,40,30));
+                wave2.setEnemyInfo(new EnemyInfo(4,1,100,30));
                 // 정보를 다 추가한 wave를 wavelist에 등록
-                waveList.add(wave);
+                waveList.add(wave1);
                 waveList.add(wave2);
                 // 총 wave
                 waveNumber = waveList.size();
-
                 break;
+            case 2:
+                stageName = "wave";
+                mapInfo = new int[][]{
+                        {2,1,1,0,1, 1,1,0,1,1, 1,1,1,-1,-1, -1,-1},
+                        {0,0,1,0,1, 0,1,0,1,0, 0,0,1,-1,-1, -1,-1},
+                        {1,1,1,0,1, 0,1,0,1,0, 3,0,1,-1,-1, -1,-1},
+                        {1,0,0,0,1, 0,1,0,1,0, 1,1,1,-1,-1, -1,-1},
+                        {1,1,1,1,1, 0,1,0,1,0, -1,-1, -1,-1,-1, -1,-1},
+                        {0,0,0,0,0, 0,1,0,1,0, -1,-1, -1,-1,-1, -1,-1},
+                        {1,1,1,1,1, 1,1,0,1,0, -1,-1, -1,-1,-1, -1,-1},
+                        {1,0,0,0,0, 0,0,0,1,0, -1,-1, -1,-1,-1, -1,-1},
+                        {1,1,1,1,1, 1,1,1,1,0, -1,-1, -1,-1,-1, -1,-1}
+                };
+                for(int y=0; y<mapInfo.length; y++){
+                    for(int x=0; x<mapInfo[0].length; x++){
+                        if(mapInfo[y][x]==2){
+                            startingPoint = new int[]{x,y,1};
+                            break;
+                        }
+                    }
+                }
+                playerGold = 80;
+                playerCredit =0;
+                playerHealthPoint = 100;
+                initialPlayerHealthPoint = playerHealthPoint;
+                enemyKilled = new HashMap<>();
+                // wave 초기화
+                wave1 = new Wave();
+                // wave에 적 정보 추가( 어떤 적을, 몇명이나 , 어느 시점에서 , 어느 간격으로 생산할지 결정)
+                wave1.setEnemyInfo(new EnemyInfo(0,5,10,30));
+                wave1.setEnemyInfo(new EnemyInfo(1,5,20,30));
+                wave1.setEnemyInfo(new EnemyInfo(2,5,30,30));
+
+                wave2 = new Wave();
+                wave2.setEnemyInfo(new EnemyInfo(0,10,10,100));
+                wave2.setEnemyInfo(new EnemyInfo(3,5,40,30));
+                wave2.setEnemyInfo(new EnemyInfo(4,1,100,30));
+                // 정보를 다 추가한 wave를 wavelist에 등록
+                waveList.add(wave1);
+                waveList.add(wave2);
+                // 총 wave
+                waveNumber = waveList.size();
+                break;
+            case 3:
+                stageName = "vortex";
+                mapInfo = new int[][]{
+                        {1,1,1,1,1, 1,1,1,1,1, 1,1,1,1,1, -1},
+                        {1,0,0,0,0, 0,0,0,0,0, 0,0,0,0,1, -1},
+                        {1,0,1,1,1, 1,1,1,1,1, 1,1,1,0,1, -1},
+                        {1,0,1,0,0, 0,0,0,0,0, 0,0,1,0,1, -1},
+                        {1,0,1,0,1, 1,1,1,1,1, 3,0,1,0,1, -1},
+                        {1,0,1,0,1, 0,0,0,0,0, 0,0,1,0,1, -1},
+                        {1,0,1,0,1, 1,1,1,1,1, 1,1,1,0,1, -1},
+                        {1,0,1,0,0, 0,0,0,0,0, 0,0,0,0,1, -1},
+                        {2,0,1,1,1, 1,1,1,1,1, 1,1,1,1,1, -1}
+                };
+                for(int y=0; y<mapInfo.length; y++){
+                    for(int x=0; x<mapInfo[0].length; x++){
+                        if(mapInfo[y][x]==2){
+                            startingPoint = new int[]{x,y,1};
+                            break;
+                        }
+                    }
+                }
+                playerGold = 80;
+                playerCredit =0;
+                playerHealthPoint = 100;
+                initialPlayerHealthPoint = playerHealthPoint;
+                enemyKilled = new HashMap<>();
+                // wave 초기화
+                wave1 = new Wave();
+                // wave에 적 정보 추가( 어떤 적을, 몇명이나 , 어느 시점에서 , 어느 간격으로 생산할지 결정)
+                wave1.setEnemyInfo(new EnemyInfo(0,5,10,30));
+                wave1.setEnemyInfo(new EnemyInfo(1,5,20,30));
+                wave1.setEnemyInfo(new EnemyInfo(2,5,30,30));
+
+                wave2 = new Wave();
+                wave2.setEnemyInfo(new EnemyInfo(0,10,10,100));
+                wave2.setEnemyInfo(new EnemyInfo(3,5,40,30));
+                wave2.setEnemyInfo(new EnemyInfo(4,1,100,30));
+                // 정보를 다 추가한 wave를 wavelist에 등록
+                waveList.add(wave1);
+                waveList.add(wave2);
+                // 총 wave
+                waveNumber = waveList.size();
+                break;
+            case 4:
+                stageName = "cat face";
+                mapInfo = new int[][]{
+                        {-1,-1,1,1,1, -1,-1,-1,-1,-1, 1,1,1,-1,-1, -1},
+                        {-1,1,1,0,1, 1,-1,-1,-1,1, 1,0,1,1,-1, -1},
+                        {1,1,0,0,0, 1,1,-1,1,1, 0,0,0,1,1, -1},
+                        {1,0,0,0,0, 0,1,2,3,0, 0,0,0,0,1, -1},
+                        {1,0,0,0,0, 0,0,0,0,0, 0,0,0,0,1, -1},
+                        {1,1,0,0,0, 0,0,0,0,0, 0,0,0,1,1, -1},
+                        {-1,1,1,1,0, 0,0,0,0,0, 0,1,1,1,-1, -1},
+                        {-1,-1,-1,1,1, 1,0,0,0,1, 1,1,-1,-1,-1, -1},
+                        {-1,-1,-1,-1,-1, 1,1,1,1,1, -1,-1,-1,-1,-1, -1}
+                };
+                for(int y=0; y<mapInfo.length; y++){
+                    for(int x=0; x<mapInfo[0].length; x++){
+                        if(mapInfo[y][x]==2){
+                            startingPoint = new int[]{x,y,0};
+                            break;
+                        }
+                    }
+                }
+                playerGold = 80;
+                playerCredit =0;
+                playerHealthPoint = 100;
+                initialPlayerHealthPoint = playerHealthPoint;
+                enemyKilled = new HashMap<>();
+                // wave 초기화
+                wave1 = new Wave();
+                // wave에 적 정보 추가( 어떤 적을, 몇명이나 , 어느 시점에서 , 어느 간격으로 생산할지 결정)
+                wave1.setEnemyInfo(new EnemyInfo(0,5,10,30));
+                wave1.setEnemyInfo(new EnemyInfo(1,5,20,30));
+                wave1.setEnemyInfo(new EnemyInfo(2,5,30,30));
+
+                wave2 = new Wave();
+                wave2.setEnemyInfo(new EnemyInfo(0,10,10,100));
+                wave2.setEnemyInfo(new EnemyInfo(3,5,40,30));
+                wave2.setEnemyInfo(new EnemyInfo(4,1,100,30));
+                // 정보를 다 추가한 wave를 wavelist에 등록
+                waveList.add(wave1);
+                waveList.add(wave2);
+                // 총 wave
+                waveNumber = waveList.size();
+                break;
+            case 5:
+                stageName = "snail";
+                mapInfo = new int[][]{
+                        {-1,-1,-1,0,0, 0,0,0,3,1, 0,0,0,-1,-1,-1},
+                        {-1,-1,-1,0,0, 1,1,1,0,1, 1,0,0,-1,-1,-1},
+                        {-1,-1,-1,0,0, 1,0,1,1,0, 1,1,0,-1,-1,-1},
+                        {-1,-1,-1,0,1, 1,0,0,1,1, 0,1,1,-1,-1,-1},
+                        {-1,-1,-1,1,1, 0,0,2,0,1, 0,0,1,-1,-1,-1},
+                        {-1,-1,-1,1,0, 0,0,1,1,1, 0,1,1,-1,-1,-1},
+                        {-1,-1,-1,1,1, 0,0,0,0,0, 1,1,0,-1,-1,-1},
+                        {-1,-1,-1,0,1, 1,0,0,0,1, 1,0,0,-1,-1,-1},
+                        {-1,-1,-1,0,0, 1,1,1,1,1, 0,0,0,-1,-1,-1}
+
+                };
+                for(int y=0; y<mapInfo.length; y++){
+                    for(int x=0; x<mapInfo[0].length; x++){
+                        if(mapInfo[y][x]==2){
+                            startingPoint = new int[]{x,y,3};
+                            break;
+                        }
+                    }
+                }
+                playerGold = 80;
+                playerCredit =0;
+                playerHealthPoint = 100;
+                initialPlayerHealthPoint = playerHealthPoint;
+                enemyKilled = new HashMap<>();
+                // wave 초기화
+                wave1 = new Wave();
+                // wave에 적 정보 추가( 어떤 적을, 몇명이나 , 어느 시점에서 , 어느 간격으로 생산할지 결정)
+                wave1.setEnemyInfo(new EnemyInfo(0,5,10,30));
+                wave1.setEnemyInfo(new EnemyInfo(1,5,20,30));
+                wave1.setEnemyInfo(new EnemyInfo(2,5,30,30));
+
+                wave2 = new Wave();
+                wave2.setEnemyInfo(new EnemyInfo(0,10,10,100));
+                wave2.setEnemyInfo(new EnemyInfo(3,5,40,30));
+                wave2.setEnemyInfo(new EnemyInfo(4,1,100,30));
+                // 정보를 다 추가한 wave를 wavelist에 등록
+                waveList.add(wave1);
+                waveList.add(wave2);
+                // 총 wave
+                waveNumber = waveList.size();
+                break;
+            case 6:
+                mapInfo = new int[][]{
+
+                        {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
+                        {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
+                        {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
+                        {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
+                        {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
+                        {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
+                        {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
+                        {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0},
+                        {0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0}
+                };
+                for(int y=0; y<mapInfo.length; y++){
+                    for(int x=0; x<mapInfo[0].length; x++){
+                        if(mapInfo[y][x]==2){
+                            startingPoint = new int[]{x,y};
+                            break;
+                        }
+                    }
+                }
+                playerGold = 80;
+                playerCredit =0;
+                playerHealthPoint = 100;
+                initialPlayerHealthPoint = playerHealthPoint;
+                enemyKilled = new HashMap<>();
+                // wave 초기화
+                wave1 = new Wave();
+                // wave에 적 정보 추가( 어떤 적을, 몇명이나 , 어느 시점에서 , 어느 간격으로 생산할지 결정)
+                wave1.setEnemyInfo(new EnemyInfo(0,5,10,30));
+                wave1.setEnemyInfo(new EnemyInfo(1,5,20,30));
+                wave1.setEnemyInfo(new EnemyInfo(2,5,30,30));
+
+                wave2 = new Wave();
+                wave2.setEnemyInfo(new EnemyInfo(0,10,10,100));
+                wave2.setEnemyInfo(new EnemyInfo(3,5,40,30));
+                wave2.setEnemyInfo(new EnemyInfo(4,1,100,30));
+                // 정보를 다 추가한 wave를 wavelist에 등록
+                waveList.add(wave1);
+                waveList.add(wave2);
+                // 총 wave
+                waveNumber = waveList.size();
+                break;
+
             default :
                 Log.i("Stage","unregistered stage code error");
                 break;
@@ -187,5 +419,21 @@ public class Stage {
 
     public void setInitialPlayerHealthPoint(int initialPlayerHealthPoint) {
         this.initialPlayerHealthPoint = initialPlayerHealthPoint;
+    }
+
+    public int[] getStartingPoint() {
+        return startingPoint;
+    }
+
+    public void setStartingPoint(int[] startingPoint) {
+        this.startingPoint = startingPoint;
+    }
+
+    public String getStageName() {
+        return stageName;
+    }
+
+    public void setStageName(String stageName) {
+        this.stageName = stageName;
     }
 }

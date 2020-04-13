@@ -172,8 +172,6 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         towerList = new ArrayList<>();
         enemyList = new ArrayList<>();
         enemyPathMap = new HashMap<String,Integer>();
-        // 적 경로 초기화
-        setEnemyPath();
         killCount = new int[5];
         getCoinList = new ArrayList<>();
 
@@ -308,6 +306,12 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         waveEnemyInfo = new EnemyInfo[5];
         // 맵 정보를 가져온다
         tileMap = stage.getMapInfo();
+        tileWidth = tileMap[0].length;
+        tileHeight = tileMap.length;
+        // starting point 등록
+        enemySpawnPoint = stage.getStartingPoint();
+        // 적 경로 초기화
+        setEnemyPath();
         // 골드, 체력 세팅
         ((GameActivity)getContext()).setCoinCountView(stage.getPlayerGold()+"");
         ((GameActivity)getContext()).setHealthPointView(stage.getPlayerHealthPoint()+"");
@@ -335,7 +339,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
             Paint paint = new Paint();
             paint.setAntiAlias(true);
 
-            canvas.drawRGB(0, 100, 0);
+            canvas.drawRGB(0, 0, 0);
             // 맵 그리기
             drawMapTile(canvas,paint);
             // 타워 그리기
@@ -928,11 +932,12 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                 // focused( int[2] - x,y 좌표 저장. focus 안되었을 때
                 focusedTileCoordinate = new int[]{mappedY,mappedX};
                 Log.i("FOCUS_COMPLETE","x : "+mappedX + " y : "+mappedY);
+                ((GameActivity)getContext()).setMenuVisibility(true);
             }
 
-            ((GameActivity)getContext()).setTextView("x : "+mappedX +" y : "+mappedY);
+//            ((GameActivity)getContext()).setTextView("x : "+mappedX +" y : "+mappedY);
             // 왼쪽에 있던 메뉴가 드러나도록 한다.
-            ((GameActivity)getContext()).setMenuVisibility(true);
+
 
         }else{
             // 타일 밖이면 focus를 잃는다

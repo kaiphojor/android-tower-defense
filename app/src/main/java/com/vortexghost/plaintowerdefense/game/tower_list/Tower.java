@@ -46,29 +46,29 @@ public class Tower {
         towerLevel = 1;
         switch(towerCode){
             case 0:
-                towerAttackPoint = 1;
+                towerAttackPoint = 2;
                 towerAttackSpeed = 50;
                 towerRange = 300;
                 break;
             case 1:
-                towerAttackPoint = 2;
-                towerAttackSpeed = 10;
-                towerRange = 300;
+                towerAttackPoint = 3;
+                towerAttackSpeed = 60;
+                towerRange = 350;
                 break;
             case 2:
                 towerAttackPoint = 3;
-                towerAttackSpeed = 10;
-                towerRange = 300;
+                towerAttackSpeed = 100;
+                towerRange = 400;
                 break;
             case 3:
-                towerAttackPoint = 4;
-                towerAttackSpeed = 10;
+                towerAttackPoint = 5;
+                towerAttackSpeed = 80;
                 towerRange = 500;
                 break;
             case 4:
-                towerAttackPoint = 5;
-                towerAttackSpeed = 10;
-                towerRange = 500;
+                towerAttackPoint = 60;
+                towerAttackSpeed = 8;
+                towerRange = 1000;
                 break;
             default :
                 break;

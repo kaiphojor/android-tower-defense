@@ -39,7 +39,7 @@
             android:layout_marginStart="0dp"
             android:layout_marginTop="0dp"
             android:layout_marginEnd="40dp"
-            android:text="전리품"
+            android:text="점수"
             android:textColor="#FFFFFF"
             android:textSize="24sp" />
 
@@ -70,15 +70,23 @@
             android:id="@+id/shake_bonus_bt_victory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:text="흔들어서 보상2배" />
+            android:text="흔들어서 점수2배" />
 
         <Button
             android:id="@+id/advertisement_bonus_bt_victory"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:drawableLeft="@drawable/video_button_left"
-            android:text="광고 - 보상2배" />
+            android:text="광고 - 보상2배"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/time_left_tv_victory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5초"
+            android:textSize="30sp"
+            android:visibility="gone" />
     </LinearLayout>
 
     <RatingBar

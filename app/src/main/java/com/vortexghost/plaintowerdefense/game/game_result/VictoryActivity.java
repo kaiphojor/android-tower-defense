@@ -5,7 +5,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Vibrator;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -16,14 +22,31 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.vortexghost.plaintowerdefense.R;
+import com.vortexghost.plaintowerdefense.game.ShakeDetector;
 import com.vortexghost.plaintowerdefense.user_info.StageInfo;
 import com.vortexghost.plaintowerdefense.user_info.UserInfoSingleton;
 import com.vortexghost.plaintowerdefense.stage_select.StageSelectActivity;
 
 public class VictoryActivity extends Activity implements View.OnClickListener {
+    // The following are used for the shake detection
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private ShakeDetector mShakeDetector;
+    // 진동감지 관련한 view, 변수
+    private static int shakeCount;
+    private final String shakeCountString = "흔든횟수 : ";
+    private TextView shakeCountTextView;
+    private Button shakeStartSButton;
+    // 진동발생 관련 view, 변수
+    private static TextView shakeTimeLeftTextView;
+    private final int vibratileSecond = 10;
+    private static int remainingSecond;
+    private static boolean isShakeAvailable;
+    private final String shakeTimeLeftString = "초";
+
     // view
     RatingBar starRatingBar;
-    TextView rewardTextView;
+    static TextView rewardTextView;
     Button shakeButton;
     Button advertisementButton;
     TextView pressNextTextView;
@@ -43,6 +66,33 @@ public class VictoryActivity extends Activity implements View.OnClickListener {
     int stageLevel;
     // 적 종류별 죽인 횟수
     int[] killCount;
+    static int reward;
+    // 진동발생하는 vibrator
+    Vibrator vibrator;
+
+    private final static Handler mHandler = new Handler(){
+        public void handleMessage(Message msg){
+            msg.what -= 1;
+//            remainingSecond--;
+            shakeTimeLeftTextView.setText(msg.what+"초");
+            if(msg.what > 0){
+                // 메세지를 처리하고 또다시 핸들러에 메세지 전달 (1000ms 지연)
+                mHandler.sendEmptyMessageDelayed(msg.what,1000);
+            }else{
+                isShakeAvailable = false;
+                if(shakeCount >= 15){
+                    reward = reward *2;
+                    setShakeResult(true);
+                    startCountAnimation(rewardTextView,0,reward);
+                }else{
+                    setShakeResult(false);
+                }
+
+
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // 반투명 처리
@@ -61,6 +111,7 @@ public class VictoryActivity extends Activity implements View.OnClickListener {
 
         // listener
         pressNextTextView.setOnClickListener(this);
+        shakeButton.setOnClickListener(this);
         SharedPreferences gamePreference = getSharedPreferences("game",MODE_PRIVATE);
         SharedPreferences.Editor editor = gamePreference.edit();
         try{
@@ -105,7 +156,7 @@ public class VictoryActivity extends Activity implements View.OnClickListener {
             userInfo.setStageInfo(context,stageLevel,stageuserInfo);
         }
         // 죽인 적 점수 계산
-        int reward = 0;
+        reward = 0;
         userInfo.setEnemyKilled(context,killCount);
         for(int i=0; i<killCount.length; i++){
             if(killCount[i]!=-1){
@@ -117,7 +168,7 @@ public class VictoryActivity extends Activity implements View.OnClickListener {
         startCountAnimation(rewardTextView,0,reward);
         startStarCountAnimation(starRatingBar);
 
-
+        initShakeDetector();
 
 //        LottieAnimationView video = findViewById(R.id.video_anim_victory);
 //        video.setAnimation("video_anim.json");
@@ -146,9 +197,11 @@ public class VictoryActivity extends Activity implements View.OnClickListener {
     }
     // view binding
     public void bindView(){
+        shakeTimeLeftTextView = findViewById(R.id.time_left_tv_victory);
         starRatingBar = findViewById(R.id.star_rb_victory);
         rewardTextView = findViewById(R.id.reward_tv_victory);
         shakeButton = findViewById(R.id.shake_bonus_bt_victory);
+        shakeStartSButton = shakeButton;
         advertisementButton = findViewById(R.id.advertisement_bonus_bt_victory);
         pressNextTextView = findViewById(R.id.finish_bt_victory);
     }
@@ -160,9 +213,21 @@ public class VictoryActivity extends Activity implements View.OnClickListener {
         switch(id){
             // 스테이지 선택으로 돌아간다
             case R.id.finish_bt_victory :
+                // 점수 저장
+                UserInfoSingleton userInfoSingleton = UserInfoSingleton.getInstance();
+                userInfoSingleton.setReward(reward);
                 intent = new Intent(context, StageSelectActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                break;
+            case R.id.shake_bonus_bt_victory :
+                // 진동을 감지하고, 진동을 낼 수 있도록 만든다
+                isShakeAvailable = true;
+                // 시작할 때 버튼을 안보이게 만든다
+                shakeStartSButton.setVisibility(View.GONE);
+                shakeTimeLeftTextView.setVisibility(View.VISIBLE);
+                // 앱 시작과 동시에 핸들러에 메세지 전달
+                mHandler.sendEmptyMessage(vibratileSecond);
                 break;
             default :
                 break;
@@ -216,7 +281,7 @@ public class VictoryActivity extends Activity implements View.OnClickListener {
         textView.startAnimation(fadeOut);
     }
     // number counter 효과
-    private void startCountAnimation(final TextView textView,int start,int end) {
+    private static void startCountAnimation(final TextView textView,int start,int end) {
         ValueAnimator animator = ValueAnimator.ofInt(start, end); //0 is min number, 600 is max number
         // 스르륵 흐르는 애니메이션 시간
         animator.setDuration(500); //Duration is in milliseconds
@@ -246,5 +311,66 @@ public class VictoryActivity extends Activity implements View.OnClickListener {
     @Override
     public void onBackPressed() {
         // back button 에서 행동이 못나오게 한다
+    }
+    public void initShakeDetector(){
+        shakeCount = 0;
+        remainingSecond = 5;
+        // 진동기 초기화 - 시스템 서비스 호출
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        // ShakeDetector initialization
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mAccelerometer = mSensorManager
+                .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mShakeDetector = new ShakeDetector();
+        mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+
+            @Override
+            public void onShake(int count) {
+                /*
+                 * The following method, "handleShakeEvent(count):" is a stub //
+                 * method you would use to setup whatever you want done once the
+                 * device has been shook.
+                 */
+//                Log.i(TAG,"on shake called : " + isShakeAvailable);
+                if (isShakeAvailable) {
+                    handleShakeEvent(count);
+                }
+            }
+        });
+    }
+    // 진동 발생 및 카운터 증가
+    public void handleShakeEvent(int count) {
+        shakeCount++;
+        vibrator.vibrate(400); // 0.5초간 진동
+//        Log.i(TAG, "shake event 확인");
+//        Toast.makeText(context, "event : " + shakeCount, Toast.LENGTH_SHORT).show();
+//        shakeCountTextView.setText(shakeCountString + shakeCount);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // 가속도계 센서를 등록한다.
+        mSensorManager.registerListener(mShakeDetector, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
+    }
+    // background 상황에서도 흔들림을 감지하고 적용할 필요는 없다
+    @Override
+    public void onPause() {
+        // Add the following line to unregister the Sensor Manager onPause
+        // 가속도계 센서를 해지한다
+        mSensorManager.unregisterListener(mShakeDetector);
+        if (shakeCount != 0){
+
+        }
+        super.onPause();
+        Log.i(TAG,"onPause called");
+    }
+    public static void setShakeResult(final boolean isShakeSuccess){
+        if(isShakeSuccess){
+            shakeTimeLeftTextView.setText(shakeCount+"회, 성공!");
+        }else{
+            shakeTimeLeftTextView.setText(shakeCount+"회, 실패!");
+        }
+
     }
 }

@@ -353,7 +353,7 @@ public class UserInfoSingleton {
     }
 
     public void setReward(int reward) {
-        this.reward = reward;
+        this.reward = this.reward + reward;
     }
 
     public int getGem() {

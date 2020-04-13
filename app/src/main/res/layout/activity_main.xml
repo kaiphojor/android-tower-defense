@@ -147,8 +147,9 @@
 
         <ImageView
             android:id="@+id/test_image_iv_main"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
             app:srcCompat="@color/colorAccent"
             tools:srcCompat="@drawable/background_blue_aqua_turquoise" />
     </FrameLayout>

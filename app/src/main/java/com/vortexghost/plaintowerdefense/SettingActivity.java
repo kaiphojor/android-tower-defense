@@ -9,8 +9,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.vortexghost.plaintowerdefense.error_collect.BaseActivity;
@@ -50,6 +52,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     CheckBox sfxCheckBox;
     SeekBar bgmVolumeSeekBar;
     SeekBar sfxVolumeSeekBar;
+    // 배경 교체용 switch
+    Switch wallpaperSwitch;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +70,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         crashLogButton.setOnClickListener(this);
         // 음량 정보 초기화
         initSoundSetting();
+        // 배경화면 교체관련 listener
+        wallPaperSetting();
 
         // click listener 등록
         findViewById(R.id.sign_out_bt_setting).setOnClickListener(this);
@@ -85,6 +92,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
 
     // firebase 인증, google 로그인 클라이언트에서 모두 로그아웃한다
+
     private void signOut() {
         // Firebase sign out
         mAuth.signOut();
@@ -104,7 +112,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     }
                 });
     }
-
     private void backToLoginPage(){
         // 액티비티 스택을 다지우고, 로그인 페이지로 돌아간다
         intent = new Intent(context,LoginActivity.class);
@@ -134,6 +141,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
         }
     }
+
     // sound 설정 불러오기 & 조정하기
     public void initSoundSetting(){
         bgmCheckBox = findViewById(R.id.mute_sound_cb_setting);
@@ -194,5 +202,38 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             }
         });
 
+    }
+    // 배경화면 교체 여부 결정
+    private void wallPaperSetting() {
+        wallpaperSwitch = findViewById(R.id.wallpaper_sw_setting);
+        // 이전 설정 불러와서 setting
+        final SharedPreferences settingSharedPreference = getSharedPreferences("setting",MODE_PRIVATE);
+        // 초기 설정은 가이드 배경화면이다. check하면 풍경 배경화면으로 바뀐다
+        boolean isGuideWallpaperChanged = settingSharedPreference.getBoolean("isGuideWallpaperChanged",false);
+        if(isGuideWallpaperChanged){
+            wallpaperSwitch.setText("풍경 배경화면");
+            wallpaperSwitch.setChecked(true);
+        }else{
+            wallpaperSwitch.setText("가이드 배경화면");
+            wallpaperSwitch.setChecked(false);
+        }
+        // 스위치 변경시 문구변경후 스위치 값을 shared preference에 저장한다
+        wallpaperSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    wallpaperSwitch.setText("풍경 배경화면");
+                }else{
+                    wallpaperSwitch.setText("가이드 배경화면");
+                }
+                try{
+                    SharedPreferences.Editor editor = settingSharedPreference.edit();
+                    editor.putBoolean("isGuideWallpaperChanged",isChecked);
+                    editor.apply();
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

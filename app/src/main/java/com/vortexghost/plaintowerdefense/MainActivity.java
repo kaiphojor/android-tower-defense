@@ -302,7 +302,10 @@ public class MainActivity extends BaseActivity {
 
     // handler 이용한 fade in fade out animation
     public void fadeAnimation(final ImageView imageView, final boolean isfadeOut, final int index) {
-        final int imagesToShow[] = {R.drawable.background_blue_aqua_turquoise, R.drawable.background_blur, R.drawable.background_free_pic, R.drawable.background_milky_way};
+        // 일반 풍경 배경화면이다.
+        final int imagesToShow[] = {R.drawable.wallpaper_1, R.drawable.wallpaper_2, R.drawable.wallpaper_3, R.drawable.wallpaper_4};
+        // 가이드 배경화면. 게임에 대한 설명을 담고 있다.
+        final int imageGuide[] = {R.drawable.for_all,R.drawable.what,R.drawable.no_one_read_this,R.drawable.yes_delete};
 
         final Animation animationFade;
         // fade in & out animation 초기화
@@ -311,7 +314,15 @@ public class MainActivity extends BaseActivity {
         fadeout = AnimationUtils.loadAnimation(this, R.anim.fadeout);
         fadein = AnimationUtils.loadAnimation(this, R.anim.fadein);
         // 사진 세팅
-        imageView.setImageResource(imagesToShow[index]);
+        // 이전 설정 불러와서 setting
+        final SharedPreferences settingSharedPreference = getSharedPreferences("setting",MODE_PRIVATE);
+        // 초기 설정은 가이드 배경화면이다. check하면 풍경 배경화면으로 바뀐다
+        boolean isGuideWallpaperChanged = settingSharedPreference.getBoolean("isGuideWallpaperChanged",false);
+        if(isGuideWallpaperChanged){
+            imageView.setImageResource(imagesToShow[index]);
+        }else{
+            imageView.setImageResource(imageGuide[index]);
+        }
         // 그림이 화면에 보이는 시간은 5초, 빈화면은 1초간 뜨게한다
         int delay;
         if(!isfadeOut){

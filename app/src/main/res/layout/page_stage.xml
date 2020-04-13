@@ -23,7 +23,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:alpha="1"
-            tools:srcCompat="@tools:sample/backgrounds/scenic[17]" />
+            android:scaleType="centerInside"
+            tools:srcCompat="@drawable/stage_1" />
 
     </FrameLayout>
 

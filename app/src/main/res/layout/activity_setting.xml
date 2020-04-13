@@ -164,17 +164,17 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:text="시작화면사진"
+                    android:text="메인화면 배경 슬라이드 교체"
                     android:textSize="19sp" />
 
                 <Switch
-                    android:id="@+id/random_wallpaper_sw_setting"
+                    android:id="@+id/wallpaper_sw_setting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:text="랜덤 선택"
+                    android:text="배경화면"
                     android:textSize="15sp" />
 
                 <Button
@@ -185,7 +185,8 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:text="사진첩에서 선택"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -217,7 +218,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:text="설정초기화" />
+                    android:text="설정초기화"
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/button4"
@@ -226,7 +228,8 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:text="기록 모두 지우기"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <LinearLayout

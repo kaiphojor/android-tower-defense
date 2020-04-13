@@ -3,6 +3,7 @@ package com.vortexghost.plaintowerdefense.user_info;
 public class StageInfo{
     boolean isClear;
     int starNumber;
+    String name;
     public StageInfo(boolean isClear, int starNumber) {
         this.isClear = isClear;
         this.starNumber = starNumber;
@@ -22,5 +23,13 @@ public class StageInfo{
 
     public void setStarNumber(int starNumber) {
         this.starNumber = starNumber;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -56,7 +56,31 @@ public class StageAdapter extends PagerAdapter {
             page = inflater.inflate(R.layout.page_stage,container,false);
             // view binding
             levelTextView = page.findViewById(R.id.level_tv_stage);
-            final String levelString = "Stage "+(position+1);
+            String stageName="";
+            int imageResource=0;
+            switch(position){
+                case 0:
+                    stageName = "snake";
+                    imageResource = R.drawable.stage_1;
+                    break;
+                case 1:
+                    stageName = "wave";
+                    imageResource = R.drawable.stage_2;
+                    break;
+                case 2:
+                    stageName = "vortex";
+                    imageResource = R.drawable.stage_3;
+                    break;
+                case 3:
+                    stageName = "catface";
+                    imageResource = R.drawable.stage_4;
+                    break;
+                case 4:
+                    stageName = "snail";
+                    imageResource = R.drawable.stage_5;
+                    break;
+            }
+            final String levelString = "Stage "+(position+1)+ " : " +stageName;
             final int level = position + 1;
             levelTextView.setText(levelString);
             starRatingBar = page.findViewById(R.id.rb_stage);
@@ -64,7 +88,7 @@ public class StageAdapter extends PagerAdapter {
             clearImageView = page.findViewById(R.id.clear_iv_stage);
 
             // 이미지 설정 -> 스테이지 별로 교체해야..
-            stageImageView.setImageResource(R.drawable.seele_logo);
+            stageImageView.setImageResource(imageResource);
             boolean isClear = stageInfo[position].isClear();
             int starCount = stageInfo[position].getStarNumber();
             if(isClear){

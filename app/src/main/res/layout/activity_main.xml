@@ -21,9 +21,9 @@
             android:id="@+id/title_tv_main"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="5"
+            android:layout_weight="1"
             android:paddingStart="30dp"
-            android:text="타워디펜스"
+            android:text="메인화면"
             android:textSize="36sp" />
 
         <Button
@@ -31,7 +31,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="5"
-            android:text="Button" />
+            android:text="Button"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/profile_iv_main"
@@ -106,7 +107,7 @@
             android:layout_marginBottom="20dp"
             android:text="멀티플레이"
             android:textSize="25sp"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/buy_gem_tv_main"

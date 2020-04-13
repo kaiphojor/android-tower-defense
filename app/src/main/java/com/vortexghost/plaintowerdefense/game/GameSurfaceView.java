@@ -1182,6 +1182,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                         // 상태 전환 및 이전 상태 저장
                         previousState = state;
                         state = FIGHT;
+                        ((GameActivity)getContext()).setstartButton(true);
                         // 값을 초기화
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putBoolean("isWaveStart",false);
@@ -1242,7 +1243,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                             // 다음 wave의 enemy를 설정
                             Wave wave = (Wave)waveList.get(stage.getCurrentWave()-1);
                             // wave 정보 탑재
-
+                            ((GameActivity)getContext()).setstartButton(false);
                             try{
                                 waveEnemyInfo[MINION] = wave.getEnemyInfo("minion").clone();
                                 waveEnemyInfo[DICHOTOMY] = wave.getEnemyInfo("dichotomy").clone();
@@ -1305,6 +1306,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                         // 재시작 할 수 있는지 확인
                         boolean canRetry = gamePreference.getBoolean("canRetry",false);
                         if(canRetry){
+                            ((GameActivity)getContext()).setstartButton(false);
                             // 재시작시 변수 초기화, 상태 전환, 적 재배치, 추가 골드, player hp 회복
                             SharedPreferences.Editor preferenceEditor = gamePreference.edit();
                             preferenceEditor.putBoolean("retried",true);

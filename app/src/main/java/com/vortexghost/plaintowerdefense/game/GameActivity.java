@@ -333,10 +333,14 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
         });
     }
     // 시작 버튼 설정
-    public void setstartButton(final String buttonText) {
+    public void setstartButton(final boolean isStart) {
         GameActivity.this.runOnUiThread(new Runnable() {
             public void run() {
-                startButton.setText(buttonText);
+                if(isStart){
+                    startButton.setText("진행중");
+                }else{
+                    startButton.setText("시작");
+                }
             }
         });
     }

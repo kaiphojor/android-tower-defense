@@ -22,7 +22,6 @@ import com.vortexghost.plaintowerdefense.game.tower_list.Tower;
 
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -68,7 +67,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
     Bitmap coinImage;
     // resized image
     Bitmap[] beamImage;
-    Bitmap enemyPelletImage;
+    Bitmap[] enemyPelletImage;
     Bitmap tileImageResized;
     Bitmap enemyTileImageResized;
     Bitmap scaledBeamImage;
@@ -106,7 +105,10 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
     // 현재 wave에서 생성할 적 정보
     EnemyInfo[] waveEnemyInfo;
     static final int MINION = 0;
-    static final int BOSS = 1;
+    static final int DICHOTOMY = 1;
+    static final int PURPLE = 2;
+    static final int NOISE = 3;
+    static final int SAHAQUIEL = 4;
     /*
     상태 전이 변수
      */
@@ -181,8 +183,15 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         tileImage = BitmapFactory.decodeResource(res, R.drawable.platform_tile_001);
         enemyTileImage =BitmapFactory.decodeResource(res, R.drawable.platform_tile_011);
         focusedTileImage =BitmapFactory.decodeResource(res, R.drawable.focused_pixel_500);
-        enemyPelletImage = BitmapFactory.decodeResource(res,R.drawable.yellow_pellet);
-        enemyPelletImage = BitmapFactory.decodeResource(res,R.drawable.yellow_pellet);
+        // 적이미지
+        enemyPelletImage = new Bitmap[5];
+
+        enemyPelletImage[0] = BitmapFactory.decodeResource(res,R.drawable.yellow_pellet);
+        enemyPelletImage[1] = BitmapFactory.decodeResource(res,R.drawable.enemy_2);
+        enemyPelletImage[2] = BitmapFactory.decodeResource(res,R.drawable.enemy_3);
+        enemyPelletImage[3] = BitmapFactory.decodeResource(res,R.drawable.enemy_4);
+        enemyPelletImage[4] = BitmapFactory.decodeResource(res,R.drawable.enemy_5);
+
         coinImage = BitmapFactory.decodeResource(res,R.drawable.coin);
         // 빔 이미지 load
         beamImage = new Bitmap[6];
@@ -197,7 +206,11 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         startPointImage = Bitmap.createScaledBitmap(startPointImage, tileLength, tileLength, true);
         endPointImage = Bitmap.createScaledBitmap(endPointImage, tileLength, tileLength, true);
 
-        enemyPelletImage = Bitmap.createScaledBitmap(enemyPelletImage,enemyScale,enemyScale,true);
+        enemyPelletImage[0] = Bitmap.createScaledBitmap(enemyPelletImage[0],enemyScale,enemyScale,true);
+        enemyPelletImage[1] = Bitmap.createScaledBitmap(enemyPelletImage[1],enemyScale,enemyScale,true);
+        enemyPelletImage[2] = Bitmap.createScaledBitmap(enemyPelletImage[2],enemyScale,enemyScale,true);
+        enemyPelletImage[3] = Bitmap.createScaledBitmap(enemyPelletImage[3],enemyScale,enemyScale,true);
+        enemyPelletImage[4] = Bitmap.createScaledBitmap(enemyPelletImage[4],enemyScale,enemyScale,true);
         tileImageResized  = Bitmap.createScaledBitmap(tileImage, tileLength, tileLength, true);
         enemyTileImageResized  = Bitmap.createScaledBitmap(enemyTileImage, tileLength, tileLength, true);
         focusedTileImage  = Bitmap.createScaledBitmap(focusedTileImage, tileLength, tileLength, true);
@@ -305,7 +318,10 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         // wave 정보 탑재
         try{
             waveEnemyInfo[MINION] = wave.getEnemyInfo("minion").clone();
-            waveEnemyInfo[BOSS] = wave.getEnemyInfo("boss").clone();
+            waveEnemyInfo[DICHOTOMY] = wave.getEnemyInfo("dichotomy").clone();
+            waveEnemyInfo[PURPLE] = wave.getEnemyInfo("purple").clone();
+            waveEnemyInfo[NOISE] = wave.getEnemyInfo("noise").clone();
+            waveEnemyInfo[SAHAQUIEL] = wave.getEnemyInfo("sahaquiel").clone();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -408,14 +424,65 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                 // 갱신
             }
         }
-        // boss 생성
-        if(waveEnemyInfo[BOSS] != null){
+        // dichotomy 생성
+        if(waveEnemyInfo[DICHOTOMY] != null){
             // 생성 가능한지 확인 (남은 적 수, 시간)
-            if(waveEnemyInfo[BOSS].canGenerate(counter)){
+            if(waveEnemyInfo[DICHOTOMY].canGenerate(counter)){
                 // 적 정보 갱신
-                waveEnemyInfo[BOSS].postGenerationUpdate(counter);
+                waveEnemyInfo[DICHOTOMY].postGenerationUpdate(counter);
                 // 적 생성
                 Enemy enemy = new Enemy(1);
+                int[] spawnCoordinate = new int[]{baseX+enemySpawnPoint[0]*tileLength + tileLength/2 - enemyScale/2,baseY+enemySpawnPoint[1]*tileLength + tileLength/2 - enemyScale/2,enemySpawnPoint[2]};
+                enemy.setCoordinate(spawnCoordinate);
+                // 적 중앙 좌표 설정
+                int[] centeredPixel = new int[]{enemy.getX()+enemyScale/2,enemy.getY()+enemyScale/2};
+                enemy.setCenteredPixel(centeredPixel);
+                enemyList.add(enemy);
+                // 갱신
+            }
+        }
+        // purple 생성
+        if(waveEnemyInfo[PURPLE] != null){
+            // 생성 가능한지 확인 (남은 적 수, 시간)
+            if(waveEnemyInfo[PURPLE].canGenerate(counter)){
+                // 적 정보 갱신
+                waveEnemyInfo[PURPLE].postGenerationUpdate(counter);
+                // 적 생성
+                Enemy enemy = new Enemy(2);
+                int[] spawnCoordinate = new int[]{baseX+enemySpawnPoint[0]*tileLength + tileLength/2 - enemyScale/2,baseY+enemySpawnPoint[1]*tileLength + tileLength/2 - enemyScale/2,enemySpawnPoint[2]};
+                enemy.setCoordinate(spawnCoordinate);
+                // 적 중앙 좌표 설정
+                int[] centeredPixel = new int[]{enemy.getX()+enemyScale/2,enemy.getY()+enemyScale/2};
+                enemy.setCenteredPixel(centeredPixel);
+                enemyList.add(enemy);
+                // 갱신
+            }
+        }
+        // noise 생성
+        if(waveEnemyInfo[NOISE] != null){
+            // 생성 가능한지 확인 (남은 적 수, 시간)
+            if(waveEnemyInfo[NOISE].canGenerate(counter)){
+                // 적 정보 갱신
+                waveEnemyInfo[NOISE].postGenerationUpdate(counter);
+                // 적 생성
+                Enemy enemy = new Enemy(3);
+                int[] spawnCoordinate = new int[]{baseX+enemySpawnPoint[0]*tileLength + tileLength/2 - enemyScale/2,baseY+enemySpawnPoint[1]*tileLength + tileLength/2 - enemyScale/2,enemySpawnPoint[2]};
+                enemy.setCoordinate(spawnCoordinate);
+                // 적 중앙 좌표 설정
+                int[] centeredPixel = new int[]{enemy.getX()+enemyScale/2,enemy.getY()+enemyScale/2};
+                enemy.setCenteredPixel(centeredPixel);
+                enemyList.add(enemy);
+                // 갱신
+            }
+        }
+        // sahaquiel 생성
+        if(waveEnemyInfo[SAHAQUIEL] != null){
+            // 생성 가능한지 확인 (남은 적 수, 시간)
+            if(waveEnemyInfo[SAHAQUIEL].canGenerate(counter)){
+                // 적 정보 갱신
+                waveEnemyInfo[SAHAQUIEL].postGenerationUpdate(counter);
+                // 적 생성
+                Enemy enemy = new Enemy(4);
                 int[] spawnCoordinate = new int[]{baseX+enemySpawnPoint[0]*tileLength + tileLength/2 - enemyScale/2,baseY+enemySpawnPoint[1]*tileLength + tileLength/2 - enemyScale/2,enemySpawnPoint[2]};
                 enemy.setCoordinate(spawnCoordinate);
                 // 적 중앙 좌표 설정
@@ -701,7 +768,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
         // 적을 그린다
         if(!enemyList.isEmpty()){
             for(Enemy enemy : enemyList){
-                canvas.drawBitmap(enemyPelletImage,enemy.getX(),enemy.getY(),paint);
+                canvas.drawBitmap(enemyPelletImage[enemy.getEnemyCode()],enemy.getX(),enemy.getY(),paint);
             }
         }
     }
@@ -1172,7 +1239,10 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
 
                             try{
                                 waveEnemyInfo[MINION] = wave.getEnemyInfo("minion").clone();
-                                waveEnemyInfo[BOSS] = wave.getEnemyInfo("boss").clone();
+                                waveEnemyInfo[DICHOTOMY] = wave.getEnemyInfo("dichotomy").clone();
+                                waveEnemyInfo[PURPLE] = wave.getEnemyInfo("purple").clone();
+                                waveEnemyInfo[NOISE] = wave.getEnemyInfo("noise").clone();
+                                waveEnemyInfo[SAHAQUIEL] = wave.getEnemyInfo("sahaquiel").clone();
                             }catch(Exception e){
                                 e.printStackTrace();
                             }
@@ -1251,7 +1321,10 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                             // wave 정보 탑재
                             try{
                                 waveEnemyInfo[MINION] = wave.getEnemyInfo("minion").clone();
-                                waveEnemyInfo[BOSS] = wave.getEnemyInfo("boss").clone();
+                                waveEnemyInfo[DICHOTOMY] = wave.getEnemyInfo("dichotomy").clone();
+                                waveEnemyInfo[PURPLE] = wave.getEnemyInfo("purple").clone();
+                                waveEnemyInfo[NOISE] = wave.getEnemyInfo("noise").clone();
+                                waveEnemyInfo[SAHAQUIEL] = wave.getEnemyInfo("sahaquiel").clone();
                             }catch(Exception e){
                                 e.printStackTrace();
                             }

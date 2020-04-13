@@ -12,8 +12,25 @@ public class EnemyInfo implements Cloneable{
     public int generationTime;
     // 생성 간격
     public int generationGap;
-    public EnemyInfo(String name, int number, int generationTime, int generationGap) {
-        this.name = name;
+    public EnemyInfo(int enemyCode,int number, int generationTime, int generationGap) {
+        switch(enemyCode){
+            case 0:
+                name = "minion";
+                break;
+            case 1:
+                name = "dichotomy";
+                break;
+            case 2:
+                name = "purple";
+                break;
+            case 3:
+                name = "noise";
+                break;
+            case 4:
+                name = "sahaquiel";
+                break;
+        }
+//        this.name = name;
         this.number = number;
         this.generationTime = generationTime;
         this.generationGap = generationGap;

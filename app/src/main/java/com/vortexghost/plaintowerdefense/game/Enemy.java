@@ -24,14 +24,28 @@ public class Enemy {
                 rewardGold = 10;
                 break;
             case 1:
-                name = "boss";
+                name = "dichotomy";
                 healthPoint = 20;
                 attackPoint =1;
                 speed = 2;
                 rewardGold = 50;
                 break;
             case 2:
-                name = "other";
+                name = "purple";
+                healthPoint = 10;
+                attackPoint = 4;
+                speed = 4;
+                rewardGold = 100;
+                break;
+            case 3:
+                name = "noise";
+                healthPoint = 10;
+                attackPoint = 4;
+                speed = 20;
+                rewardGold = 100;
+                break;
+            case 4:
+                name = "sahaquiel";
                 healthPoint = 10;
                 attackPoint = 4;
                 speed = 1;

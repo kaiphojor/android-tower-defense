@@ -52,9 +52,14 @@ public class Stage {
                 // wave 초기화
                 Wave wave = new Wave();
                 // wave에 적 정보 추가( 어떤 적을, 몇명이나 , 어느 시점에서 , 어느 간격으로 생산할지 결정)
-                wave.setEnemyInfo(new EnemyInfo("minion",5,10,100));
+                wave.setEnemyInfo(new EnemyInfo(0,5,10,30));
+                wave.setEnemyInfo(new EnemyInfo(1,5,20,30));
+                wave.setEnemyInfo(new EnemyInfo(2,5,30,30));
+                wave.setEnemyInfo(new EnemyInfo(3,5,40,30));
+                wave.setEnemyInfo(new EnemyInfo(4,5,100,30));
+
                 Wave wave2 = new Wave();
-                wave2.setEnemyInfo(new EnemyInfo("minion",10,10,100));
+                wave2.setEnemyInfo(new EnemyInfo(0,10,10,100));
 //                wave.setEnemyInfo(new EnemyInfo("boss",1,100 *20+10+10,100));
                 // 정보를 다 추가한 wave를 wavelist에 등록
                 waveList.add(wave);

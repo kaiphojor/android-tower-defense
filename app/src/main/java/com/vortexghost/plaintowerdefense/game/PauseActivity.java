@@ -75,6 +75,8 @@ public class PauseActivity extends Activity implements View.OnClickListener {
                     bgmMuteView.setImageResource(R.drawable.audio_mute);
                 }
                 SoundSingleton.setBgmMute(!isMute);
+                // 효과음도 음소거 - tower defense는 sound play 필요없다
+                SoundSingleton.setSfxMute(!isMute);
                 SoundSingleton.updateSoundSingleton(context);
                 // 사진 교체
                 break;

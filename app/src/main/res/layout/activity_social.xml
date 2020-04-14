@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="5"
             android:paddingStart="30dp"
-            android:text="recyclerview"
+            android:text="친구목록"
             android:textSize="36sp" />
 
         <ImageView

@@ -68,7 +68,7 @@ public class LoginSingleton {
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         if (currentUser == null) {
-            Toast.makeText(context, "부적절한 접근", Toast.LENGTH_LONG).show();
+//            Toast.makeText(context, "부적절한 접근", Toast.LENGTH_LONG).show();
         } else {
             // 메인화면 이후에서는 로그인 된 것으로 가정 - 로그인을 서비스 이요 조건으로 삼음
             // 로그인이 되었다면 nickname을 상단에 세팅.

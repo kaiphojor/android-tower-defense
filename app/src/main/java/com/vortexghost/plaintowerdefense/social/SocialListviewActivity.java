@@ -95,14 +95,14 @@ public class SocialListviewActivity extends BaseActivity implements View.OnClick
             // item 메모 수정
             @Override
             public void onEditClick(View v, int position) {
-                Singleton.toast(position + ": 수정", false);
+//                Singleton.toast(position + ": 수정", false);
                 String memoString = userList.get(position).getMemo();
                 editMemoDialog(position,memoString);
             }
             // item 삭제
             @Override
             public void onDeleteClick(View v, int position) {
-                Singleton.toast(position + ": 삭제", false);
+//                Singleton.toast(position + ": 삭제", false);
                 listViewAdapter.deleteItem(position);
             }
         });

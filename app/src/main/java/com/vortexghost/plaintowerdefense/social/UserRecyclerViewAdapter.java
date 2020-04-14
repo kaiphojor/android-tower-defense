@@ -170,11 +170,11 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
                 case R.id.favorite_iv_user:
                     User item = data.get(position);
                     if(item.isFavorite()){
-                        Singleton.toast(position +": 즐겨찾기 해제",false);
+//                        Singleton.toast(position +": 즐겨찾기 해제",false);
                         item.setFavorite(false);
                         notifyItemChanged(position);
                     }else{
-                        Singleton.toast(position +": 즐겨찾기 추가",false);
+//                        Singleton.toast(position +": 즐겨찾기 추가",false);
                         item.setFavorite(true);
                         notifyItemChanged(position);
                     }

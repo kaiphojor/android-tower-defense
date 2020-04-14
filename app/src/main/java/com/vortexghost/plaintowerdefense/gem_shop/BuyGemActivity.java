@@ -209,7 +209,7 @@ public class BuyGemActivity extends BaseActivity implements BillingProcessor.IBi
          // 이 메소드는 구매 '성공'시에만 호출된다.
          if (productId.equals(selectedItem.getStockKeepingUnit())) {
              // TODO: 구매 해 주셔서 감사합니다! 메세지 보내기
-             Singleton.toast("구매 감사합니다!",true);
+//             Singleton.toast("구매 감사합니다!",true);
 //             storage.setPurchasedRemoveAds(billingProcessor.isPurchased(selectedItem.getStockKeepingUnit()));
 
              // * 광고 제거는 1번 구매하면 영구적으로 사용하는 것이므로 consume하지 않지만,
@@ -249,7 +249,7 @@ public class BuyGemActivity extends BaseActivity implements BillingProcessor.IBi
 
      }
      public void buyItem(Gem gem){
-        Singleton.toast(gem.getStockKeepingUnit(),false);
+//        Singleton.toast(gem.getStockKeepingUnit(),false);
         billingProcessor.purchase(this, gem.getStockKeepingUnit());
 
      }

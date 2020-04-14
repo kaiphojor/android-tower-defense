@@ -91,17 +91,17 @@ public class LoginActivity extends BaseActivity {
     public void updateUI(FirebaseUser user){
         // 로그인 여부 확인
         if(user == null){
-            Log.i(TAG,"로그인 하지 않음");
-            Toast.makeText(this,"로그인 하지 않음",Toast.LENGTH_LONG).show();
+//            Log.i(TAG,"로그인 하지 않음");
+//            Toast.makeText(this,"로그인 하지 않음",Toast.LENGTH_LONG).show();
         }else{
-            Log.i(TAG,"로그인 함");
+//            Log.i(TAG,"로그인 함");
             String loginMessage = "";
             loginMessage += "email : " + user.getEmail();
             loginMessage += "displayname : " + user.getDisplayName();
             loginMessage += "uid : " + user.getUid();
             loginMessage += "tostring : " + user.toString();
             Log.i(TAG,loginMessage);
-            Toast.makeText(this,"로그인 함",Toast.LENGTH_LONG).show();
+//            Toast.makeText(this,"로그인 함",Toast.LENGTH_LONG).show();
         }
     }
     // 따로 구분한 클릭 처리 이벤트
@@ -189,7 +189,7 @@ public class LoginActivity extends BaseActivity {
                             // 처음 가입 시 setting page로 가서 닉네임, 사진 설정,
                             // 이전에 가입했다면 main page 이동
                             SharedPreferences sharedPreference = getSharedPreferences("sharedPreference", MODE_PRIVATE);
-                            String text = sharedPreference.getString("nickname","");
+                            String text = sharedPreference.getString(user.getEmail(),"");
 
                             if(text.contentEquals("")){
                                 // 새로 만들 때
@@ -206,7 +206,7 @@ public class LoginActivity extends BaseActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(context, "Authentication Failed.", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(context, "Authentication Failed.", Toast.LENGTH_SHORT).show();
                             updateUI(null);
                         }
 
@@ -238,8 +238,7 @@ public class LoginActivity extends BaseActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(LoginActivity.this, "Authentication failed.",Toast.LENGTH_SHORT).show();
                             updateUI(null);
                         }
 
@@ -261,8 +260,7 @@ public class LoginActivity extends BaseActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(LoginActivity.this, "Authentication failed.",Toast.LENGTH_SHORT).show();
                             updateUI(null);
                         }
 

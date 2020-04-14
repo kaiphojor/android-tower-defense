@@ -288,7 +288,7 @@ public class MainActivity extends BaseActivity {
                     SharedPreferences.Editor editor = sharedPreference.edit();
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
                     String dateString = simpleDateFormat.format(new Date(System.currentTimeMillis()));
-                    Singleton.toast(dateString, true);
+//                    Singleton.toast(dateString, true);
                     editor.putString("popUpStatus", "false&" + dateString);
                     editor.apply();
                     // checkbox클릭시 바로 dialog를 닫는다

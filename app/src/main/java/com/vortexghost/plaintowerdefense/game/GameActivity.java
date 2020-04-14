@@ -13,7 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.vortexghost.plaintowerdefense.SoundSingleton;
+import com.vortexghost.plaintowerdefense.sound.SoundPoolPlayer;
+import com.vortexghost.plaintowerdefense.sound.SoundSingleton;
 import com.vortexghost.plaintowerdefense.error_collect.BaseActivity;
 import com.vortexghost.plaintowerdefense.LoginSingleton;
 import com.vortexghost.plaintowerdefense.R;
@@ -62,6 +63,8 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
     // mp3 player singleton
     MediaPlayer musicPlayer = MusicPlayerSingleton.getInstance();
     float bgmVolume;
+    float sfxVolume;
+    SoundPoolPlayer sfxPlayer;
     // 현재 user 정보
     UserInfoSingleton userInfo;
     @Override
@@ -129,6 +132,7 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
         musicPlayer.setLooping(true);
         // 준비되었을 때 시작하기 위한 listener
         musicPlayer.setOnPreparedListener(this);
+        sfxPlayer = new SoundPoolPlayer(this);
 
 
         // 현재 user 정보 초기화
@@ -146,10 +150,11 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
         // 음소거 여부를 고려한 설정
         bgmVolume = isBgmMute ? 0f : 0.01f * SoundSingleton.getBgmVolume();
         musicPlayer.setVolume(bgmVolume,bgmVolume);
-
         if(!musicPlayer.isPlaying()){
             musicPlayer.start();
         }
+        // 효과음 음량 불러오기
+        sfxVolume =SoundSingleton.isSfxMute() ? 0f : 0.01f * SoundSingleton.getSfxVolume();
 
         // shared preference 에 pause 해제 정보 저장
         SharedPreferences sharedPreferences = getSharedPreferences("game", MODE_MULTI_PROCESS | MODE_WORLD_WRITEABLE);
@@ -260,6 +265,12 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
 //            backgroundMusic.cancel(true);
 //        }
 //        ((Activity) context).finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sfxPlayer.release();
     }
 
     @Override
@@ -384,6 +395,34 @@ public class GameActivity extends BaseActivity implements View.OnClickListener, 
         GameActivity.this.runOnUiThread(new Runnable() {
             public void run() {
                 Singleton.toast("골드가 부족합니다",false);
+            }
+        });
+    }
+    // 빔 sfx, 타워별 효과음 구별
+    public void playBeamSound(final int towerCode) {
+        GameActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+                if(sfxVolume > 0f){
+                    int audioSource=0;
+                    switch(towerCode){
+                        case 0:
+                            audioSource = R.raw.laser1;
+                            break;
+                        case 1:
+                            audioSource = R.raw.laser3;
+                            break;
+                        case 2:
+                            audioSource = R.raw.laser6;
+                            break;
+                        case 3:
+                            audioSource = R.raw.laser10;
+                            break;
+                        case 4:
+                            audioSource = R.raw.laser8;
+                            break;
+                    }
+                    sfxPlayer.playShortResource(audioSource,sfxVolume);
+                }
             }
         });
     }

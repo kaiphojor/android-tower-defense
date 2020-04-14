@@ -1,4 +1,4 @@
-package com.vortexghost.plaintowerdefense;
+package com.vortexghost.plaintowerdefense.sound;
 
 import android.content.Context;
 import android.content.SharedPreferences;

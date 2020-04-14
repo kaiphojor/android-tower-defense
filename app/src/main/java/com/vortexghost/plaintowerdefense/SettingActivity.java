@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.vortexghost.plaintowerdefense.error_collect.BaseActivity;
 import com.vortexghost.plaintowerdefense.error_collect.CrashLogActivity;
+import com.vortexghost.plaintowerdefense.sound.SoundSingleton;
 import com.vortexghost.plaintowerdefense.user_info.UserInfoSingleton;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.tasks.OnCompleteListener;

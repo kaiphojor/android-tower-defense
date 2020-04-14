@@ -697,9 +697,10 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                     int distance = getDistance(tower,enemy);
                     // 사거리 이내에 들어왔을 때 공격
                     if(distance < tower.getTowerRange()){
-                        Singleton.log("tower-enemy distance : " + distance);
-                        // 공격
+                        // 빔 발사 효과음 내기
+                        ((GameActivity)getContext()).playBeamSound(tower.getTowerCode());
                         // 공격 및 피해 적용
+                        Singleton.log("tower-enemy distance : " + distance);
                         enemy.getDamage(tower.getTowerAttackPoint());
                         tower.resetCoolDown();
                         tower.setBeamImageCountDown();
@@ -708,6 +709,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable, SurfaceHol
                     }else{
                         // 공격하지 않음
                     }
+
                 }
             }else{
                 // 공격 불가

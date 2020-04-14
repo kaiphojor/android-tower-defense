@@ -10,7 +10,7 @@ import android.view.WindowManager;
 
 import com.vortexghost.plaintowerdefense.MainActivity;
 import com.vortexghost.plaintowerdefense.R;
-import com.vortexghost.plaintowerdefense.SoundSingleton;
+import com.vortexghost.plaintowerdefense.sound.SoundSingleton;
 
 import pl.droidsonroids.gif.GifImageView;
 

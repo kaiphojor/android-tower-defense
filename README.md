@@ -5,7 +5,7 @@ Android application(java)
 타워 디펜스 게임
 * 기간 2020.02 ~ 2020.04
 
-![image-play](.\tower_defense_play.png)
+![image-play](tower_defense_play.png)
 
 
 ## 설명
